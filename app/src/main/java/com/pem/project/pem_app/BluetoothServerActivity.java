@@ -16,21 +16,24 @@ import android.view.MenuItem;
 import android.widget.TextView;
 
 import java.io.IOException;
+import java.io.OutputStream;
+import java.lang.reflect.Method;
+import java.util.ArrayList;
 import java.util.Set;
 import java.util.UUID;
 
 
 public class BluetoothServerActivity extends Activity {
 
-   private BluetoothAdapter bAdapter;
-   private BroadcastReceiver mReceiver;
-   private TextView client ;
+    private BluetoothAdapter bAdapter;
+
+    private TextView client;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_bluetooth);
-        client = (TextView)findViewById(R.id.client1);
+        client = (TextView) findViewById(R.id.client1);
         bluetoothSetup();
     }
 
@@ -57,10 +60,10 @@ public class BluetoothServerActivity extends Activity {
         return super.onOptionsItemSelected(item);
     }
 
-    public void bluetoothSetup(){
+    public void bluetoothSetup() {
 
         bAdapter = BluetoothAdapter.getDefaultAdapter();
-        if(bAdapter != null) {
+        if (bAdapter != null) {
             bAdapter.setName("Game Server");
             Log.d("Bluetooth", bAdapter.getName());
             // Make the device discoverable
@@ -83,11 +86,18 @@ public class BluetoothServerActivity extends Activity {
         }
     }
 
-    public void onBackPressed(){
-        unregisterReceiver(mReceiver);
-        super.onBackPressed();
-    }
 
+    public void sendDataToPairedDevice(BluetoothSocket socket, String message){
+        byte[] toSend = message.getBytes();
+        try {
+            //BluetoothSocket socket = device.createInsecureRfcommSocketToServiceRecord(Constants.uuid);
+            OutputStream mmOutStream = socket.getOutputStream();
+            mmOutStream.write(toSend);
+            // Your Data is sent to  BT connected paired device ENJOY.
+        } catch (IOException e) {
+            Log.e("BluetoothSend", "Exception during write", e);
+        }
+    }
 
     /**
      * This thread runs while listening for incoming connections. It behaves
@@ -116,7 +126,7 @@ public class BluetoothServerActivity extends Activity {
             BluetoothSocket socket = null;
 
             // Listen to the server socket if we're not connected
-            while (true) {
+            while (ServerData.getNumOfClients() < 4) {
                 try {
                     // This is a blocking call and will only return on a
                     // successful connection or an exception
@@ -128,23 +138,30 @@ public class BluetoothServerActivity extends Activity {
                 }
 
                 // If a connection was accepted
-                if (socket != null) {
+                /*if (socket != null) {
                     cancel();
-                }
+                }*/
             }
 
         }
 
-        public void manageConnections(BluetoothSocket socket) {
+        public void manageConnections(final BluetoothSocket socket) {
             Log.d("BluetoothServer", "Client ist da! " + socket.getRemoteDevice());
-            final String s = socket.getRemoteDevice().getName();
+            ServerData.addToClients(socket);
+
+
             runOnUiThread(new Runnable() {
                 @Override
                 public void run() {
-                    client.setText(s);
+                    ArrayList<BluetoothSocket> clients = ServerData.getClients();
+                    client.setText("");
+                    for(BluetoothSocket s : clients){
+                        Log.d("Clients", "Client: " + s.getRemoteDevice().getName() );
+                        client.setText(client.getText() + s.getRemoteDevice().getName() + "\n");
+                        sendDataToPairedDevice(socket, "Hello, welcome to the game!");
+                    }
                 }
             });
-
         }
 
         public void cancel() {

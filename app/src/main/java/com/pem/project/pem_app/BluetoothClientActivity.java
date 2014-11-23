@@ -9,22 +9,31 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.os.Bundle;
+import android.os.Handler;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.TextView;
 
 import java.io.IOException;
+import java.io.InputStream;
+import java.util.ArrayList;
 
 
 public class BluetoothClientActivity extends Activity {
     private BluetoothAdapter bAdapter;
     private BroadcastReceiver mReceiver;
+    private TextView text;
+
+
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_bluetooth_client);
+        text = (TextView)findViewById(R.id.status);
+
         connectToServer();
     }
 
@@ -65,9 +74,11 @@ public class BluetoothClientActivity extends Activity {
                     BluetoothDevice device = intent.getParcelableExtra(BluetoothDevice.EXTRA_DEVICE);
                     // Add the name and address to an array adapter to show in a ListView
                     Log.d("PEM_Bluetooth", "Discovered: " + device.getName() + "\n" + device.getAddress());
-
-                    ConnectThread connectThread = new ConnectThread(device);
-                    connectThread.start();
+                    Log.d("PEM_Bluetooth", device.getUuids() + "");
+                    if(device.getName().equals("Game Server")) {
+                        ConnectThread connectThread = new ConnectThread(device);
+                        connectThread.start();
+                    }
                 }
             }
         };
@@ -76,6 +87,12 @@ public class BluetoothClientActivity extends Activity {
         registerReceiver(mReceiver, filter); // Don't forget to unregister during onDestroy
         bAdapter.startDiscovery();
 
+    }
+
+    public void listen(BluetoothSocket socket, TextView messageText){
+        BluetoothSocketListener bsl = new BluetoothSocketListener(socket, messageText);
+        Thread messageListener = new Thread(bsl);
+        messageListener.start();
     }
 
     private class ConnectThread extends Thread {
@@ -107,6 +124,8 @@ public class BluetoothClientActivity extends Activity {
                 // Connect the device through the socket. This will block
                 // until it succeeds or throws an exception
                 mmSocket.connect();
+                unregisterReceiver(mReceiver);
+                listen(mmSocket, text);
             } catch (IOException connectException) {
                 // Unable to connect; close the socket and get out
                 try {
@@ -126,4 +145,56 @@ public class BluetoothClientActivity extends Activity {
             } catch (IOException e) { }
         }
     }
+
+    private class BluetoothSocketListener implements Runnable {
+
+        private BluetoothSocket socket;
+        private TextView textView;
+        private Handler handler;
+
+        public BluetoothSocketListener(BluetoothSocket socket, TextView textView) {
+            Log.d("BluetoothClient", "started listening");
+            this.socket = socket;
+            this.textView = textView;
+        }
+
+        public void run() {
+            int bufferSize = 1024;
+            byte[] buffer = new byte[bufferSize];
+            try {
+                InputStream instream = socket.getInputStream();
+                int bytesRead = -1;
+                String message = "";
+                while (true) {
+                    message = "";
+                    bytesRead = instream.read(buffer);
+                    if (bytesRead != -1) {
+                        while ((bytesRead==bufferSize)&&(buffer[bufferSize-1] != 0)) {
+                            message = message + new String(buffer, 0, bytesRead);
+                            bytesRead = instream.read(buffer);
+                        }
+                        message = message + new String(buffer, 0, bytesRead - 1);
+                        Log.d("BluetoothMessage", message);
+                        processMessage(message);
+                        socket.getInputStream();
+                    }
+                }
+            } catch (IOException e) {
+                Log.d("BLUETOOTH_COMMS", e.getMessage());
+            }
+        }
+    }
+
+    public void processMessage(String m){
+        final String message = m;
+
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                text.setText(message);
+            }
+        });
+    }
+
+
 }
