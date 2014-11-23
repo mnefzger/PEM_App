@@ -13,6 +13,9 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.Adapter;
+import android.widget.ListAdapter;
+import android.widget.ListView;
 import android.widget.TextView;
 
 import java.io.IOException;
@@ -26,14 +29,17 @@ import java.util.UUID;
 public class BluetoothServerActivity extends Activity {
 
     private BluetoothAdapter bAdapter;
-
-    private TextView client;
+    private ListView clientList;
+    private ClientListAdapter listAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_bluetooth);
-        client = (TextView) findViewById(R.id.client1);
+        clientList = (ListView) findViewById(R.id.clientsList);
+        listAdapter = new ClientListAdapter(this);
+        clientList.setAdapter(listAdapter);
+
         bluetoothSetup();
     }
 
@@ -65,20 +71,11 @@ public class BluetoothServerActivity extends Activity {
         bAdapter = BluetoothAdapter.getDefaultAdapter();
         if (bAdapter != null) {
             bAdapter.setName("Game Server");
-            Log.d("Bluetooth", bAdapter.getName());
+
             // Make the device discoverable
             Intent discoverableIntent = new Intent(BluetoothAdapter.ACTION_REQUEST_DISCOVERABLE);
             discoverableIntent.putExtra(BluetoothAdapter.EXTRA_DISCOVERABLE_DURATION, 300);
             startActivity(discoverableIntent);
-
-            /*Set<BluetoothDevice> pairedDevices =bAdapter.getBondedDevices();
-            // If there are paired devices
-            if (pairedDevices.size() > 0) {
-                // Loop through paired devices
-                for (BluetoothDevice device : pairedDevices) {
-                    System.out.println("Bonded: " + device.getName() + "\n" + device.getAddress());
-                }
-            }*/
 
             AcceptThread acceptThread = new AcceptThread();
             acceptThread.start();
@@ -136,12 +133,9 @@ public class BluetoothServerActivity extends Activity {
                     Log.e("Bluetooth", "accept() failed", e);
                     break;
                 }
-
-                // If a connection was accepted
-                /*if (socket != null) {
-                    cancel();
-                }*/
             }
+
+            cancel();
 
         }
 
@@ -149,17 +143,13 @@ public class BluetoothServerActivity extends Activity {
             Log.d("BluetoothServer", "Client ist da! " + socket.getRemoteDevice());
             ServerData.addToClients(socket);
 
-
             runOnUiThread(new Runnable() {
                 @Override
                 public void run() {
-                    ArrayList<BluetoothSocket> clients = ServerData.getClients();
-                    client.setText("");
-                    for(BluetoothSocket s : clients){
-                        Log.d("Clients", "Client: " + s.getRemoteDevice().getName() );
-                        client.setText(client.getText() + s.getRemoteDevice().getName() + "\n");
-                        sendDataToPairedDevice(socket, "Hello, welcome to the game!");
-                    }
+                    //refresh ListView
+                    listAdapter.add(socket);
+                    listAdapter.notifyDataSetChanged();
+                    sendDataToPairedDevice(socket, "Hello, welcome to the game!");
                 }
             });
         }

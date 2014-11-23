@@ -99,8 +99,6 @@ public class BluetoothClientActivity extends Activity {
         private final BluetoothSocket mmSocket;
         private final BluetoothDevice mmDevice;
 
-
-
         public ConnectThread(BluetoothDevice device) {
             Log.d("PEM_Bluetooth", "started ConnectClient");
             // Use a temporary object that is later assigned to mmSocket,
@@ -110,7 +108,6 @@ public class BluetoothClientActivity extends Activity {
 
             // Get a BluetoothSocket to connect with the given BluetoothDevice
             try {
-                // MY_UUID is the app's UUID string, also used by the server code
                 tmp = device.createRfcommSocketToServiceRecord(Constants.uuid);
             } catch (IOException e) { }
             mmSocket = tmp;
@@ -134,8 +131,6 @@ public class BluetoothClientActivity extends Activity {
                 return;
             }
 
-            // Do work to manage the connection (in a separate thread)
-            //manageConnectedSocket(mmSocket);
         }
 
         /** Will cancel an in-progress connection, and close the socket */

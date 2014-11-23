@@ -14,12 +14,16 @@ public class ServerData {
     private static ArrayList<BluetoothSocket> clients = new ArrayList<BluetoothSocket>();
 
     public static void addToClients(BluetoothSocket socket){
-        Log.d("ThreadPass", "Found: " + socket);
+        Log.d("Bluetooth ServerData", "Added Client " + socket);
         clients.add(socket);
     }
 
     public static ArrayList<BluetoothSocket> getClients(){
         return clients;
+    }
+
+    public static BluetoothSocket getClientAt(int pos){
+        return clients.get(pos);
     }
 
     public static int getNumOfClients(){
