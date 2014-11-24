@@ -4,7 +4,6 @@ import android.app.Activity;
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothServerSocket;
 import android.bluetooth.BluetoothSocket;
-import android.content.BroadcastReceiver;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
@@ -84,7 +83,7 @@ public class BluetoothServerActivity extends Activity {
 
     public void bluetoothSetup() {
         //first, mark this device as server
-        ServerData.markAsServer();
+        ServerData.markLocalAsServer();
 
         bAdapter = BluetoothAdapter.getDefaultAdapter();
         if (bAdapter != null) {
@@ -159,7 +158,7 @@ public class BluetoothServerActivity extends Activity {
                     listAdapter.notifyDataSetChanged();
                     BluetoothHelper.sendDataToPairedDevice(socket, "Hello, welcome to the game!_");
 
-                    if(ServerData.getNumOfClients() == 1) startGame.setEnabled(true);
+                    if (ServerData.getNumOfClients() == 1) startGame.setEnabled(true);
                 }
             });
 

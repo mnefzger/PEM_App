@@ -1,17 +1,37 @@
 package com.pem.project.pem_app;
 
 import android.app.Activity;
+import android.app.Fragment;
+import android.bluetooth.BluetoothSocket;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 
 
-public class GameActivity extends Activity {
+public class GameActivity extends Activity implements BluetoothListener.IListenCallback{
+    private Activity gameActivity;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_game);
+        gameActivity = this;
+
+        if(!ServerData.isServer()){
+            BluetoothListener listener = new BluetoothListener(this);
+            listener.listen(ServerData.getServer());
+            BluetoothHelper.sendDataToPairedDevice(ServerData.getServer(), "Hallo Server, Client checking in!_");
+        } else {
+            BluetoothListener listener = new BluetoothListener(this);
+            listener.listen(ServerData.getClientAt(0));
+
+            BluetoothListener listener2 = new BluetoothListener(this);
+            listener2.listen(ServerData.getClientAt(1));
+
+            /*BluetoothListener listener3 = new BluetoothListener(this);
+            listener3.listen(ServerData.getClientAt(2)); */
+        }
     }
 
 
@@ -36,4 +56,10 @@ public class GameActivity extends Activity {
 
         return super.onOptionsItemSelected(item);
     }
+
+    public void processReceivedMessage(String m, BluetoothSocket s){
+        Log.d("Received Message", "From " + s.getRemoteDevice().getName() + ": " + m);
+    }
+
+
 }

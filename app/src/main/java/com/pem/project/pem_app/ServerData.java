@@ -15,6 +15,7 @@ public class ServerData {
     private static ArrayList<BluetoothSocket> team1 = new ArrayList<BluetoothSocket>();
     private static ArrayList<BluetoothSocket> team2 = new ArrayList<BluetoothSocket>();
     private static boolean isServer = false;
+    private static BluetoothSocket server;
 
     public static void addToClients(BluetoothSocket socket){
         Log.d("Bluetooth ServerData", "Added Client " + socket);
@@ -38,11 +39,18 @@ public class ServerData {
     }
 
     //only the server calls this method
-    public static void markAsServer(){
+    public static void markLocalAsServer(){
         isServer = true;
     }
     public static boolean isServer(){
         return isServer;
+    }
+
+    public static void markRemoteAsServer(BluetoothSocket socket){
+        server = socket;
+    }
+    public static BluetoothSocket getServer(){
+        return server;
     }
 
     public static ArrayList<BluetoothSocket> getClients(){

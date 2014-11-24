@@ -9,23 +9,19 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.os.Bundle;
-import android.os.Handler;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.TextView;
 
 import java.io.IOException;
-import java.io.InputStream;
-import java.util.ArrayList;
 
 
-public class BluetoothClientActivity extends Activity {
+public class BluetoothClientActivity extends Activity implements BluetoothListener.IListenCallback {
     private BluetoothAdapter bAdapter;
     private BroadcastReceiver mReceiver;
     private TextView text;
-
-
+    Activity clientActivity;
 
 
     @Override
@@ -33,8 +29,10 @@ public class BluetoothClientActivity extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_bluetooth_client);
         text = (TextView)findViewById(R.id.status);
+        clientActivity = this;
 
         connectToServer();
+
     }
 
 
@@ -89,6 +87,22 @@ public class BluetoothClientActivity extends Activity {
 
     }
 
+    public void processReceivedMessage(String m, BluetoothSocket s){
+        final String message = m;
+        final BluetoothSocket socket = s;
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                text.setText("From " + socket.getRemoteDevice().getName() + ": " + message);
+            }
+        });
+
+        if(m.equals("START")){
+            Intent intent = new Intent(getApplicationContext(), GameActivity.class);
+            startActivity(intent);
+        }
+    }
+
 
     private class ConnectThread extends Thread {
         private final BluetoothSocket mmSocket;
@@ -117,7 +131,9 @@ public class BluetoothClientActivity extends Activity {
                 // until it succeeds or throws an exception
                 mmSocket.connect();
                 unregisterReceiver(mReceiver);
-                listen(mmSocket, text);
+                ServerData.markRemoteAsServer(mmSocket);
+                BluetoothListener listener = new BluetoothListener(clientActivity);
+                listener.listen(mmSocket);
             } catch (IOException connectException) {
                 // Unable to connect; close the socket and get out
                 try {
@@ -136,65 +152,7 @@ public class BluetoothClientActivity extends Activity {
         }
     }
 
-    public void listen(BluetoothSocket socket, TextView messageText){
-        BluetoothSocketListener bsl = new BluetoothSocketListener(socket, messageText);
-        Thread messageListener = new Thread(bsl);
-        messageListener.start();
-    }
 
-    private class BluetoothSocketListener implements Runnable {
-
-        private BluetoothSocket socket;
-        private TextView textView;
-        private Handler handler;
-
-        public BluetoothSocketListener(BluetoothSocket socket, TextView textView) {
-            Log.d("BluetoothClient", "started listening");
-            this.socket = socket;
-            this.textView = textView;
-        }
-
-        public void run() {
-            int bufferSize = 1024;
-            byte[] buffer = new byte[bufferSize];
-            try {
-                InputStream instream = socket.getInputStream();
-                int bytesRead = -1;
-                String message = "";
-                while (true) {
-                    message = "";
-                    bytesRead = instream.read(buffer);
-                    if (bytesRead != -1) {
-                        while ((bytesRead==bufferSize)&&(buffer[bufferSize-1] != 0)) {
-                            message = message + new String(buffer, 0, bytesRead);
-                            bytesRead = instream.read(buffer);
-                        }
-                        message = message + new String(buffer, 0, bytesRead - 1);
-                        Log.d("BluetoothMessage", message);
-                        processMessage(message);
-                        socket.getInputStream();
-                    }
-                }
-            } catch (IOException e) {
-                Log.d("BLUETOOTH_COMMS", e.getMessage());
-            }
-        }
-    }
-
-    public void processMessage(String m){
-        final String message = m;
-        runOnUiThread(new Runnable() {
-            @Override
-            public void run() {
-                text.setText(message);
-            }
-        });
-
-        if(m.equals("START")){
-            Intent intent = new Intent(getApplicationContext(), GameActivity.class);
-            startActivity(intent);
-        }
-    }
 
 
 }
