@@ -27,6 +27,10 @@
             android:name="com.pem.project.pem_app.BluetoothClientActivity"
             android:label="@string/title_activity_bluetooth_client" >
         </activity>
+        <activity
+            android:name="com.pem.project.pem_app.GameActivity"
+            android:label="@string/title_activity_game" >
+        </activity>
     </application>
 
 </manifest>

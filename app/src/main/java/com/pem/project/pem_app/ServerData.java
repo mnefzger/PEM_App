@@ -12,10 +12,37 @@ import java.util.ArrayList;
  */
 public class ServerData {
     private static ArrayList<BluetoothSocket> clients = new ArrayList<BluetoothSocket>();
+    private static ArrayList<BluetoothSocket> team1 = new ArrayList<BluetoothSocket>();
+    private static ArrayList<BluetoothSocket> team2 = new ArrayList<BluetoothSocket>();
+    private static boolean isServer = false;
 
     public static void addToClients(BluetoothSocket socket){
         Log.d("Bluetooth ServerData", "Added Client " + socket);
         clients.add(socket);
+    }
+
+    public static void addToTeam(BluetoothSocket socket, int team){
+        if(team == 1) team1.add(socket);
+        else team2.add(socket);
+    }
+
+    public static void removeFromTeam(BluetoothSocket socket){
+        if(team1.contains(socket)) team1.remove(socket);
+        else team2.remove(socket);
+    }
+
+    public static int getTeam(BluetoothSocket socket){
+        if(team1.contains(socket)) return 1;
+        else if(team2.contains(socket)) return 2;
+        else return 0;
+    }
+
+    //only the server calls this method
+    public static void markAsServer(){
+        isServer = true;
+    }
+    public static boolean isServer(){
+        return isServer;
     }
 
     public static ArrayList<BluetoothSocket> getClients(){

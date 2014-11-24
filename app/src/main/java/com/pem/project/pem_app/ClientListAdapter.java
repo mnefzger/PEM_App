@@ -45,7 +45,7 @@ public class ClientListAdapter extends ArrayAdapter<BluetoothSocket>{
             TextView team = (TextView) v.findViewById(R.id.teamText);
 
             client.setText(clientSocket.getRemoteDevice().getName());
-            team.setText("Team " + ((position % 2) + 1));
+            team.setText("Team " + ServerData.getTeam(clientSocket));
         }
 
         return v;

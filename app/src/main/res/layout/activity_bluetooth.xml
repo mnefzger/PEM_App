@@ -30,5 +30,6 @@
         android:text="Start Game"
         android:id="@+id/startGameButton"
         android:layout_alignParentBottom="true"
-        android:layout_centerHorizontal="true" />
+        android:layout_centerHorizontal="true"
+        android:enabled="false"/>
 </RelativeLayout>

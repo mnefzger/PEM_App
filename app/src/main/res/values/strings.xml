@@ -6,5 +6,6 @@
     <string name="action_settings">Settings</string>
     <string name="title_activity_bluetooth">BluetoothActivity</string>
     <string name="title_activity_bluetooth_client">BluetoothClientActivity</string>
+    <string name="title_activity_game">GameActivity</string>
 
 </resources>

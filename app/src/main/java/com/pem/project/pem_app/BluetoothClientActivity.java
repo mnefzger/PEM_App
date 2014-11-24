@@ -89,11 +89,6 @@ public class BluetoothClientActivity extends Activity {
 
     }
 
-    public void listen(BluetoothSocket socket, TextView messageText){
-        BluetoothSocketListener bsl = new BluetoothSocketListener(socket, messageText);
-        Thread messageListener = new Thread(bsl);
-        messageListener.start();
-    }
 
     private class ConnectThread extends Thread {
         private final BluetoothSocket mmSocket;
@@ -141,6 +136,12 @@ public class BluetoothClientActivity extends Activity {
         }
     }
 
+    public void listen(BluetoothSocket socket, TextView messageText){
+        BluetoothSocketListener bsl = new BluetoothSocketListener(socket, messageText);
+        Thread messageListener = new Thread(bsl);
+        messageListener.start();
+    }
+
     private class BluetoothSocketListener implements Runnable {
 
         private BluetoothSocket socket;
@@ -182,13 +183,17 @@ public class BluetoothClientActivity extends Activity {
 
     public void processMessage(String m){
         final String message = m;
-
         runOnUiThread(new Runnable() {
             @Override
             public void run() {
                 text.setText(message);
             }
         });
+
+        if(m.equals("START")){
+            Intent intent = new Intent(getApplicationContext(), GameActivity.class);
+            startActivity(intent);
+        }
     }
 
 

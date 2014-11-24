@@ -2,28 +2,20 @@ package com.pem.project.pem_app;
 
 import android.app.Activity;
 import android.bluetooth.BluetoothAdapter;
-import android.bluetooth.BluetoothDevice;
 import android.bluetooth.BluetoothServerSocket;
 import android.bluetooth.BluetoothSocket;
 import android.content.BroadcastReceiver;
-import android.content.Context;
 import android.content.Intent;
-import android.content.IntentFilter;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.widget.Adapter;
-import android.widget.ListAdapter;
+import android.view.View;
+import android.widget.AdapterView;
+import android.widget.Button;
 import android.widget.ListView;
-import android.widget.TextView;
-
 import java.io.IOException;
-import java.io.OutputStream;
-import java.lang.reflect.Method;
-import java.util.ArrayList;
-import java.util.Set;
-import java.util.UUID;
+
 
 
 public class BluetoothServerActivity extends Activity {
@@ -31,6 +23,7 @@ public class BluetoothServerActivity extends Activity {
     private BluetoothAdapter bAdapter;
     private ListView clientList;
     private ClientListAdapter listAdapter;
+    private Button startGame;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -39,8 +32,31 @@ public class BluetoothServerActivity extends Activity {
         clientList = (ListView) findViewById(R.id.clientsList);
         listAdapter = new ClientListAdapter(this);
         clientList.setAdapter(listAdapter);
+        clientList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+                BluetoothSocket s = listAdapter.getItem(i);
+                int team = (ServerData.getTeam(s) == 1) ? 2 : 1;
+                ServerData.removeFromTeam(s);
+                ServerData.addToTeam(listAdapter.getItem(i), team);
+                listAdapter.notifyDataSetChanged();
+            }
+        });
+
+        startGame = (Button) findViewById(R.id.startGameButton);
+        startGame.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                // Tell Clients to start the game
+                for(BluetoothSocket client : ServerData.getClients()) BluetoothHelper.sendDataToPairedDevice(client, "START_");
+
+                Intent intent = new Intent(getApplicationContext(), GameActivity.class);
+                startActivity(intent);
+            }
+        });
 
         bluetoothSetup();
+
     }
 
 
@@ -67,6 +83,8 @@ public class BluetoothServerActivity extends Activity {
     }
 
     public void bluetoothSetup() {
+        //first, mark this device as server
+        ServerData.markAsServer();
 
         bAdapter = BluetoothAdapter.getDefaultAdapter();
         if (bAdapter != null) {
@@ -83,18 +101,6 @@ public class BluetoothServerActivity extends Activity {
         }
     }
 
-
-    public void sendDataToPairedDevice(BluetoothSocket socket, String message){
-        byte[] toSend = message.getBytes();
-        try {
-            //BluetoothSocket socket = device.createInsecureRfcommSocketToServiceRecord(Constants.uuid);
-            OutputStream mmOutStream = socket.getOutputStream();
-            mmOutStream.write(toSend);
-            // Your Data is sent to  BT connected paired device ENJOY.
-        } catch (IOException e) {
-            Log.e("BluetoothSend", "Exception during write", e);
-        }
-    }
 
     /**
      * This thread runs while listening for incoming connections. It behaves
@@ -123,7 +129,7 @@ public class BluetoothServerActivity extends Activity {
             BluetoothSocket socket = null;
 
             // Listen to the server socket if we're not connected
-            while (ServerData.getNumOfClients() < 4) {
+            while (ServerData.getNumOfClients() < 3) {
                 try {
                     // This is a blocking call and will only return on a
                     // successful connection or an exception
@@ -142,6 +148,8 @@ public class BluetoothServerActivity extends Activity {
         public void manageConnections(final BluetoothSocket socket) {
             Log.d("BluetoothServer", "Client ist da! " + socket.getRemoteDevice());
             ServerData.addToClients(socket);
+            int team = (ServerData.getNumOfClients() < 2)?  1 : 2;
+            ServerData.addToTeam(socket, team);
 
             runOnUiThread(new Runnable() {
                 @Override
@@ -149,9 +157,14 @@ public class BluetoothServerActivity extends Activity {
                     //refresh ListView
                     listAdapter.add(socket);
                     listAdapter.notifyDataSetChanged();
-                    sendDataToPairedDevice(socket, "Hello, welcome to the game!");
+                    BluetoothHelper.sendDataToPairedDevice(socket, "Hello, welcome to the game!_");
+
+                    if(ServerData.getNumOfClients() == 1) startGame.setEnabled(true);
                 }
             });
+
+
+
         }
 
         public void cancel() {
@@ -163,4 +176,5 @@ public class BluetoothServerActivity extends Activity {
             }
         }
     }
+
 }
