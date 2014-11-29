@@ -2,6 +2,8 @@ package com.pem.project.pem_app;
 
 import android.app.Activity;
 import android.app.Fragment;
+import android.app.FragmentManager;
+import android.app.FragmentTransaction;
 import android.bluetooth.BluetoothSocket;
 import android.os.Bundle;
 import android.util.Log;
@@ -9,14 +11,28 @@ import android.view.Menu;
 import android.view.MenuItem;
 
 
-public class GameActivity extends Activity implements BluetoothListener.IListenCallback{
-    private Activity gameActivity;
+public class GameActivity extends Activity implements BluetoothListener.IListenCallback, MainGameFragment.OnFragmentInteractionListener {
+    private FragmentManager fragmentManager;
+    private FragmentTransaction fragmentTransaction;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_game);
-        gameActivity = this;
+
+        fragmentManager = getFragmentManager();
+        fragmentTransaction = fragmentManager.beginTransaction();
+        // Create new fragment
+        Fragment mainFragment = new MainGameFragment();
+
+        // Replace whatever is in the fragment_container view with this fragment,
+        // and add the transaction to the back stack
+        fragmentTransaction.replace(R.id.fragment_container, mainFragment);
+        fragmentTransaction.addToBackStack(null);
+
+        // Commit the transaction
+        fragmentTransaction.commit();
 
         if(!ServerData.isServer()){
             BluetoothListener listener = new BluetoothListener(this);
@@ -26,8 +42,8 @@ public class GameActivity extends Activity implements BluetoothListener.IListenC
             BluetoothListener listener = new BluetoothListener(this);
             listener.listen(ServerData.getClientAt(0));
 
-            BluetoothListener listener2 = new BluetoothListener(this);
-            listener2.listen(ServerData.getClientAt(1));
+            /*BluetoothListener listener2 = new BluetoothListener(this);
+            listener2.listen(ServerData.getClientAt(1));*/
 
             /*BluetoothListener listener3 = new BluetoothListener(this);
             listener3.listen(ServerData.getClientAt(2)); */
@@ -61,5 +77,8 @@ public class GameActivity extends Activity implements BluetoothListener.IListenC
         Log.d("Received Message", "From " + s.getRemoteDevice().getName() + ": " + m);
     }
 
+    public void onFragmentInteraction(){
+
+    }
 
 }
