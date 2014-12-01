@@ -1,24 +1,25 @@
 package com.pem.project.pem_app;
 
 import android.app.Activity;
-import android.net.Uri;
 import android.os.Bundle;
 import android.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 
 
 /**
  * A simple {@link Fragment} subclass.
  * Activities that contain this fragment must implement the
- * {@link MainGameFragment.OnFragmentInteractionListener} interface
+ * {@link Game_Main_Fragment.OnFragmentInteractionListener} interface
  * to handle interaction events.
- * Use the {@link MainGameFragment#newInstance} factory method to
+ * Use the {@link Game_Main_Fragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class MainGameFragment extends Fragment {
+public class Game_Main_Fragment extends Fragment {
     private OnFragmentInteractionListener mListener;
+    private Button startMiniGameButton;
 
     /**
      * Use this factory method to create a new instance of
@@ -26,12 +27,12 @@ public class MainGameFragment extends Fragment {
      *
      */
 
-    public static MainGameFragment newInstance() {
-        MainGameFragment fragment = new MainGameFragment();
+    public static Game_Main_Fragment newInstance() {
+        Game_Main_Fragment fragment = new Game_Main_Fragment();
         return fragment;
     }
 
-    public MainGameFragment() {
+    public Game_Main_Fragment() {
         // Required empty public constructor
     }
 
@@ -43,8 +44,18 @@ public class MainGameFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_main_game, container, false);
+
+        View view =  inflater.inflate(R.layout.fragment_game_main, container, false);
+
+        startMiniGameButton = (Button)view.findViewById(R.id.startMiniGameButton);
+        startMiniGameButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                ((GameActivity)getActivity()).changeFragment(new Game_Rescue_Fragment());
+            }
+        });
+
+        return view;
     }
 
     // TODO: Rename method, update argument and hook method into UI event

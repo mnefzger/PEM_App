@@ -11,7 +11,9 @@ import android.view.Menu;
 import android.view.MenuItem;
 
 
-public class GameActivity extends Activity implements BluetoothListener.IListenCallback, MainGameFragment.OnFragmentInteractionListener {
+public class GameActivity extends Activity implements BluetoothListener.IListenCallback,
+        Game_Main_Fragment.OnFragmentInteractionListener,
+        Game_Rescue_Fragment.OnFragmentInteractionListener{
     private FragmentManager fragmentManager;
     private FragmentTransaction fragmentTransaction;
 
@@ -21,18 +23,7 @@ public class GameActivity extends Activity implements BluetoothListener.IListenC
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_game);
 
-        fragmentManager = getFragmentManager();
-        fragmentTransaction = fragmentManager.beginTransaction();
-        // Create new fragment
-        Fragment mainFragment = new MainGameFragment();
-
-        // Replace whatever is in the fragment_container view with this fragment,
-        // and add the transaction to the back stack
-        fragmentTransaction.replace(R.id.fragment_container, mainFragment);
-        fragmentTransaction.addToBackStack(null);
-
-        // Commit the transaction
-        fragmentTransaction.commit();
+        changeFragment(new Game_Main_Fragment());
 
         if(!ServerData.isServer()){
             BluetoothListener listener = new BluetoothListener(this);
@@ -75,6 +66,19 @@ public class GameActivity extends Activity implements BluetoothListener.IListenC
 
     public void processReceivedMessage(String m, BluetoothSocket s){
         Log.d("Received Message", "From " + s.getRemoteDevice().getName() + ": " + m);
+    }
+
+    public void changeFragment(Fragment f){
+        fragmentManager = getFragmentManager();
+        fragmentTransaction = fragmentManager.beginTransaction();
+
+        // Replace whatever is in the fragment_container view with this fragment,
+        // and add the transaction to the back stack
+        fragmentTransaction.replace(R.id.fragment_container, f);
+        fragmentTransaction.addToBackStack(null);
+
+        // Commit the transaction
+        fragmentTransaction.commit();
     }
 
     public void onFragmentInteraction(){
