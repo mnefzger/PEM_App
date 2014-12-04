@@ -8,5 +8,8 @@
     <string name="title_activity_bluetooth_client">BluetoothClientActivity</string>
     <string name="title_activity_game">GameActivity</string>
     <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="questionMark">"?"</string>
+    <string name="plus">+</string>
+    <string name="equals">=</string>
 
 </resources>

@@ -20,6 +20,7 @@ import android.widget.Button;
 public class Game_Main_Fragment extends Fragment {
     private OnFragmentInteractionListener mListener;
     private Button startMiniGameButton;
+    private Button startMiniGameButton2;
 
     /**
      * Use this factory method to create a new instance of
@@ -54,6 +55,15 @@ public class Game_Main_Fragment extends Fragment {
                 ((GameActivity)getActivity()).changeFragment(new Game_Rescue_Fragment());
             }
         });
+
+        startMiniGameButton2 = (Button)view.findViewById(R.id.startMiniGameButton2);
+        startMiniGameButton2.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                ((GameActivity)getActivity()).changeFragment(new Game_Math_Fragment());
+            }
+        });
+
 
         return view;
     }

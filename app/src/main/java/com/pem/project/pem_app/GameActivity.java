@@ -5,6 +5,7 @@ import android.app.Fragment;
 import android.app.FragmentManager;
 import android.app.FragmentTransaction;
 import android.bluetooth.BluetoothSocket;
+import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
@@ -13,7 +14,8 @@ import android.view.MenuItem;
 
 public class GameActivity extends Activity implements BluetoothListener.IListenCallback,
         Game_Main_Fragment.OnFragmentInteractionListener,
-        Game_Rescue_Fragment.OnFragmentInteractionListener{
+        Game_Rescue_Fragment.OnFragmentInteractionListener,
+        Game_Math_Fragment.OnFragmentInteractionListener{
     private FragmentManager fragmentManager;
     private FragmentTransaction fragmentTransaction;
 
@@ -84,5 +86,11 @@ public class GameActivity extends Activity implements BluetoothListener.IListenC
     public void onFragmentInteraction(){
 
     }
+
+    @Override
+    public void onFragmentInteraction(Uri uri) {
+
+    }
+
 
 }
