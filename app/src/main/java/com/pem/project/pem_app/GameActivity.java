@@ -18,6 +18,7 @@ public class GameActivity extends Activity implements BluetoothListener.IListenC
         Game_Math_Fragment.OnFragmentInteractionListener{
     private FragmentManager fragmentManager;
     private FragmentTransaction fragmentTransaction;
+    private MessageProcessor messageProcessor;
 
 
     @Override
@@ -27,6 +28,8 @@ public class GameActivity extends Activity implements BluetoothListener.IListenC
 
         changeFragment(new Game_Main_Fragment());
 
+        messageProcessor = new MessageProcessor();
+
         if(!ServerData.isServer()){
             BluetoothListener listener = new BluetoothListener(this);
             listener.listen(ServerData.getServer());
@@ -35,8 +38,8 @@ public class GameActivity extends Activity implements BluetoothListener.IListenC
             BluetoothListener listener = new BluetoothListener(this);
             listener.listen(ServerData.getClientAt(0));
 
-            /*BluetoothListener listener2 = new BluetoothListener(this);
-            listener2.listen(ServerData.getClientAt(1));*/
+            BluetoothListener listener2 = new BluetoothListener(this);
+            listener2.listen(ServerData.getClientAt(1));
 
             /*BluetoothListener listener3 = new BluetoothListener(this);
             listener3.listen(ServerData.getClientAt(2)); */
@@ -68,6 +71,7 @@ public class GameActivity extends Activity implements BluetoothListener.IListenC
 
     public void processReceivedMessage(String m, BluetoothSocket s){
         Log.d("Received Message", "From " + s.getRemoteDevice().getName() + ": " + m);
+        messageProcessor.processMessage(m, s);
     }
 
     public void changeFragment(Fragment f){
