@@ -13,6 +13,7 @@ public class MainActivity extends Activity {
 
     private Button createGameButton;
     private Button findGameButton;
+    private Button scanBtn;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -39,7 +40,12 @@ public class MainActivity extends Activity {
         });
 
     }
-
+//start QR scan
+    public void onButtonClickScanQR (View view){
+        scanBtn = (Button)findViewById(R.id.buttonQR);
+        Intent intent= new Intent(this, QRScanActivity.class);
+        startActivity(intent);
+    }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {

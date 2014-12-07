@@ -11,5 +11,6 @@
     <string name="questionMark">"?"</string>
     <string name="plus">+</string>
     <string name="equals">=</string>
+    <string name="title_activity_qrscan">QRScanActivity</string>
 
 </resources>
