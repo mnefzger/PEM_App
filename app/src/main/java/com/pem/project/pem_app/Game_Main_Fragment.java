@@ -52,8 +52,15 @@ public class Game_Main_Fragment extends Fragment {
         startMiniGameButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                ((GameActivity)getActivity()).changeFragment(Game_Rescue_Fragment.newInstance("rope"));
-                //BluetoothHelper.sendDataToPairedDevice(, "START_Rescue_pit");
+                ((GameActivity)getActivity()).changeFragment(Game_Rescue_Fragment.newInstance("rope"), "RESCUE");
+
+                if (!ServerData.isServer()){
+                    //send to server
+                    BluetoothHelper.sendDataToPairedDevice(ServerData.getServer(), "START_Rescue_ropeWait_");
+                } else {
+                    // send to partner of server
+                    BluetoothHelper.sendDataToPairedDevice(ServerData.getTeamMembers(1).get(0), "START_Rescue_ropeWait_");
+                }
             }
         });
 
@@ -61,7 +68,7 @@ public class Game_Main_Fragment extends Fragment {
         startMiniGameButton2.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                ((GameActivity)getActivity()).changeFragment(Game_Math_Fragment.newInstance("",""));
+                ((GameActivity)getActivity()).changeFragment(Game_Math_Fragment.newInstance("",""), "MATH");
             }
         });
 

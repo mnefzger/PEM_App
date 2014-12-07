@@ -16,8 +16,6 @@ import android.hardware.*;
 import android.widget.TextView;
 
 
-import com.ubhave.sensormanager.SensorDataListener;
-
 import org.w3c.dom.Text;
 
 import java.util.ArrayList;
@@ -37,6 +35,11 @@ public class Game_Rescue_Fragment extends Fragment implements SensorHandler.Sens
         private OnFragmentInteractionListener mListener;
         private SensorManager sm;
         TextView distanceText;
+        private FrameLayout info;
+        private FrameLayout info2;
+        private FrameLayout rescue;
+        private FrameLayout rescue2;
+
         //differentiate players' parts
         static final String param1 = "param1";
         String mode;
@@ -73,9 +76,10 @@ public class Game_Rescue_Fragment extends Fragment implements SensorHandler.Sens
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View v =  inflater.inflate(R.layout.fragment_game_rescue, container, false);
-        final FrameLayout info = (FrameLayout)v.findViewById(R.id.theRescueIntroText);
-        final FrameLayout info2 = (FrameLayout)v.findViewById(R.id.theRescueIntroText2);
-        final FrameLayout rescue = (FrameLayout)v.findViewById(R.id.theRescueLayout);
+        info = (FrameLayout)v.findViewById(R.id.theRescueIntroText);
+        info2 = (FrameLayout)v.findViewById(R.id.theRescueIntroText2);
+        rescue = (FrameLayout)v.findViewById(R.id.theRescueLayout);
+        rescue2 = (FrameLayout)v.findViewById(R.id.theRescueLayout2);
 
 
         if(!mode.equals("rope")){
@@ -85,7 +89,7 @@ public class Game_Rescue_Fragment extends Fragment implements SensorHandler.Sens
             info2.setVisibility(View.INVISIBLE);
         }
 
-            Button startTheRescue = (Button)v.findViewById(R.id.startTheRescue);
+        Button startTheRescue = (Button)v.findViewById(R.id.startTheRescue);
         startTheRescue.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -132,6 +136,16 @@ public class Game_Rescue_Fragment extends Fragment implements SensorHandler.Sens
             // send to partner of server
             BluetoothHelper.sendDataToPairedDevice(ServerData.getTeamMembers(1).get(0), "GAMEDATA_Rescue_ropeThrown_");
         }
+    }
+
+    public void ropeIsThrown(){
+        getActivity().runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                info2.setVisibility(View.INVISIBLE);
+                rescue2.setVisibility(View.VISIBLE);
+            }
+        });
     }
 
 

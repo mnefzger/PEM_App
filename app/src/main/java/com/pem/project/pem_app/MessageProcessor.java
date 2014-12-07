@@ -14,10 +14,27 @@ public class MessageProcessor {
         String miniGame = messageParameters[1];
         String extra = messageParameters[2];
 
+        //check what kind of message we got [START, INFO, GAMEDATA]
         if(messageArt.equals("START")){
-            return "START";
+            //default
+            if(miniGame.equals("null"))  return "START";
+
+            if(miniGame.equals("Rescue")){
+                if(ServerData.isServer()){
+                    //check if socket belongs to server's team
+                    if(ServerData.getTeam(socket) == 1){
+                        return extra;
+                    } else {
+                        BluetoothHelper.sendDataToPairedDevice(ServerData.getOtherTeamMember(socket), "START_Rescue_ropeWait_");
+                    }
+                } else {
+                    return extra;
+                }
+            }
         } else if(messageArt.equals("INFO")){
+
             return extra;
+
         } else if(messageArt.equals("GAMEDATA")){
 
             if(miniGame.equals("Rescue")){

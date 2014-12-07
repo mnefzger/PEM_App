@@ -30,7 +30,7 @@ public class GameActivity extends Activity implements BluetoothListener.IListenC
         messageProcessor = new MessageProcessor();
         fragmentManager = getFragmentManager();
 
-        changeFragment(new Game_Main_Fragment());
+        changeFragment(new Game_Main_Fragment(), "MAIN");
 
         if(!ServerData.isServer()){
             BluetoothListener listener = new BluetoothListener(this);
@@ -75,19 +75,21 @@ public class GameActivity extends Activity implements BluetoothListener.IListenC
         Log.d("Message", m);
         String processed = messageProcessor.processMessage(m, s);
         Log.d("Received Processed Message", processed);
-        if(processed.equals("ropeThrown")){
-            //to do
-            this.changeFragment(Game_Rescue_Fragment.newInstance("pit"));
+        if(processed.equals("ropeWait")){
+            this.changeFragment(Game_Rescue_Fragment.newInstance("pit"), "RESCUE");
+        } else if(processed.equals("ropeThrown")){
+            Game_Rescue_Fragment fragment = (Game_Rescue_Fragment)fragmentManager.findFragmentByTag("RESCUE");
+            fragment.ropeIsThrown();
         }
     }
 
-    public void changeFragment(Fragment f){
+    public void changeFragment(Fragment f, String tag){
 
         fragmentTransaction = fragmentManager.beginTransaction();
 
         // Replace whatever is in the fragment_container view with this fragment,
         // and add the transaction to the back stack
-        fragmentTransaction.replace(R.id.fragment_container, f);
+        fragmentTransaction.replace(R.id.fragment_container, f, tag);
         fragmentTransaction.addToBackStack(null);
 
         // Commit the transaction

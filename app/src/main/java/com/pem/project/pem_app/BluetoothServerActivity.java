@@ -47,7 +47,7 @@ public class BluetoothServerActivity extends Activity {
             @Override
             public void onClick(View view) {
                 // Tell Clients to start the game
-                for(BluetoothSocket client : ServerData.getClients()) BluetoothHelper.sendDataToPairedDevice(client, "START_Null_Null_");
+                for(BluetoothSocket client : ServerData.getClients()) BluetoothHelper.sendDataToPairedDevice(client, "START_null_null_");
 
                 Intent intent = new Intent(getApplicationContext(), GameActivity.class);
                 startActivity(intent);
