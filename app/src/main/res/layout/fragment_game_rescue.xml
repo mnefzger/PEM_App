@@ -15,7 +15,7 @@
         android:layout_gravity="left|bottom"
         android:id="@+id/theRescueLayout2"
         android:visibility="invisible"
-        android:alpha="0"
+        android:alpha="1"
         android:padding="10dp">
 
         <TextView
@@ -44,7 +44,7 @@
         android:layout_row="1"
         android:layout_column="1"
         android:padding="10dp"
-        android:alpha="0">
+        android:alpha="1">
 
 
         <TextView android:layout_width="fill_parent" android:layout_height="wrap_content"
