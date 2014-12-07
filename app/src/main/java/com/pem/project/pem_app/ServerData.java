@@ -38,6 +38,21 @@ public class ServerData {
         else return 0;
     }
 
+    public static ArrayList<BluetoothSocket> getTeamMembers(int team){
+        if(team == 1) return team1;
+        else return team2;
+    }
+
+    public static BluetoothSocket getOtherTeamMember(BluetoothSocket s){
+        int team = getTeam(s);
+        if(team == 1){
+            return team1.get(0);
+        }else{
+            BluetoothSocket member = (team2.get(0) == s)? team2.get(1) : team2.get(0);
+            return member;
+        }
+    }
+
     //only the server calls this method
     public static void markLocalAsServer(){
         isServer = true;

@@ -1,6 +1,7 @@
 package com.pem.project.pem_app;
 
 import android.app.Activity;
+import android.content.Context;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -9,11 +10,15 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.FrameLayout;
+import android.hardware.*;
+import android.widget.TextView;
 
-import com.ubhave.sensormanager.ESException;
-import com.ubhave.sensormanager.data.SensorData;
-import com.ubhave.sensormanager.data.pull.AbstractMotionData;
-import com.ubhave.sensormanager.sensors.SensorUtils;
+
+import com.ubhave.sensormanager.SensorDataListener;
+
+import org.w3c.dom.Text;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -28,9 +33,13 @@ import java.util.Objects;
  * Use the {@link Game_Rescue_Fragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class Game_Rescue_Fragment extends Fragment {
+public class Game_Rescue_Fragment extends Fragment implements SensorHandler.SensorCallback{
         private OnFragmentInteractionListener mListener;
         private SensorManager sm;
+        TextView distanceText;
+        //differentiate players' parts
+        static final String param1 = "param1";
+        String mode;
 
     /**
      * Use this factory method to create a new instance of
@@ -38,8 +47,11 @@ public class Game_Rescue_Fragment extends Fragment {
      *
      */
     // TODO: Rename and change types and number of parameters
-    public static Game_Rescue_Fragment newInstance() {
+    public static Game_Rescue_Fragment newInstance(String m) {
         Game_Rescue_Fragment fragment = new Game_Rescue_Fragment();
+        Bundle args = new Bundle();
+        args.putString(param1, m);
+        fragment.setArguments(args);
         return fragment;
     }
 
@@ -50,14 +62,42 @@ public class Game_Rescue_Fragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        startSensing();
+        if (getArguments() != null) {
+            mode = getArguments().getString(param1);
+        }
+
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_game_rescue, container, false);
+        View v =  inflater.inflate(R.layout.fragment_game_rescue, container, false);
+        final FrameLayout info = (FrameLayout)v.findViewById(R.id.theRescueIntroText);
+        final FrameLayout info2 = (FrameLayout)v.findViewById(R.id.theRescueIntroText2);
+        final FrameLayout rescue = (FrameLayout)v.findViewById(R.id.theRescueLayout);
+
+
+        if(!mode.equals("rope")){
+            info.setVisibility(View.INVISIBLE);
+            rescue.setVisibility(View.INVISIBLE);
+        } else{
+            info2.setVisibility(View.INVISIBLE);
+        }
+
+            Button startTheRescue = (Button)v.findViewById(R.id.startTheRescue);
+        startTheRescue.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                info.setVisibility(View.GONE);
+                rescue.setVisibility(View.VISIBLE);
+                startSensing();
+            }
+        });
+
+        distanceText = (TextView)v.findViewById(R.id.distanceText);
+
+        return v;
     }
 
     @Override
@@ -78,83 +118,20 @@ public class Game_Rescue_Fragment extends Fragment {
     }
 
     public void startSensing(){
-       sm = new SensorManager(getActivity().getApplicationContext());
-       new SensingTask().execute();
+        new SensorHandler(this, getActivity().getApplicationContext());
     }
 
-    private class SensingTask extends AsyncTask<SensorManager, SensorData, SensorData> {
-
-        @Override
-        protected SensorData doInBackground(SensorManager... s) {
-            SensorData data  = null;
-            try{
-                data = sm.getDataFromSensor(5001);
-                int sensorType = data.getSensorType();
-                Log.d("DATA", "Received from: " + SensorUtils.getSensorName(sensorType));
-
-                //get values out of Data object
-                AbstractMotionData abstract_data = (AbstractMotionData) data;
-                ArrayList<float[]> readings = abstract_data.getSensorReadings();
-                ArrayList<Float> xs = new ArrayList<Float>();
-                ArrayList<Float> ys = new ArrayList<Float>();
-                ArrayList<Float> zs = new ArrayList<Float>();
-
-                for (int i = 0; i < readings.size(); i++)
-                {
-                    float[] sample = readings.get(i);
-                    xs.add(sample[0]);
-                    ys.add(sample[1]);
-                    zs.add(sample[2]);
-                }
-
-                Log.d("Distance" , calcDistance(xs,ys,zs) + " Meter");
-            } catch(ESException e){
-                //fail
-            }
-            return data;
+    @Override
+    public void dataSensed(double[] data) {
+        distanceText.setText("You have thrown the rope\n" + data[0] + " meters!\n\n" +
+                "Your partner can now begin to climb out..." );
+        if (!ServerData.isServer()){
+            //send to server
+            BluetoothHelper.sendDataToPairedDevice(ServerData.getServer(), "GAMEDATA_Rescue_ropeThrown_");
+        } else {
+            // send to partner of server
+            BluetoothHelper.sendDataToPairedDevice(ServerData.getTeamMembers(1).get(0), "GAMEDATA_Rescue_ropeThrown_");
         }
-
-        protected void onPostExecute(Long result) {
-
-        }
-    }
-
-    public float getMax(ArrayList<Float> al){
-        float max = 0;
-        for(int i = 0; i< al.size(); i++){
-            max = (al.get(i) > max)? al.get(i) : max;
-        }
-        return max;
-    }
-
-    public double calcDistance(ArrayList<Float> x, ArrayList<Float> y, ArrayList<Float> z){
-        Log.d("Max X",x + "");
-        Log.d("Max Y",y + "");
-        Log.d("Max Z",z + "");
-        float distance = 0;
-        float dt = x.size()/x.size();
-        float dx=0.0f;
-        float vx=0.0f;
-        for (int i=1; i<x.size(); i++)
-        {
-            vx+=(x.get(i-1) + x.get(i))/2.0f*dt;
-            dx+=vx*dt;
-        }
-        float dy=0.0f;
-        float vy=0.0f;
-        for (int i=1; i<y.size(); i++)
-        {
-            vy+=(y.get(i-1) + y.get(i))/2.0f*dt;
-            dy+=vy*dt;
-        }
-        float dz=0.0f;
-        float vz=0.0f;
-        for (int i=1; i<z.size(); i++)
-        {
-            vz+=(z.get(i-1) + z.get(i))/2.0f*dt;
-            dz+=vz*dt;
-        }
-        return Math.sqrt(dx*dx + dy*dy + dz*dz);
     }
 
 

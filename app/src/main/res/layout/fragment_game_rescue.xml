@@ -1,12 +1,99 @@
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools" android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="com.pem.project.pem_app.Game_Rescue_Fragment">
+    tools:context="com.pem.project.pem_app.Game_Rescue_Fragment"
+    android:background="#ffcae8c5"
+    android:rowCount="5"
+    android:columnCount="6"
+    android:id="@+id/rescueFragment"
+    android:tag="rescueFragment">
 
-    <!-- TODO: Update blank fragment layout -->
-    <TextView android:layout_width="247dp" android:layout_height="136dp"
-        android:text="hallo"
+    <FrameLayout
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:layout_gravity="left|bottom"
+        android:id="@+id/theRescueLayout"
+        android:visibility="invisible"
+        android:alpha="1">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceLarge"
+            android:text="Throw the rope!"
+            android:id="@+id/distanceText"
+            android:layout_gravity="center"
+            android:textColor="@color/black" />
+
+    </FrameLayout>
+
+    <FrameLayout
+        android:layout_width="fill_parent"
+        android:layout_height="608dp"
+        android:id="@+id/theRescueIntroText2"
+        android:layout_gravity="center_horizontal|bottom"
+        android:alpha="1">
+
+        <TextView
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:text="You fell into a pit!\nLuckily, your partner came to your rescue.\nYou will have to wait until your partner throws the rope so you can climb out."
+            android:id="@+id/textView4"
+            android:layout_gravity="center_horizontal|top"
+            android:textSize="25dp"
+            android:textColor="@color/black"
+            android:gravity="center"/>
+
+    </FrameLayout>
+
+
+    <FrameLayout
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
         android:layout_gravity="center"
-        android:id="@+id/sensorText"/>
+        android:id="@+id/theRescueIntroText"
+        android:layout_row="1"
+        android:layout_column="1"
+        android:alpha="1">
+
+
+        <TextView android:layout_width="fill_parent" android:layout_height="wrap_content"
+            android:text="Your Partner has fallen into a pit trap!\nOnly you can help him out.\n\nFirstly, you have to throw the rope so he can climb out.\n\nTo throw the rope, simulate the throwing motion with your phone."
+            android:layout_gravity="center_horizontal|top"
+            android:gravity="center"
+            android:id="@+id/sensorText"
+            android:textSize="20dp"
+            android:layout_marginTop="85dp"
+            android:autoText="false"
+            android:textColor="@color/black"/>
+
+        <ImageView
+                android:layout_width="156dp"
+                android:layout_height="225dp"
+                android:id="@+id/imageView"
+                android:src="@drawable/smallphone"
+            android:layout_gravity="left|bottom">
+        </ImageView>
+
+        <Button
+            android:layout_width="125dp"
+            android:layout_height="wrap_content"
+            android:text="Start"
+            android:id="@+id/startTheRescue"
+            android:layout_gravity="right|bottom" />
+
+
+    </FrameLayout>
+
+    <TextView
+        android:layout_width="fill_parent"
+        android:layout_height="72dp"
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:text="The Rescue"
+        android:id="@+id/textView3"
+        android:layout_gravity="center_horizontal|top"
+        android:gravity="center"
+        android:background="#ff38b95d"
+        android:textSize="35dp"/>
 
 </FrameLayout>

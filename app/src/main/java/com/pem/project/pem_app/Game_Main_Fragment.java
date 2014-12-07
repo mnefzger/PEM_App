@@ -52,7 +52,8 @@ public class Game_Main_Fragment extends Fragment {
         startMiniGameButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                ((GameActivity)getActivity()).changeFragment(new Game_Rescue_Fragment());
+                ((GameActivity)getActivity()).changeFragment(Game_Rescue_Fragment.newInstance("rope"));
+                //BluetoothHelper.sendDataToPairedDevice(, "START_Rescue_pit");
             }
         });
 
@@ -60,7 +61,7 @@ public class Game_Main_Fragment extends Fragment {
         startMiniGameButton2.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                ((GameActivity)getActivity()).changeFragment(new Game_Math_Fragment());
+                ((GameActivity)getActivity()).changeFragment(Game_Math_Fragment.newInstance("",""));
             }
         });
 
@@ -68,12 +69,6 @@ public class Game_Main_Fragment extends Fragment {
         return view;
     }
 
-    // TODO: Rename method, update argument and hook method into UI event
-    public void onButtonPressed() {
-        if (mListener != null) {
-            mListener.onFragmentInteraction();
-        }
-    }
 
     @Override
     public void onAttach(Activity activity) {

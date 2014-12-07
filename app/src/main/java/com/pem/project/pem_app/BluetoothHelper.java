@@ -21,5 +21,7 @@ public class BluetoothHelper {
         } catch (IOException e) {
             Log.e("BluetoothSend", "Exception during write", e);
         }
+
+        Log.d("Sent to: ", socket.getRemoteDevice().getName() + ", " + message);
     }
 }

@@ -15,7 +15,8 @@ import android.view.MenuItem;
 public class GameActivity extends Activity implements BluetoothListener.IListenCallback,
         Game_Main_Fragment.OnFragmentInteractionListener,
         Game_Rescue_Fragment.OnFragmentInteractionListener,
-        Game_Math_Fragment.OnFragmentInteractionListener{
+        Game_Math_Fragment.OnFragmentInteractionListener
+        {
     private FragmentManager fragmentManager;
     private FragmentTransaction fragmentTransaction;
     private MessageProcessor messageProcessor;
@@ -26,20 +27,21 @@ public class GameActivity extends Activity implements BluetoothListener.IListenC
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_game);
 
-        changeFragment(new Game_Main_Fragment());
-
         messageProcessor = new MessageProcessor();
+        fragmentManager = getFragmentManager();
+
+        changeFragment(new Game_Main_Fragment());
 
         if(!ServerData.isServer()){
             BluetoothListener listener = new BluetoothListener(this);
             listener.listen(ServerData.getServer());
-            BluetoothHelper.sendDataToPairedDevice(ServerData.getServer(), "Hallo Server, Client checking in!_");
+            BluetoothHelper.sendDataToPairedDevice(ServerData.getServer(), "INFO_null_Hallo Server, Client checking in!_");
         } else {
             BluetoothListener listener = new BluetoothListener(this);
             listener.listen(ServerData.getClientAt(0));
 
-            BluetoothListener listener2 = new BluetoothListener(this);
-            listener2.listen(ServerData.getClientAt(1));
+            /*BluetoothListener listener2 = new BluetoothListener(this);
+            listener2.listen(ServerData.getClientAt(1));*/
 
             /*BluetoothListener listener3 = new BluetoothListener(this);
             listener3.listen(ServerData.getClientAt(2)); */
@@ -70,12 +72,17 @@ public class GameActivity extends Activity implements BluetoothListener.IListenC
     }
 
     public void processReceivedMessage(String m, BluetoothSocket s){
-        Log.d("Received Message", "From " + s.getRemoteDevice().getName() + ": " + m);
-        messageProcessor.processMessage(m, s);
+        Log.d("Message", m);
+        String processed = messageProcessor.processMessage(m, s);
+        Log.d("Received Processed Message", processed);
+        if(processed.equals("ropeThrown")){
+            //to do
+            this.changeFragment(Game_Rescue_Fragment.newInstance("pit"));
+        }
     }
 
     public void changeFragment(Fragment f){
-        fragmentManager = getFragmentManager();
+
         fragmentTransaction = fragmentManager.beginTransaction();
 
         // Replace whatever is in the fragment_container view with this fragment,
@@ -95,6 +102,4 @@ public class GameActivity extends Activity implements BluetoothListener.IListenC
     public void onFragmentInteraction(Uri uri) {
 
     }
-
-
 }

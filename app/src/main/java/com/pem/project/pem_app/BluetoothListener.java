@@ -19,6 +19,8 @@ public class BluetoothListener {
     }
 
     private IListenCallback callback;
+    Thread messageListener;
+    private boolean listening = true;
 
     public BluetoothListener(Activity activity){
         callback = (IListenCallback) activity;
@@ -26,7 +28,7 @@ public class BluetoothListener {
 
     public void listen(BluetoothSocket socket){
         BluetoothSocketListener bsl = new BluetoothSocketListener(socket);
-        Thread messageListener = new Thread(bsl);
+        messageListener = new Thread(bsl);
         messageListener.start();
     }
 
@@ -42,32 +44,44 @@ public class BluetoothListener {
         }
 
         public void run() {
-            int bufferSize = 1024;
-            byte[] buffer = new byte[bufferSize];
-            try {
-                InputStream instream = socket.getInputStream();
-                int bytesRead = -1;
-                String message = "";
-                while (true) {
-                    message = "";
-                    bytesRead = instream.read(buffer);
-                    if (bytesRead != -1) {
-                        while ((bytesRead==bufferSize)&&(buffer[bufferSize-1] != 0)) {
-                            message = message + new String(buffer, 0, bytesRead);
-                            bytesRead = instream.read(buffer);
-                        }
-                        message = message + new String(buffer, 0, bytesRead - 1);
-                        processMessage(message, socket);
-                        socket.getInputStream();
-                    }
-                }
-            } catch (IOException e) {
-                Log.d("BLUETOOTH_COMMS", e.getMessage());
-            }
+           while(listening) {
+               int bufferSize = 1024;
+               byte[] buffer = new byte[bufferSize];
+               try {
+                   InputStream instream = socket.getInputStream();
+                   int bytesRead = -1;
+                   String message = "";
+                   while (true) {
+                       message = "";
+                       bytesRead = instream.read(buffer);
+                       if (bytesRead != -1) {
+                           while ((bytesRead == bufferSize) && (buffer[bufferSize - 1] != 0)) {
+                               message = message + new String(buffer, 0, bytesRead);
+                               bytesRead = instream.read(buffer);
+                           }
+                           message = message + new String(buffer, 0, bytesRead - 1);
+                           processMessage(message, socket);
+                           socket.getInputStream();
+                       }
+                   }
+               } catch (IOException e) {
+                   Log.d("BLUETOOTH_COMMS", e.getMessage());
+               }
+           }
+        }
+    }
+
+    public void destroy(){
+        listening = false;
+        try{
+            messageListener.join();
+        } catch (Exception e){
+            Log.d("Destroy", e.toString());
         }
     }
 
     public void processMessage(String m, BluetoothSocket socket){
+           Log.d("Received", m);
            callback.processReceivedMessage(m, socket);
     }
 }

@@ -22,6 +22,7 @@ public class BluetoothClientActivity extends Activity implements BluetoothListen
     private BroadcastReceiver mReceiver;
     private TextView text;
     Activity clientActivity;
+    private BluetoothListener listener;
 
 
     @Override
@@ -88,18 +89,20 @@ public class BluetoothClientActivity extends Activity implements BluetoothListen
     }
 
     public void processReceivedMessage(String m, BluetoothSocket s){
-        final String message = m;
         final BluetoothSocket socket = s;
+        Log.d("BLABLAB", "");
+        final String processed = new MessageProcessor().processMessage(m, socket);
         runOnUiThread(new Runnable() {
             @Override
             public void run() {
-                text.setText("From " + socket.getRemoteDevice().getName() + ": " + message);
+                text.setText("From " + socket.getRemoteDevice().getName() + ": " + processed);
             }
         });
 
-        if(m.equals("START")){
+        if(processed.equals("START")){
             Intent intent = new Intent(getApplicationContext(), GameActivity.class);
             startActivity(intent);
+            listener.destroy();
         }
     }
 
@@ -132,7 +135,7 @@ public class BluetoothClientActivity extends Activity implements BluetoothListen
                 mmSocket.connect();
                 unregisterReceiver(mReceiver);
                 ServerData.markRemoteAsServer(mmSocket);
-                BluetoothListener listener = new BluetoothListener(clientActivity);
+                listener = new BluetoothListener(clientActivity);
                 listener.listen(mmSocket);
             } catch (IOException connectException) {
                 // Unable to connect; close the socket and get out
@@ -150,6 +153,11 @@ public class BluetoothClientActivity extends Activity implements BluetoothListen
                 mmSocket.close();
             } catch (IOException e) { }
         }
+    }
+
+    @Override
+    public void onStop(){
+        super.onStop();
     }
 
 
