@@ -74,3 +74,7 @@ $RECYCLE.BIN/
 *.msp
 .idea/inspectionProfiles/profiles_settings.xml
 .idea/inspectionProfiles/Project_Default.xml
+
+app/app.iml
+.idea/modules.xml
+.idea/workspace.xml
