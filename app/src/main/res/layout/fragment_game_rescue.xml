@@ -11,29 +11,16 @@
 
     <FrameLayout
         android:layout_width="fill_parent"
-        android:layout_height="521dp"
+        android:layout_height="fill_parent"
         android:layout_gravity="left|bottom"
         android:id="@+id/theRescueLayout2"
         android:visibility="invisible"
         android:alpha="1"
-        android:padding="10dp">
+        android:padding="10dp"
+        android:background="@drawable/pit_rope">
 
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textAppearance="?android:attr/textAppearanceLarge"
-            android:text="Your partner managed to throw the rope down your pit!\nYou begin climbing out...\n\nBut as you climb, rocks are getting loose and are falling down on you!\nSwing on the rope to avoid being hit!"
-            android:id="@+id/textView5"
-            android:layout_gravity="center|top"
-            android:gravity="center"
-            android:textColor="@color/black" />
 
-        <Button
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="New Button"
-            android:id="@+id/button"
-            android:layout_gravity="right|bottom" />
+
     </FrameLayout>
 
     <FrameLayout
@@ -109,11 +96,19 @@
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
             android:text="You fell into a pit!\nLuckily, your partner came to your rescue.\nYou will have to wait until your partner throws the rope so you can climb out."
-            android:id="@+id/textView4"
+            android:id="@+id/pitText"
             android:layout_gravity="center_horizontal|top"
             android:textSize="25dp"
             android:textColor="@color/black"
             android:gravity="center"/>
+
+        <Button
+            android:layout_width="96dp"
+            android:layout_height="wrap_content"
+            android:text="Start"
+            android:id="@+id/startTheRescue2"
+            android:layout_gravity="right|bottom"
+            android:visibility="invisible"/>
 
     </FrameLayout>
 
