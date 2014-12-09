@@ -10,16 +10,6 @@
     android:background="@drawable/start_bg">
 
     <Button
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Scan QR-Code"
-        android:id="@+id/buttonQR"
-        android:layout_centerVertical="true"
-        android:layout_centerHorizontal="true"
-        android:onClick="onButtonClickScanQR" />
-
-
-    <Button
         android:layout_width="fill_parent"
         android:layout_height="65dp"
         android:text="Find Game"

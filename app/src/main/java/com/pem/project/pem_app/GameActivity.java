@@ -5,11 +5,13 @@ import android.app.Fragment;
 import android.app.FragmentManager;
 import android.app.FragmentTransaction;
 import android.bluetooth.BluetoothSocket;
+import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
 
@@ -41,6 +43,14 @@ public class GameActivity extends Activity implements BluetoothListener.IListenC
 
         Button qrcode = (Button) findViewById(R.id.scanQRButton);
         Button fight = (Button) findViewById(R.id.fightButton);
+
+        qrcode.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent= new Intent(GameActivity.this, QRScanActivity.class);
+                startActivity(intent);
+            }
+        });
 
         ImageView team1_coin = (ImageView) findViewById(R.id.team1_coin);
         ImageView team2_coin = (ImageView) findViewById(R.id.team2_coin);
