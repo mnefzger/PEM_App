@@ -294,50 +294,50 @@ public class Game_Math_Fragment extends Fragment implements OnClickListener {
 
             if (field == 0){
 
-                if (player == 1) {
-                    if (!ServerData.isServer()) {
-                        //send to server
-                        BluetoothHelper.sendDataToPairedDevice(ServerData.getServer(), "GAMEDATA_Math_result1:" + butPressed.getText() + "_");
-                    } else {
-                        // send to partner of server
-                        BluetoothHelper.sendDataToPairedDevice(ServerData.getTeamMembers(1).get(0), "GAMEDATA_Math_result1:" + butPressed.getText() + "_");
-                    }
 
+                if (!ServerData.isServer()) {
+                    //send to server
+                    BluetoothHelper.sendDataToPairedDevice(ServerData.getServer(), "GAMEDATA_Math_result1:" + butPressed.getText() + "_");
+                } else {
+                    // send to partner of server
+                    BluetoothHelper.sendDataToPairedDevice(ServerData.getTeamMembers(1).get(0), "GAMEDATA_Math_result1:" + butPressed.getText() + "_");
                 }
+
+
             } else if (field == 1) {
-                if (player == 1) butPressed.setBackgroundColor(0xFFFFFFFF);
-                if (player == 2) butPressed.setBackgroundColor(0xFFFFFFFF);
+                if (!ServerData.isServer()) {
+                    //send to server
+                    BluetoothHelper.sendDataToPairedDevice(ServerData.getServer(), "GAMEDATA_Math_result2:" + butPressed.getText() + "_");
+                } else {
+                    // send to partner of server
+                    BluetoothHelper.sendDataToPairedDevice(ServerData.getTeamMembers(1).get(0), "GAMEDATA_Math_result2:" + butPressed.getText() + "_");
+                }
 
             }
-
-
-
-
 
         }
 
 
-        public void setResult(String processed){
+        public void setResult(final String processed){
 
-            TextView result1;
-            TextView result2;
+            getActivity().runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    TextView result1;
+                    TextView result2;
+
+                    result1 = (TextView) rootView.findViewById(R.id.result1);
+                    result2 = (TextView) rootView.findViewById(R.id.result2);
+
+                    if (processed.startsWith("result1"))
+                     result1.setText(processed.substring(8));
+                     else if (processed.startsWith("result2"))
+                     result2.setText(processed.substring(8));
+
+                }
+            });
 
 
-            result1 = (TextView) rootView.findViewById(R.id.result1);
-            result2 = (TextView) rootView.findViewById(R.id.result2);
-
-
-            //System.out.println(processed.substring(8));
-
-       /**     if (processed.startsWith("result1"))
-                result1.setText(processed.substring(8));
-            else if (processed.startsWith("result2"))
-                result2.setText(processed.substring(8));**/
-
-            if (processed.startsWith("result1"))
-                result1.setText("test");
-            else if (processed.startsWith("result2"))
-                result2.setText("test");
 
         }
 

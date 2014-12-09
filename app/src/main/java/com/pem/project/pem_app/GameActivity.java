@@ -41,29 +41,7 @@ public class GameActivity extends Activity implements BluetoothListener.IListenC
         changeFragment(new Game_Main_Fragment(), "MAIN");
 
 
-        Button qrcode = (Button) findViewById(R.id.scanQRButton);
-        Button fight = (Button) findViewById(R.id.fightButton);
 
-        qrcode.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent intent= new Intent(GameActivity.this, QRScanActivity.class);
-                startActivity(intent);
-            }
-        });
-
-        ImageView team1_coin = (ImageView) findViewById(R.id.team1_coin);
-        ImageView team2_coin = (ImageView) findViewById(R.id.team2_coin);
-
-        ImageView team1_keyyellow = (ImageView) findViewById(R.id.team1_keyyellow);
-        ImageView team1_keyred = (ImageView) findViewById(R.id.team1_keyred);
-        ImageView team1_keygreen = (ImageView) findViewById(R.id.team1_keygreen);
-        ImageView team1_keyblue = (ImageView) findViewById(R.id.team1_keyblue);
-
-        ImageView team2_keyyellow = (ImageView) findViewById(R.id.team2_keyyellow);
-        ImageView team2_keyred = (ImageView) findViewById(R.id.team2_keyred);
-        ImageView team2_keygreen = (ImageView) findViewById(R.id.team2_keygreen);
-        ImageView team2_keyblue = (ImageView) findViewById(R.id.team2_keyblue);
 
 
         if(!ServerData.isServer()){
@@ -114,6 +92,13 @@ public class GameActivity extends Activity implements BluetoothListener.IListenC
         } else if(processed.equals("ropeThrown")){
             Game_Rescue_Fragment fragment = (Game_Rescue_Fragment)fragmentManager.findFragmentByTag("RESCUE");
             fragment.ropeIsThrown();
+        }
+        if(processed.equals("Player2")){
+            this.changeFragment(Game_Math_Fragment.newInstance("Player2", ""), "MATH");
+        } else if(processed.startsWith("result")){
+            Game_Math_Fragment fragment = (Game_Math_Fragment)fragmentManager.findFragmentByTag("MATH");
+            fragment.setResult(processed);
+
         }
     }
 

@@ -1,17 +1,25 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    tools:context="com.pem.project.pem_app.GameActivity"
-    android:background="#ffa2d39c">
+xmlns:tools="http://schemas.android.com/tools"
+android:layout_width="match_parent"
+android:layout_height="match_parent"
+android:background="@drawable/game_bg"
+android:paddingBottom="@dimen/activity_vertical_margin"
+android:paddingLeft="@dimen/activity_horizontal_margin"
+android:paddingRight="@dimen/activity_horizontal_margin"
+android:paddingTop="@dimen/activity_vertical_margin"
+tools:context="com.pem.project.pem_app.GameActivity">
 
-    <TextView android:text="Main Screen" android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="98dp"
-        android:textColor="@color/black"
-        android:layout_below="@+id/textView3"
-        android:layout_centerHorizontal="true" />
-
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/teamStates"
+    android:layout_width="fill_parent"
+    android:layout_height="wrap_content"
+    android:layout_above="@+id/gameButtons"
+    android:layout_alignParentLeft="true"
+    android:layout_alignParentStart="true"
+    android:layout_alignParentTop="true"
+    android:orientation="vertical"
+    android:paddingBottom="6dip"
+    android:paddingTop="4dip">
     <Button
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -29,14 +37,137 @@
         android:layout_alignParentBottom="true"
         android:layout_centerHorizontal="true" />
 
-    <TextView
+    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        android:id="@+id/team1_state"
         android:layout_width="fill_parent"
-        android:layout_height="72dp"
-        android:textAppearance="?android:attr/textAppearanceLarge"
-        android:text="Jungle Quest"
-        android:id="@+id/textView3"
-        android:layout_gravity="center_horizontal|top"
-        android:gravity="center"
-        android:background="#ff38b95d"
-        android:textSize="35dp"/>
+        android:layout_height="wrap_content"
+        android:layout_weight="0.5"
+        android:background="#cc000d43"
+        android:paddingBottom="6dip"
+        android:paddingTop="4dip">
+
+        <ImageView
+            android:id="@+id/team1_coin"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="0.2"
+            android:src="@drawable/coin_left" />
+
+        <ImageView
+            android:id="@+id/team1_keyyellow"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="0.2"
+            android:src="@drawable/key_yellow_no" />
+
+        <ImageView
+            android:id="@+id/team1_keyred"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="0.2"
+            android:src="@drawable/key_red_no" />
+
+        <ImageView
+            android:id="@+id/team1_keygreen"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="0.2"
+            android:src="@drawable/key_green_no" />
+
+        <ImageView
+            android:id="@+id/team1_keyblue"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="0.2"
+            android:src="@drawable/key_blue_no" />
+    </LinearLayout>
+
+    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        android:id="@+id/team2_state"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_above="@id/gameButtons"
+        android:layout_below="@id/team1_state"
+        android:layout_weight="0.5"
+        android:background="#cc480000"
+        android:paddingBottom="6dip"
+        android:paddingTop="4dip">
+
+        <ImageView
+            android:id="@+id/team2_coin"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="0.2"
+            android:src="@drawable/coin_right" />
+
+        <ImageView
+            android:id="@+id/team2_keyyellow"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="0.2"
+            android:src="@drawable/key_yellow_no" />
+
+        <ImageView
+            android:id="@+id/team2_keyred"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="0.2"
+            android:src="@drawable/key_red_no" />
+
+        <ImageView
+            android:id="@+id/team2_keygreen"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="0.2"
+            android:src="@drawable/key_green_no" />
+
+        <ImageView
+            android:id="@+id/team2_keyblue"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="0.2"
+            android:src="@drawable/key_blue_no" />
+    </LinearLayout>
+</LinearLayout>
+
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/gameButtons"
+    android:layout_width="fill_parent"
+    android:layout_height="wrap_content"
+    android:layout_alignParentBottom="true"
+    android:orientation="vertical"
+    android:paddingBottom="6dip"
+    android:paddingTop="4dip">
+
+    <Button
+        android:id="@+id/scanQRButton"
+        android:layout_width="fill_parent"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:layout_marginTop="33dp"
+        android:layout_weight="0.5"
+        android:text="Scan QR-code"
+        android:layout_height="65dp"
+        android:textStyle="bold"
+        android:textSize="22dp"
+        android:textColor="#cde657"
+        android:background="#95000000" />
+
+    <Button
+        android:id="@+id/fightButton"
+        android:layout_width="fill_parent"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:layout_below="@+id/scanQRButton"
+        android:layout_weight="0.5"
+        android:text="Fight!"
+        android:layout_height="65dp"
+        android:textStyle="bold"
+        android:textSize="22dp"
+        android:textColor="#cde657"
+        android:background="#95000000"
+        android:layout_marginTop="15dp"/>
+
+</LinearLayout>
+
 </RelativeLayout>
