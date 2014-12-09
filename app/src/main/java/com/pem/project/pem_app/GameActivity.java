@@ -10,6 +10,8 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.Button;
+import android.widget.ImageView;
 
 
 public class GameActivity extends Activity implements BluetoothListener.IListenCallback,
@@ -20,6 +22,10 @@ public class GameActivity extends Activity implements BluetoothListener.IListenC
     private FragmentManager fragmentManager;
     private FragmentTransaction fragmentTransaction;
     private MessageProcessor messageProcessor;
+            private Button qrcode, fight;
+            private ImageView team1_coin, team2_coin,
+                    team1_keyyellow, team1_keyred, team1_keygreen, team1_keyblue,
+                    team2_keyyellow, team2_keyred, team2_keygreen, team2_keyblue;
 
 
     @Override
@@ -31,6 +37,24 @@ public class GameActivity extends Activity implements BluetoothListener.IListenC
         fragmentManager = getFragmentManager();
 
         changeFragment(new Game_Main_Fragment(), "MAIN");
+
+
+        Button qrcode = (Button) findViewById(R.id.scanQRButton);
+        Button fight = (Button) findViewById(R.id.fightButton);
+
+        ImageView team1_coin = (ImageView) findViewById(R.id.team1_coin);
+        ImageView team2_coin = (ImageView) findViewById(R.id.team2_coin);
+
+        ImageView team1_keyyellow = (ImageView) findViewById(R.id.team1_keyyellow);
+        ImageView team1_keyred = (ImageView) findViewById(R.id.team1_keyred);
+        ImageView team1_keygreen = (ImageView) findViewById(R.id.team1_keygreen);
+        ImageView team1_keyblue = (ImageView) findViewById(R.id.team1_keyblue);
+
+        ImageView team2_keyyellow = (ImageView) findViewById(R.id.team2_keyyellow);
+        ImageView team2_keyred = (ImageView) findViewById(R.id.team2_keyred);
+        ImageView team2_keygreen = (ImageView) findViewById(R.id.team2_keygreen);
+        ImageView team2_keyblue = (ImageView) findViewById(R.id.team2_keyblue);
+
 
         if(!ServerData.isServer()){
             BluetoothListener listener = new BluetoothListener(this);
