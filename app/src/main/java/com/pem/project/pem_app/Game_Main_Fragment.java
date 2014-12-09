@@ -68,7 +68,15 @@ public class Game_Main_Fragment extends Fragment {
         startMiniGameButton2.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                ((GameActivity)getActivity()).changeFragment(Game_Math_Fragment.newInstance("",""), "MATH");
+                ((GameActivity)getActivity()).changeFragment(Game_Math_Fragment.newInstance("",""), "MATH1");
+
+                if (!ServerData.isServer()){
+                    //send to server
+                    BluetoothHelper.sendDataToPairedDevice(ServerData.getServer(), "START_Math_Player2_");
+                } else {
+                    // send to partner of server
+                    BluetoothHelper.sendDataToPairedDevice(ServerData.getTeamMembers(1).get(0), "START_Math_Player2_");
+                }
             }
         });
 

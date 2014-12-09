@@ -31,6 +31,18 @@ public class MessageProcessor {
                     return extra;
                 }
             }
+            if(miniGame.equals("Math")){
+                if(ServerData.isServer()){
+                    //check if socket belongs to server's team
+                    if(ServerData.getTeam(socket) == 1){
+                        return extra;
+                    } else {
+                        BluetoothHelper.sendDataToPairedDevice(ServerData.getOtherTeamMember(socket), "START_Math_Player2_");
+                    }
+                } else {
+                    return extra;
+                }
+            }
         } else if(messageArt.equals("INFO")){
 
             return extra;
@@ -46,7 +58,21 @@ public class MessageProcessor {
                         BluetoothHelper.sendDataToPairedDevice(ServerData.getOtherTeamMember(socket), "GAMEDATA_Rescue_ropeThrown_");
                     }
                 } else {
-                    Log.d("Processiong", "...");
+                    Log.d("Processing", "...");
+                    return extra;
+                }
+            }
+
+            if(miniGame.equals("Math")){
+                if(ServerData.isServer()){
+                    //check if socket belongs to server's team
+                    if(ServerData.getTeam(socket) == 1){
+                        return extra;
+                    } else {
+                        BluetoothHelper.sendDataToPairedDevice(ServerData.getOtherTeamMember(socket), "GAMEDATA_Math_" + extra + "_");
+                    }
+                } else {
+                    Log.d("Processing", "...");
                     return extra;
                 }
             }
