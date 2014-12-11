@@ -2,60 +2,71 @@
     xmlns:tools="http://schemas.android.com/tools" android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context="com.pem.project.pem_app.BluetoothServerActivity"
-    android:background="@drawable/back">
+    android:background="#293127">
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textAppearance="?android:attr/textAppearanceLarge"
-        android:text="Game Server"
-        android:id="@+id/serverName"
+    <RelativeLayout
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
         android:layout_below="@+id/textView3"
-        android:layout_alignLeft="@+id/textView"
-        android:layout_alignStart="@+id/textView"
-        android:layout_marginTop="20dp" />
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Team 1"
-        android:textSize="20sp"
-        android:id="@+id/textView2"
-        android:layout_toEndOf="@+id/startGameButton"
-        android:layout_alignRight="@+id/clientsList"
-        android:layout_alignEnd="@+id/clientsList"
-        android:gravity="right"
-        android:layout_alignBottom="@+id/serverName"
-        android:layout_alignTop="@+id/serverName"
-        android:textColor="@color/white" />
+        android:padding="10dp">
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textAppearance="?android:attr/textAppearanceLarge"
-        android:text="Connected Clients:"
-        android:id="@+id/textView"
-        android:layout_marginTop="20dp"
-        android:layout_below="@+id/serverName"
-        android:layout_alignLeft="@+id/clientsList"
-        android:layout_alignStart="@+id/clientsList" />
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceLarge"
+            android:text="Game Server"
+            android:id="@+id/serverName"
+            android:layout_below="@+id/textView3"
+            android:layout_alignLeft="@+id/textView"
+            android:layout_alignStart="@+id/textView"
+            android:layout_marginTop="20dp"
+            android:textColor="#D5F6B8"
+            android:textSize="30dp"/>
 
-    <ListView
-        android:layout_width="wrap_content"
-        android:layout_height="200dp"
-        android:id="@+id/clientsList"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true"
-        android:layout_above="@+id/startGameButton"
-        android:layout_below="@+id/textView" />
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Team 1"
+            android:textSize="30dp"
+            android:id="@+id/textView2"
+            android:layout_toEndOf="@+id/startGameButton"
+            android:layout_alignRight="@+id/clientsList"
+            android:layout_alignEnd="@+id/clientsList"
+            android:gravity="right"
+            android:layout_alignBottom="@+id/serverName"
+            android:layout_alignTop="@+id/serverName"
+            android:textColor="#D5F6B8" />
 
-    <Button
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Start Game"
-        android:id="@+id/startGameButton"
-        android:layout_alignParentBottom="true"
-        android:layout_centerHorizontal="true"
-        android:enabled="false"/>
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceLarge"
+            android:text="Connected Clients:"
+            android:id="@+id/textView"
+            android:layout_marginTop="20dp"
+            android:layout_below="@+id/serverName"
+            android:layout_alignLeft="@+id/clientsList"
+            android:layout_alignStart="@+id/clientsList"
+            android:textColor="#D5F6B8" />
+
+        <ListView
+            android:layout_width="wrap_content"
+            android:layout_height="200dp"
+            android:id="@+id/clientsList"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true"
+            android:layout_above="@+id/startGameButton"
+            android:layout_below="@+id/textView" />
+
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Start Game"
+            android:id="@+id/startGameButton"
+            android:layout_alignParentBottom="true"
+            android:layout_centerHorizontal="true"
+            android:enabled="false"/>
+    </RelativeLayout>
 
     <TextView
         android:layout_width="fill_parent"
@@ -65,8 +76,9 @@
         android:id="@+id/textView3"
         android:layout_gravity="center_horizontal|top"
         android:gravity="center"
-        android:background="#ff38b95d"
-        android:textSize="35dp"/>
+        android:background="#3E6617"
+        android:textSize="35dp"
+        android:textColor="#D5F6B8" />
 
 
 

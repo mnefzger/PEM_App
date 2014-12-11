@@ -2,7 +2,7 @@
     xmlns:tools="http://schemas.android.com/tools" android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context="com.pem.project.pem_app.BluetoothClientActivity"
-    android:background="@drawable/back">
+    android:background="#293127">
 
     TextView android:text="@string/hello_world" android:layout_width="wrap_content"
         android:layout_height="wrap_content" />
@@ -13,10 +13,10 @@
         android:textAppearance="?android:attr/textAppearanceLarge"
         android:text="Waiting for Server..."
         android:id="@+id/status"
-        android:layout_alignParentTop="true"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true"
-        android:layout_marginTop="146dp" />
+        android:layout_marginTop="69dp"
+        android:layout_below="@+id/textView3"
+        android:layout_centerHorizontal="true"
+        android:textColor="#D5F6B8" />
 
     <TextView
         android:layout_width="fill_parent"
@@ -26,6 +26,7 @@
         android:id="@+id/textView3"
         android:layout_gravity="center_horizontal|top"
         android:gravity="center"
-        android:background="#ff38b95d"
-        android:textSize="35dp"/>
+        android:background="#3E6617"
+        android:textSize="35dp"
+        android:textColor="#D5F6B8" />
 </RelativeLayout>

@@ -121,7 +121,8 @@
         android:id="@+id/textView3"
         android:layout_gravity="center_horizontal|top"
         android:gravity="center"
-        android:background="#ff38b95d"
-        android:textSize="35dp"/>
+        android:background="#3E6617"
+        android:textSize="35dp"
+        android:textColor="#D5F6B8" />
 
 </FrameLayout>
