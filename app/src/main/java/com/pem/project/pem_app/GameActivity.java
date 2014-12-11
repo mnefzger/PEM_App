@@ -5,13 +5,11 @@ import android.app.Fragment;
 import android.app.FragmentManager;
 import android.app.FragmentTransaction;
 import android.bluetooth.BluetoothSocket;
-import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
 
@@ -95,10 +93,12 @@ public class GameActivity extends Activity implements BluetoothListener.IListenC
         }
         if(processed.equals("Player2")){
             this.changeFragment(Game_Math_Fragment.newInstance("Player2", ""), "MATH");
-        } else if(processed.startsWith("result")){
-            Game_Math_Fragment fragment = (Game_Math_Fragment)fragmentManager.findFragmentByTag("MATH");
+        } else if(processed.startsWith("result")) {
+            Game_Math_Fragment fragment = (Game_Math_Fragment) fragmentManager.findFragmentByTag("MATH");
             fragment.setResult(processed);
-
+        } else if(processed.startsWith("correctResult")){
+            Game_Math_Fragment fragment = (Game_Math_Fragment)fragmentManager.findFragmentByTag("MATH");
+            fragment.setCorrectResult(processed);
         }
     }
 

@@ -4,12 +4,15 @@ import android.app.Activity;
 import android.app.Fragment;
 import android.net.Uri;
 import android.os.Bundle;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.TextView;
+import android.widget.Toast;
 
 
 /**
@@ -48,10 +51,12 @@ public class Game_Math_Fragment extends Fragment implements OnClickListener {
     private int result1;
     private int result2;
     private int player;
+    private int correctResult;
 
     ServerData serverData;
-
-
+    private boolean field_one_pressed;
+    private boolean field_two_pressed;
+    private EditText editText1;
 
 
     /**
@@ -160,6 +165,8 @@ public class Game_Math_Fragment extends Fragment implements OnClickListener {
         buttonOption4 = (Button) rootView.findViewById(R.id.buttonMath4);
         buttonOption5 = (Button) rootView.findViewById(R.id.buttonMath5);
         buttonOption6 = (Button) rootView.findViewById(R.id.buttonMath6);
+        editText1 = (EditText) rootView.findViewById(R.id.result);
+        editText1.setImeActionLabel("Calc", KeyEvent.KEYCODE_ENTER);
 
         buttonOption1.setOnClickListener(this);
         buttonOption2.setOnClickListener(this);
@@ -167,6 +174,19 @@ public class Game_Math_Fragment extends Fragment implements OnClickListener {
         buttonOption4.setOnClickListener(this);
         buttonOption5.setOnClickListener(this);
         buttonOption6.setOnClickListener(this);
+
+        editText1.setOnKeyListener(new View.OnKeyListener() {
+            public boolean onKey(View v, int keyCode, KeyEvent event) {
+                // If the event is a key-down event on the "enter" button
+                if ((event.getAction() == KeyEvent.ACTION_DOWN) &&
+                        (keyCode == KeyEvent.KEYCODE_ENTER)) {
+                    // Perform action on key press
+                    Toast.makeText(getActivity(), editText1.getText(), Toast.LENGTH_SHORT).show();
+                    return true;
+                }
+                return false;
+            }
+        });
 
         operation1.createOperation();
         operation2.createOperation();
@@ -230,6 +250,8 @@ public class Game_Math_Fragment extends Fragment implements OnClickListener {
             //boolean play = true;
 
 
+
+
             switch(view.getId()) {
                 case R.id.buttonMath1:
                     if (operation1.getRightBox() == 0) {
@@ -277,11 +299,11 @@ public class Game_Math_Fragment extends Fragment implements OnClickListener {
             if (correct2) {
                 System.out.println("2 correct");
             }
-            if(correct1 && correct2) {
+            /**if(correct1 && correct2) {
                 createOperation();
                 correct1 = false;
                 correct2 = false;
-            }
+            }**/
         }
 
         public void buttonPressed(int field, View view){
@@ -292,8 +314,9 @@ public class Game_Math_Fragment extends Fragment implements OnClickListener {
 
 
 
-            if (field == 0){
 
+            if (field == 0){
+                field_one_pressed = true;
 
                 if (!ServerData.isServer()) {
                     //send to server
@@ -305,12 +328,29 @@ public class Game_Math_Fragment extends Fragment implements OnClickListener {
 
 
             } else if (field == 1) {
+
+                field_two_pressed = true;
+
                 if (!ServerData.isServer()) {
                     //send to server
                     BluetoothHelper.sendDataToPairedDevice(ServerData.getServer(), "GAMEDATA_Math_result2:" + butPressed.getText() + "_");
                 } else {
                     // send to partner of server
                     BluetoothHelper.sendDataToPairedDevice(ServerData.getTeamMembers(1).get(0), "GAMEDATA_Math_result2:" + butPressed.getText() + "_");
+                }
+
+            }
+
+            if (field_one_pressed && field_two_pressed){
+
+                int correctResult = operation1.getRightValue() + operation2.getRightValue();
+
+                if (!ServerData.isServer()) {
+                    //send to server
+                    BluetoothHelper.sendDataToPairedDevice(ServerData.getServer(), "GAMEDATA_Math_correctResult:" + correctResult + "_");
+                } else {
+                    // send to partner of server
+                    BluetoothHelper.sendDataToPairedDevice(ServerData.getTeamMembers(1).get(0), "GAMEDATA_Math_correctResult:" + correctResult + "_");
                 }
 
             }
@@ -340,5 +380,10 @@ public class Game_Math_Fragment extends Fragment implements OnClickListener {
 
 
         }
+
+    public void setCorrectResult(String correctResult){
+        this.correctResult = Integer.parseInt(correctResult);
+        System.out.println("Correct Result: " + correctResult);
+    }
 
 }

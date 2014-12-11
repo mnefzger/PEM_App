@@ -17,6 +17,7 @@ public class Game_Math_Helper {
     private int rightValue;
     private int randWrongValue2;
 
+
     public int getRandWrongValue1() {
         return randWrongValue1;
     }
