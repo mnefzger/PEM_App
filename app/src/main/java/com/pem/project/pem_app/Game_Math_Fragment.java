@@ -47,7 +47,7 @@ public class Game_Math_Fragment extends Fragment implements OnClickListener {
     private Button buttonOption6;
     private int result1;
     private int result2;
-    private int player = 2;
+    private int player;
 
     ServerData serverData;
 
@@ -83,6 +83,8 @@ public class Game_Math_Fragment extends Fragment implements OnClickListener {
             mParam2 = getArguments().getString(ARG_PARAM2);
         }
 
+
+
         serverData = new ServerData();
 
     }
@@ -91,11 +93,15 @@ public class Game_Math_Fragment extends Fragment implements OnClickListener {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
 
-        if (player == 1) {
-            rootView = inflater.inflate(R.layout.fragment_game_math, container, false);
-        } else {
+        if (mParam1.equals("Player2")){
+            player = 2;
             rootView = inflater.inflate(R.layout.fragment_game_math2, container, false);
+        } else {
+            player = 1;
+            rootView = inflater.inflate(R.layout.fragment_game_math, container, false);
+
         }
+
 
 
         operation1 = new Game_Math_Helper();
@@ -282,34 +288,57 @@ public class Game_Math_Fragment extends Fragment implements OnClickListener {
 
             Button butPressed = (Button) rootView.findViewById(view.getId());
 
-            TextView result1;
-            TextView result2;
+            butPressed.setBackgroundColor(0xFFFFFFFF);
 
-            if (player == 1) {
-                result1 = (TextView) rootView.findViewById(R.id.result1player2);
-                result2 = (TextView) rootView.findViewById(R.id.result2player2);
-            } else {
-                result1 = (TextView) rootView.findViewById(R.id.result1player1);
-                result2 = (TextView) rootView.findViewById(R.id.result2player1);
-            }
+
 
             if (field == 0){
-                if (player == 1) butPressed.setBackgroundColor(0xFFFF0000);
-                if (player == 2) butPressed.setBackgroundColor(0xFF0000FF);
-                result1.setText(butPressed.getText());
+
+
+                if (!ServerData.isServer()) {
+                    //send to server
+                    BluetoothHelper.sendDataToPairedDevice(ServerData.getServer(), "GAMEDATA_Math_result1:" + butPressed.getText() + "_");
+                } else {
+                    // send to partner of server
+                    BluetoothHelper.sendDataToPairedDevice(ServerData.getTeamMembers(1).get(0), "GAMEDATA_Math_result1:" + butPressed.getText() + "_");
+                }
+
+
             } else if (field == 1) {
-                if (player == 1) butPressed.setBackgroundColor(0xFFFFFF00);
-                if (player == 2) butPressed.setBackgroundColor(0xFF00FF00);
-                result2.setText(butPressed.getText());
+                if (!ServerData.isServer()) {
+                    //send to server
+                    BluetoothHelper.sendDataToPairedDevice(ServerData.getServer(), "GAMEDATA_Math_result2:" + butPressed.getText() + "_");
+                } else {
+                    // send to partner of server
+                    BluetoothHelper.sendDataToPairedDevice(ServerData.getTeamMembers(1).get(0), "GAMEDATA_Math_result2:" + butPressed.getText() + "_");
+                }
+
             }
-
-
-
-
 
         }
 
 
+        public void setResult(final String processed){
 
+            getActivity().runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    TextView result1;
+                    TextView result2;
+
+                    result1 = (TextView) rootView.findViewById(R.id.result1);
+                    result2 = (TextView) rootView.findViewById(R.id.result2);
+
+                    if (processed.startsWith("result1"))
+                     result1.setText(processed.substring(8));
+                     else if (processed.startsWith("result2"))
+                     result2.setText(processed.substring(8));
+
+                }
+            });
+
+
+
+        }
 
 }

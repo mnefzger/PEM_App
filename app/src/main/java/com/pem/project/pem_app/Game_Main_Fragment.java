@@ -1,12 +1,15 @@
 package com.pem.project.pem_app;
 
 import android.app.Activity;
-import android.os.Bundle;
 import android.app.Fragment;
+import android.content.Context;
+import android.content.Intent;
+import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.ImageView;
 
 
 /**
@@ -48,6 +51,35 @@ public class Game_Main_Fragment extends Fragment {
 
         View view =  inflater.inflate(R.layout.fragment_game_main, container, false);
 
+
+        Button qrcode = (Button) view.findViewById(R.id.scanQRButton);
+        Button fight = (Button) view.findViewById(R.id.fightButton);
+
+
+        qrcode.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Context context = getActivity().getApplicationContext();
+                Intent intent= new Intent();
+                intent.setClassName(context.getPackageName(), context.getPackageName()+".QRScanActivity");
+                startActivity(intent);
+            }
+        });
+
+
+        ImageView team1_coin = (ImageView) view.findViewById(R.id.team1_coin);
+        ImageView team2_coin = (ImageView) view.findViewById(R.id.team2_coin);
+
+        ImageView team1_keyyellow = (ImageView) view.findViewById(R.id.team1_keyyellow);
+        ImageView team1_keyred = (ImageView) view.findViewById(R.id.team1_keyred);
+        ImageView team1_keygreen = (ImageView) view.findViewById(R.id.team1_keygreen);
+        ImageView team1_keyblue = (ImageView) view.findViewById(R.id.team1_keyblue);
+
+        ImageView team2_keyyellow = (ImageView) view.findViewById(R.id.team2_keyyellow);
+        ImageView team2_keyred = (ImageView) view.findViewById(R.id.team2_keyred);
+        ImageView team2_keygreen = (ImageView) view.findViewById(R.id.team2_keygreen);
+        ImageView team2_keyblue = (ImageView) view.findViewById(R.id.team2_keyblue);
+
         startMiniGameButton = (Button)view.findViewById(R.id.startMiniGameButton);
         startMiniGameButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -68,7 +100,15 @@ public class Game_Main_Fragment extends Fragment {
         startMiniGameButton2.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                ((GameActivity)getActivity()).changeFragment(Game_Math_Fragment.newInstance("",""), "MATH");
+                ((GameActivity)getActivity()).changeFragment(Game_Math_Fragment.newInstance("Player1",""), "MATH");
+
+                if (!ServerData.isServer()){
+                    //send to server
+                    BluetoothHelper.sendDataToPairedDevice(ServerData.getServer(), "START_Math_Player2_");
+                } else {
+                    // send to partner of server
+                    BluetoothHelper.sendDataToPairedDevice(ServerData.getTeamMembers(1).get(0), "START_Math_Player2_");
+                }
             }
         });
 
