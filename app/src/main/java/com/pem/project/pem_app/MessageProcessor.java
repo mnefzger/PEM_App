@@ -14,7 +14,7 @@ public class MessageProcessor {
         String miniGame = messageParameters[1];
         String extra = messageParameters[2];
 
-        //check what kind of message we got [START, INFO, GAMEDATA]
+        //check what kind of message we got [START, INFO, GAMEDATA, UPDATE]
         if(messageArt.equals("START")){
             //default
             if(miniGame.equals("null"))  return "START";
@@ -55,10 +55,17 @@ public class MessageProcessor {
                     if(ServerData.getTeam(socket) == 1){
                         return extra;
                     } else {
-                        BluetoothHelper.sendDataToPairedDevice(ServerData.getOtherTeamMember(socket), "GAMEDATA_Rescue_ropeThrown_");
+                        BluetoothHelper.sendDataToPairedDevice(ServerData.getOtherTeamMember(socket), "GAMEDATA_Rescue_" + extra + "_");
+                    }
+
+                    if(extra.equals("pitSuccess")){
+                        // update ServerData and broadcast new data
+                        // to do
+                        for(BluetoothSocket client : ServerData.getClients()){
+                            BluetoothHelper.sendDataToPairedDevice(client, "UPDATE_Null_team1_keyYellow");
+                        }
                     }
                 } else {
-                    Log.d("Processing", "...");
                     return extra;
                 }
             }
@@ -72,11 +79,13 @@ public class MessageProcessor {
                         BluetoothHelper.sendDataToPairedDevice(ServerData.getOtherTeamMember(socket), "GAMEDATA_Math_" + extra + "_");
                     }
                 } else {
-                    Log.d("Processing", "...");
                     return extra;
                 }
             }
 
+        } else if(messageArt.equals("UPDATE")){
+           // to do
+           return extra+messageParameters[3];
         }
 
 

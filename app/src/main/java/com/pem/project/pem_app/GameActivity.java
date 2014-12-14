@@ -38,10 +38,6 @@ public class GameActivity extends Activity implements BluetoothListener.IListenC
 
         changeFragment(new Game_Main_Fragment(), "MAIN");
 
-
-
-
-
         if(!ServerData.isServer()){
             BluetoothListener listener = new BluetoothListener(this);
             listener.listen(ServerData.getServer());
@@ -82,15 +78,20 @@ public class GameActivity extends Activity implements BluetoothListener.IListenC
     }
 
     public void processReceivedMessage(String m, BluetoothSocket s){
-        Log.d("Message", m);
         String processed = messageProcessor.processMessage(m, s);
         Log.d("Received Processed Message", processed);
+
+        // RESCUE
         if(processed.equals("ropeWait")){
             this.changeFragment(Game_Rescue_Fragment.newInstance("pit"), "RESCUE");
         } else if(processed.equals("ropeThrown")){
             Game_Rescue_Fragment fragment = (Game_Rescue_Fragment)fragmentManager.findFragmentByTag("RESCUE");
             fragment.ropeIsThrown();
+        } else if(processed.equals("pitSuccess")){
+            this.changeFragment(Game_Main_Fragment.newInstance(), "MAIN");
         }
+
+        // MATH
         if(processed.equals("Player2")){
             this.changeFragment(Game_Math_Fragment.newInstance("Player2", ""), "MATH");
         } else if(processed.startsWith("result")) {

@@ -19,6 +19,7 @@ import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.Animation;
 import android.view.animation.TranslateAnimation;
 import android.widget.Button;
 import android.widget.FrameLayout;
@@ -26,6 +27,7 @@ import android.hardware.*;
 import android.widget.Gallery;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 
@@ -53,11 +55,15 @@ public class Game_Rescue_Fragment extends Fragment implements SensorHandler.Sens
         private TextView pitText;
         private Button startTheRescue;
         private Button startTheRescue2;
-        private FrameLayout info;
-        private FrameLayout info2;
+        private Button backToMain;
+        private RelativeLayout info;
+        private RelativeLayout info2;
         private FrameLayout rescue;
         private FrameLayout rescue2;
+        private RelativeLayout end;
         private int thrownRocks = 0;
+        private String side = "";
+        private boolean alive = false;
         private GestureDetector gestureDetector;
         View.OnTouchListener gestureListener;
 
@@ -66,13 +72,7 @@ public class Game_Rescue_Fragment extends Fragment implements SensorHandler.Sens
         static final String param1 = "param1";
         String mode;
 
-    /**
-     * Use this factory method to create a new instance of
-     * this fragment using the provided parameters.
-     *
-     */
-    // TODO: Rename and change types and number of parameters
-    public static Game_Rescue_Fragment newInstance(String m) {
+     public static Game_Rescue_Fragment newInstance(String m) {
         Game_Rescue_Fragment fragment = new Game_Rescue_Fragment();
         Bundle args = new Bundle();
         args.putString(param1, m);
@@ -101,10 +101,11 @@ public class Game_Rescue_Fragment extends Fragment implements SensorHandler.Sens
         display = getActivity().getWindowManager().getDefaultDisplay();
         size = new Point();
         display.getSize(size);
-        info = (FrameLayout)v.findViewById(R.id.theRescueIntroText);
-        info2 = (FrameLayout)v.findViewById(R.id.theRescueIntroText2);
+        info = (RelativeLayout)v.findViewById(R.id.theRescueIntroText);
+        info2 = (RelativeLayout)v.findViewById(R.id.theRescueIntroText2);
         rescue = (FrameLayout)v.findViewById(R.id.theRescueLayout);
         rescue2 = (FrameLayout)v.findViewById(R.id.theRescueLayout2);
+        end = (RelativeLayout)v.findViewById(R.id.endScreen);
         pitText = (TextView)v.findViewById(R.id.pitText);
         distanceText = (TextView)v.findViewById(R.id.distanceText);
 
@@ -116,7 +117,6 @@ public class Game_Rescue_Fragment extends Fragment implements SensorHandler.Sens
         };
         v.setOnClickListener(this);
         v.setOnTouchListener(gestureListener);
-
 
 
         if(!mode.equals("rope")){
@@ -144,6 +144,21 @@ public class Game_Rescue_Fragment extends Fragment implements SensorHandler.Sens
                 rescue2.setVisibility(View.VISIBLE);
                 info2.setVisibility(View.GONE);
                 throwRocks();
+            }
+        });
+
+        backToMain = (Button)v.findViewById(R.id.backToMain);
+        backToMain.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                ((GameActivity)getActivity()).changeFragment(Game_Main_Fragment.newInstance(), "MAIN");
+                if (!ServerData.isServer()){
+                    //send to server
+                    BluetoothHelper.sendDataToPairedDevice(ServerData.getServer(), "GAMEDATA_Rescue_pitSuccess_");
+                } else {
+                    // send to partner of server
+                    BluetoothHelper.sendDataToPairedDevice(ServerData.getTeamMembers(1).get(0), "GAMEDATA_Rescue_pitSuccess_");
+                }
             }
         });
 
@@ -196,19 +211,41 @@ public class Game_Rescue_Fragment extends Fragment implements SensorHandler.Sens
 
 
     public void throwRocks(){
+            // assume the worst ...
+            alive = false;
+
            // Instantiate an ImageView and define its properties
            ImageView i = new ImageView(getActivity().getApplicationContext());
+           int screen_width = size.x;
+           int rock_size =  screen_width/5;
            i.setImageResource(R.drawable.rock);
-           i.setLayoutParams(new ViewGroup.LayoutParams(250, 250));
+           i.setLayoutParams(new ViewGroup.LayoutParams(rock_size, rock_size));
            i.setAdjustViewBounds(true); // set the ImageView bounds to match the Drawable's dimensions
 
            // Spawn rock at random x position
-           Random rand = new Random();
-           int width = size.x;
-           int x = rand.nextInt((width - 250) + 1) + 250;
-           TranslateAnimation anim = new TranslateAnimation(x, x, 0, size.y+250);
-           anim.setDuration(1000);
+           int x = (Math.random() > 0.5) ? 200 : screen_width-200-rock_size;
+           side = (x == 200) ? "right" : "left";
+           TranslateAnimation anim = new TranslateAnimation(x, x, 0, size.y+rock_size);
+           anim.setDuration(1500);
            anim.setFillAfter(true);
+           anim.setAnimationListener(new Animation.AnimationListener() {
+               @Override
+               public void onAnimationStart(Animation animation) {}
+
+               @Override
+               public void onAnimationEnd(Animation animation) {
+                    if(alive == false) Log.d("FAIL","verloren!!");
+                    if(thrownRocks == 5 && alive == true){
+                        Log.d("SUCCESS", "you win");
+                        rescue2.setVisibility(View.GONE);
+                        end.setVisibility(View.VISIBLE);
+                    }
+                    side = "";
+               }
+
+               @Override
+               public void onAnimationRepeat(Animation animation) {}
+           });
            i.startAnimation(anim);
 
            thrownRocks += 1;
@@ -219,12 +256,11 @@ public class Game_Rescue_Fragment extends Fragment implements SensorHandler.Sens
            Runnable r = new Runnable() {
                @Override
                public void run() {
-                  if(thrownRocks < 5) throwRocks();
+                  if(thrownRocks < 5 && alive) throwRocks();
                }};
 
            Handler mHandler = new Handler();
            mHandler.postDelayed(r, 3000);
-
     }
 
     @Override
@@ -239,11 +275,16 @@ public class Game_Rescue_Fragment extends Fragment implements SensorHandler.Sens
             try {
                 if (Math.abs(e1.getY() - e2.getY()) > 250)
                     return false;
-                // right to left swipe
                 if(e1.getX() - e2.getX() > 120 && Math.abs(velocityX) > 100) {
-                    Log.d("SWIPE", "left");
+                    if(side.equals("left")){
+                        Log.d("SWIPE", "correct left");
+                        alive = true;
+                    }
                 }  else if (e2.getX() - e1.getX() > 120 && Math.abs(velocityX) > 100) {
-                    Log.d("SWIPE", "right");
+                    if(side.equals("right")){
+                        Log.d("SWIPE", "correct right");
+                        alive = true;
+                    }
                 }
             } catch (Exception e) {
                 // nothing
