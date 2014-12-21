@@ -13,6 +13,8 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.ListView;
+import android.widget.Toast;
+
 import java.io.IOException;
 
 
@@ -86,20 +88,42 @@ public class BluetoothServerActivity extends Activity {
         ServerData.markLocalAsServer();
 
         bAdapter = BluetoothAdapter.getDefaultAdapter();
-        if (bAdapter != null) {
-            bAdapter.setName("Game Server");
-
-            // Make the device discoverable
-            Intent discoverableIntent = new Intent(BluetoothAdapter.ACTION_REQUEST_DISCOVERABLE);
-            discoverableIntent.putExtra(BluetoothAdapter.EXTRA_DISCOVERABLE_DURATION, 300);
-            startActivity(discoverableIntent);
-
-            AcceptThread acceptThread = new AcceptThread();
-            acceptThread.start();
-
+        // check if bluetooth is on
+        if (!bAdapter.isEnabled()) {
+            Intent enableBtIntent = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
+            startActivityForResult(enableBtIntent,1);
+            bAdapter.enable();
         }
+        
     }
 
+
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        switch (requestCode) {
+            case 1:
+                // When the request to enable Bluetooth returns
+                if (resultCode == Activity.RESULT_OK) {
+                    // Bluetooth is now enabled, so set up a chat session
+                    if (bAdapter != null) {
+                        bAdapter.setName("Game Server");
+
+                        // Make the device discoverable
+                        Intent discoverableIntent = new Intent(BluetoothAdapter.ACTION_REQUEST_DISCOVERABLE);
+                        discoverableIntent.putExtra(BluetoothAdapter.EXTRA_DISCOVERABLE_DURATION, 300);
+                        startActivity(discoverableIntent);
+
+                        AcceptThread acceptThread = new AcceptThread();
+                        acceptThread.start();
+
+                    }
+                } else {
+                    // User did not enable Bluetooth or an error occurred
+                    Log.d("BT FAIL", "BT not enabled");
+                    Toast.makeText(this, "Could not enabled Bluetooth.",
+                            Toast.LENGTH_SHORT).show();
+                }
+        }
+    }
 
     /**
      * This thread runs while listening for incoming connections. It behaves

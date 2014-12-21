@@ -61,7 +61,11 @@ public class BluetoothClientActivity extends Activity implements BluetoothListen
 
     public void connectToServer(){
         bAdapter = BluetoothAdapter.getDefaultAdapter();
-        Log.d("PEM_Bluetooth", "ConnectSetupCalled");
+        //check if bluetooth is on
+        if (!bAdapter.isEnabled()) {
+            Intent enableBtIntent = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
+            startActivityForResult(enableBtIntent,1);
+        }
 
         // Create a BroadcastReceiver for ACTION_FOUND
         mReceiver = new BroadcastReceiver() {
