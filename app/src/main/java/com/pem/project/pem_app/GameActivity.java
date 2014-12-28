@@ -81,6 +81,11 @@ public class GameActivity extends Activity implements BluetoothListener.IListenC
         String processed = messageProcessor.processMessage(m, s);
         Log.d("Received Processed Message", processed);
 
+        // MINIGAME LOST
+        if(processed.equals("LOST")){
+            this.changeFragment(Game_Lost_Fragment.newInstance(), "LOST");
+        }
+
         // RESCUE
         if(processed.equals("ropeWait")){
             this.changeFragment(Game_Rescue_Fragment.newInstance("pit"), "RESCUE");

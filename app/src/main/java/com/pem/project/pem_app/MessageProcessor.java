@@ -14,7 +14,7 @@ public class MessageProcessor {
         String miniGame = messageParameters[1];
         String extra = messageParameters[2];
 
-        //check what kind of message we got [START, INFO, GAMEDATA, UPDATE]
+        //check what kind of message we got [START, INFO, GAMEDATA, UPDATE, LOST]
         if(messageArt.equals("START")){
             //default
             if(miniGame.equals("null"))  return "START";
@@ -86,6 +86,18 @@ public class MessageProcessor {
         } else if(messageArt.equals("UPDATE")){
            // to do
            return extra+messageParameters[3];
+
+        } else if(messageArt.equals("LOST")){
+            if(ServerData.isServer()){
+                //check if socket belongs to server's team
+                if(ServerData.getTeam(socket) == 1){
+                    return messageArt;
+                } else {
+                    BluetoothHelper.sendDataToPairedDevice(ServerData.getOtherTeamMember(socket), "LOST_null_null_");
+                }
+            } else {
+                return messageArt;
+            }
         }
 
 

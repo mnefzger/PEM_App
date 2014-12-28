@@ -92,7 +92,8 @@ public class BluetoothServerActivity extends Activity {
         if (!bAdapter.isEnabled()) {
             Intent enableBtIntent = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
             startActivityForResult(enableBtIntent,1);
-            bAdapter.enable();
+        } else {
+            bluetoothReady();
         }
         
     }
@@ -103,25 +104,31 @@ public class BluetoothServerActivity extends Activity {
             case 1:
                 // When the request to enable Bluetooth returns
                 if (resultCode == Activity.RESULT_OK) {
-                    // Bluetooth is now enabled, so set up a chat session
-                    if (bAdapter != null) {
-                        bAdapter.setName("Game Server");
-
-                        // Make the device discoverable
-                        Intent discoverableIntent = new Intent(BluetoothAdapter.ACTION_REQUEST_DISCOVERABLE);
-                        discoverableIntent.putExtra(BluetoothAdapter.EXTRA_DISCOVERABLE_DURATION, 300);
-                        startActivity(discoverableIntent);
-
-                        AcceptThread acceptThread = new AcceptThread();
-                        acceptThread.start();
-
-                    }
-                } else {
+                    bluetoothReady();
+                }else{
                     // User did not enable Bluetooth or an error occurred
                     Log.d("BT FAIL", "BT not enabled");
                     Toast.makeText(this, "Could not enabled Bluetooth.",
                             Toast.LENGTH_SHORT).show();
                 }
+            default:
+                Log.d("BLUETOOTH Error", "fail");
+        }
+    }
+
+    public void bluetoothReady() {
+        if (bAdapter != null) {
+            bAdapter.setName("Game Server");
+
+            Log.d("BLUETOOTH Error", "fail");
+            // Make the device discoverable
+            Intent discoverableIntent = new Intent(BluetoothAdapter.ACTION_REQUEST_DISCOVERABLE);
+            discoverableIntent.putExtra(BluetoothAdapter.EXTRA_DISCOVERABLE_DURATION, 300);
+            startActivity(discoverableIntent);
+
+            AcceptThread acceptThread = new AcceptThread();
+            acceptThread.start();
+
         }
     }
 

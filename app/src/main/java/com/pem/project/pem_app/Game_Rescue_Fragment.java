@@ -234,7 +234,11 @@ public class Game_Rescue_Fragment extends Fragment implements SensorHandler.Sens
 
                @Override
                public void onAnimationEnd(Animation animation) {
-                    if(alive == false) Log.d("FAIL","verloren!!");
+                    if(alive == false){
+                        Log.d("FAIL","verloren!!");
+                        BluetoothHelper.sendDataToPairedDevice(ServerData.getServer(), "LOST_null_null_");
+                        ((GameActivity)getActivity()).changeFragment(Game_Lost_Fragment.newInstance(), "LOST");
+                    }
                     if(thrownRocks == 5 && alive == true){
                         Log.d("SUCCESS", "you win");
                         rescue2.setVisibility(View.GONE);
