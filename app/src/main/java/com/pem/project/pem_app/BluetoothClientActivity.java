@@ -13,6 +13,7 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import java.io.IOException;
 
@@ -32,7 +33,14 @@ public class BluetoothClientActivity extends Activity implements BluetoothListen
         text = (TextView)findViewById(R.id.status);
         clientActivity = this;
 
-        connectToServer();
+        bAdapter = BluetoothAdapter.getDefaultAdapter();
+        //check if bluetooth is on
+        if (!bAdapter.isEnabled()) {
+            Intent enableBtIntent = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
+            startActivityForResult(enableBtIntent,1);
+        } else {
+            connectToServer();
+        }
 
     }
 
@@ -59,14 +67,22 @@ public class BluetoothClientActivity extends Activity implements BluetoothListen
         return super.onOptionsItemSelected(item);
     }
 
-    public void connectToServer(){
-        bAdapter = BluetoothAdapter.getDefaultAdapter();
-        //check if bluetooth is on
-        if (!bAdapter.isEnabled()) {
-            Intent enableBtIntent = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
-            startActivityForResult(enableBtIntent,1);
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        switch (requestCode) {
+            case 1:
+                // When the request to enable Bluetooth returns
+                if (resultCode == Activity.RESULT_OK) {
+                    connectToServer();
+                }else{
+                    // User did not enable Bluetooth or an error occurred
+                    Log.d("BT FAIL", "BT not enabled");
+                    Toast.makeText(this, "Could not enabled Bluetooth.",
+                            Toast.LENGTH_SHORT).show();
+                }
         }
+    }
 
+    public void connectToServer(){
         // Create a BroadcastReceiver for ACTION_FOUND
         mReceiver = new BroadcastReceiver() {
             public void onReceive(Context context, Intent intent) {

@@ -12,6 +12,7 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.app.Fragment;
 import android.os.Handler;
+import android.os.Looper;
 import android.util.Log;
 import android.view.Display;
 import android.view.GestureDetector;
@@ -47,12 +48,13 @@ import java.util.Random;
  * Use the {@link Game_Rescue_Fragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class Game_Rescue_Fragment extends Fragment implements SensorHandler.SensorCallback, View.OnClickListener{
+public class Game_Rescue_Fragment extends Fragment implements SensorHandler.ropeCallback,SensorHandler.pullCallback, View.OnClickListener{
         private OnFragmentInteractionListener mListener;
         private Display display;
         private Point size;
         private TextView distanceText;
         private TextView pitText;
+        private TextView pullText;
         private Button startTheRescue;
         private Button startTheRescue2;
         private Button backToMain;
@@ -61,9 +63,11 @@ public class Game_Rescue_Fragment extends Fragment implements SensorHandler.Sens
         private FrameLayout rescue;
         private FrameLayout rescue2;
         private RelativeLayout end;
-        private int thrownRocks = 0;
+        private int count = 0;
         private String side = "";
         private boolean alive = false;
+        private boolean inTime = false;
+        private SensorHandler sensorHandler;
         private GestureDetector gestureDetector;
         View.OnTouchListener gestureListener;
 
@@ -72,7 +76,8 @@ public class Game_Rescue_Fragment extends Fragment implements SensorHandler.Sens
         static final String param1 = "param1";
         String mode;
 
-     public static Game_Rescue_Fragment newInstance(String m) {
+
+    public static Game_Rescue_Fragment newInstance(String m) {
         Game_Rescue_Fragment fragment = new Game_Rescue_Fragment();
         Bundle args = new Bundle();
         args.putString(param1, m);
@@ -108,6 +113,7 @@ public class Game_Rescue_Fragment extends Fragment implements SensorHandler.Sens
         end = (RelativeLayout)v.findViewById(R.id.endScreen);
         pitText = (TextView)v.findViewById(R.id.pitText);
         distanceText = (TextView)v.findViewById(R.id.distanceText);
+        pullText = (TextView)v.findViewById(R.id.pull_text);
 
         gestureDetector = new GestureDetector(getActivity().getApplicationContext(), new MyGestureDetector());
         gestureListener = new View.OnTouchListener() {
@@ -132,7 +138,7 @@ public class Game_Rescue_Fragment extends Fragment implements SensorHandler.Sens
             public void onClick(View view) {
                 info.setVisibility(View.GONE);
                 rescue.setVisibility(View.VISIBLE);
-                startSensing();
+                startSensing("accelerometer");
             }
         });
 
@@ -141,6 +147,14 @@ public class Game_Rescue_Fragment extends Fragment implements SensorHandler.Sens
         startTheRescue2.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                if (!ServerData.isServer()){
+                    //send to server
+                    BluetoothHelper.sendDataToPairedDevice(ServerData.getServer(), "GAMEDATA_Rescue_ropeClimb_");
+                } else {
+                    // send to partner of server
+                    BluetoothHelper.sendDataToPairedDevice(ServerData.getTeamMembers(1).get(0), "GAMEDATA_Rescue_ropeClimb_");
+                }
+
                 rescue2.setVisibility(View.VISIBLE);
                 info2.setVisibility(View.GONE);
                 throwRocks();
@@ -182,14 +196,16 @@ public class Game_Rescue_Fragment extends Fragment implements SensorHandler.Sens
         mListener = null;
     }
 
-    public void startSensing(){
-        new SensorHandler(this, getActivity().getApplicationContext());
+    public void startSensing(String mode){
+        sensorHandler = new SensorHandler(this, getActivity().getApplicationContext(), mode);
     }
 
     @Override
-    public void dataSensed(double[] data) {
+    public void ropeSensed(double[] data) {
         distanceText.setText("You have thrown the rope\n" + data[0] + " meters!\n\n" +
-                "Your partner can now begin to climb out..." );
+                "Your partner can now begin to climb out...\n\n" +
+                "To help him, you have to pull the rope when the time is right!\n" +
+                "Tilt your phone towards you when you see the signal.");
         if (!ServerData.isServer()){
             //send to server
             BluetoothHelper.sendDataToPairedDevice(ServerData.getServer(), "GAMEDATA_Rescue_ropeThrown_");
@@ -197,6 +213,7 @@ public class Game_Rescue_Fragment extends Fragment implements SensorHandler.Sens
             // send to partner of server
             BluetoothHelper.sendDataToPairedDevice(ServerData.getTeamMembers(1).get(0), "GAMEDATA_Rescue_ropeThrown_");
         }
+        
     }
 
     public void ropeIsThrown(){
@@ -235,11 +252,15 @@ public class Game_Rescue_Fragment extends Fragment implements SensorHandler.Sens
                @Override
                public void onAnimationEnd(Animation animation) {
                     if(alive == false){
-                        Log.d("FAIL","verloren!!");
-                        BluetoothHelper.sendDataToPairedDevice(ServerData.getServer(), "LOST_null_null_");
-                        ((GameActivity)getActivity()).changeFragment(Game_Lost_Fragment.newInstance(), "LOST");
+                        Log.d("Rocks","verloren!!");
+                        if(!ServerData.isServer()) {
+                            BluetoothHelper.sendDataToPairedDevice(ServerData.getServer(), "LOST_null_null_");
+                        } else {
+                            BluetoothHelper.sendDataToPairedDevice(ServerData.getTeamMembers(1).get(0), "LOST_null_null_");
+                        }
+                        ((GameActivity) getActivity()).changeFragment(Game_Lost_Fragment.newInstance(), "LOST");
                     }
-                    if(thrownRocks == 5 && alive == true){
+                    if(count == 5 && alive == true){
                         Log.d("SUCCESS", "you win");
                         rescue2.setVisibility(View.GONE);
                         end.setVisibility(View.VISIBLE);
@@ -252,7 +273,7 @@ public class Game_Rescue_Fragment extends Fragment implements SensorHandler.Sens
            });
            i.startAnimation(anim);
 
-           thrownRocks += 1;
+           count += 1;
 
            // Add the ImageView to the layout and set the layout as the content view
            rescue2.addView(i);
@@ -260,18 +281,76 @@ public class Game_Rescue_Fragment extends Fragment implements SensorHandler.Sens
            Runnable r = new Runnable() {
                @Override
                public void run() {
-                  if(thrownRocks < 5 && alive) throwRocks();
+                  if(count < 5 && alive) throwRocks();
                }};
 
            Handler mHandler = new Handler();
            mHandler.postDelayed(r, 3000);
     }
 
+    public void pullRope(){
+        getActivity().runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                if(count == 0){
+                    rescue2.setVisibility(View.VISIBLE);
+                    info2.setVisibility(View.GONE);
+                    distanceText.setVisibility(View.GONE);
+                }
+                 else {
+                    Handler wait = new Handler();
+                    wait.postDelayed(new Runnable() {
+                                         @Override
+                                         public void run() {
+                                             inTime = false;
+                                             sensorHandler.stopSensing();
+                                             pullText.setVisibility(View.INVISIBLE);
+                                         }},
+                            (long)(700) //0.7 seconds to pull
+                    );
+                }
+
+            alive = false;
+            inTime = true;
+            count += 1;
+
+            // new pull
+            Runnable r = new Runnable() {
+                @Override
+                public void run() {
+                    if(count == 1) alive = true;
+                    if(count <= 3 && alive) {
+                        pullText.setVisibility(View.VISIBLE);
+                        startSensing("gyroscope");
+                        pullRope();
+                    } else if(!alive){
+                        if(!ServerData.isServer()) {
+                            BluetoothHelper.sendDataToPairedDevice(ServerData.getServer(), "LOST_null_null_");
+                        } else {
+                            BluetoothHelper.sendDataToPairedDevice(ServerData.getTeamMembers(1).get(0), "LOST_null_null_");
+                        }
+                        ((GameActivity) getActivity()).changeFragment(Game_Lost_Fragment.newInstance(), "LOST");
+                        Log.d("Pull", "lost");
+                    }
+                }};
+
+            Handler mHandler = new Handler();
+            mHandler.postDelayed(r, 4000);
+       }
+       });
+
+    }
+
+    @Override
+    public void pullSensed(double[] data) {
+        Log.d("GYRO", "You pulled " + data[0] + ", " + inTime);
+        if(inTime) alive = true;
+    }
+
     @Override
     public void onClick(View view) {
 
     }
-
     class MyGestureDetector extends GestureDetector.SimpleOnGestureListener{
 
         @Override

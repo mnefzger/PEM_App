@@ -92,6 +92,9 @@ public class GameActivity extends Activity implements BluetoothListener.IListenC
         } else if(processed.equals("ropeThrown")){
             Game_Rescue_Fragment fragment = (Game_Rescue_Fragment)fragmentManager.findFragmentByTag("RESCUE");
             fragment.ropeIsThrown();
+        } else if(processed.equals("ropeClimb")){
+            Game_Rescue_Fragment fragment = (Game_Rescue_Fragment)fragmentManager.findFragmentByTag("RESCUE");
+            fragment.pullRope();
         } else if(processed.equals("pitSuccess")){
             this.changeFragment(Game_Main_Fragment.newInstance(), "MAIN");
         }

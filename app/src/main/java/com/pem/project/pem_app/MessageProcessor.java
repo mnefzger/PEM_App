@@ -23,8 +23,10 @@ public class MessageProcessor {
                 if(ServerData.isServer()){
                     //check if socket belongs to server's team
                     if(ServerData.getTeam(socket) == 1){
+                        //this message is meant for the server
                         return extra;
                     } else {
+                        //this message is meant for a player of the opposite team
                         BluetoothHelper.sendDataToPairedDevice(ServerData.getOtherTeamMember(socket), "START_Rescue_ropeWait_");
                     }
                 } else {

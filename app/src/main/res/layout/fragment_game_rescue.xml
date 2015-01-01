@@ -11,7 +11,7 @@
 
     <FrameLayout
         android:layout_width="fill_parent"
-        android:layout_height="fill_parent"
+        android:layout_height="536dp"
         android:layout_gravity="left|bottom"
         android:id="@+id/theRescueLayout2"
         android:visibility="invisible"
@@ -20,12 +20,21 @@
         android:background="@drawable/pit_rope">
 
 
-
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceLarge"
+            android:text="Pull!"
+            android:textSize="50dp"
+            android:textColor="@color/black"
+            android:id="@+id/pull_text"
+            android:layout_gravity="center"
+            android:visibility="invisible"/>
     </FrameLayout>
 
     <FrameLayout
         android:layout_width="fill_parent"
-        android:layout_height="fill_parent"
+        android:layout_height="532dp"
         android:layout_gravity="left|bottom"
         android:id="@+id/theRescueLayout"
         android:visibility="invisible"
@@ -46,7 +55,7 @@
 
     <RelativeLayout
         android:layout_width="fill_parent"
-        android:layout_height="515dp"
+        android:layout_height="536dp"
         android:id="@+id/theRescueIntroText2"
         android:layout_gravity="center_horizontal|bottom"
         android:padding="10dp"
@@ -81,7 +90,7 @@
 
     <TextView
         android:layout_width="fill_parent"
-        android:layout_height="72dp"
+        android:layout_height="57dp"
         android:textAppearance="?android:attr/textAppearanceLarge"
         android:text="The Rescue"
         android:id="@+id/textView3"
@@ -92,8 +101,8 @@
         android:textColor="#D5F6B8" />
 
     <RelativeLayout
-        android:layout_width="fill_parent"
-        android:layout_height="518dp"
+        android:layout_width="358dp"
+        android:layout_height="534dp"
         android:layout_gravity="center_horizontal|bottom"
         android:id="@+id/theRescueIntroText"
         android:layout_row="1"
