@@ -2,6 +2,7 @@ package com.pem.project.pem_app;
 
 import android.app.Activity;
 import android.app.Fragment;
+import android.content.res.Configuration;
 import android.net.Uri;
 import android.os.Bundle;
 import android.view.KeyEvent;
@@ -12,7 +13,6 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
-import android.widget.Toast;
 
 
 /**
@@ -48,15 +48,17 @@ public class Game_Math_Fragment extends Fragment implements OnClickListener {
     private Button buttonOption4;
     private Button buttonOption5;
     private Button buttonOption6;
+    private int input;
+    private int correctResult = -9999;
     private int result1;
     private int result2;
-    private int player;
-    private int correctResult;
 
     ServerData serverData;
     private boolean field_one_pressed;
     private boolean field_two_pressed;
     private EditText editText1;
+    private boolean wait = false;
+    private int player;
 
 
     /**
@@ -166,7 +168,7 @@ public class Game_Math_Fragment extends Fragment implements OnClickListener {
         buttonOption5 = (Button) rootView.findViewById(R.id.buttonMath5);
         buttonOption6 = (Button) rootView.findViewById(R.id.buttonMath6);
         editText1 = (EditText) rootView.findViewById(R.id.result);
-        editText1.setImeActionLabel("Calc", KeyEvent.KEYCODE_ENTER);
+       // editText1.setImeActionLabel("Calc", KeyEvent.KEYCODE_ENTER);
 
         buttonOption1.setOnClickListener(this);
         buttonOption2.setOnClickListener(this);
@@ -175,13 +177,25 @@ public class Game_Math_Fragment extends Fragment implements OnClickListener {
         buttonOption5.setOnClickListener(this);
         buttonOption6.setOnClickListener(this);
 
+        editText1.setRawInputType(Configuration.KEYBOARD_12KEY);
         editText1.setOnKeyListener(new View.OnKeyListener() {
             public boolean onKey(View v, int keyCode, KeyEvent event) {
                 // If the event is a key-down event on the "enter" button
                 if ((event.getAction() == KeyEvent.ACTION_DOWN) &&
                         (keyCode == KeyEvent.KEYCODE_ENTER)) {
                     // Perform action on key press
-                    Toast.makeText(getActivity(), editText1.getText(), Toast.LENGTH_SHORT).show();
+                    
+
+                    if (!ServerData.isServer()) {
+                        //send to server
+                        BluetoothHelper.sendDataToPairedDevice(ServerData.getServer(), "GAMEDATA_Math_checkIfGameWon_");
+                    } else {
+                        // send to partner of server
+                        BluetoothHelper.sendDataToPairedDevice(ServerData.getTeamMembers(1).get(0), "GAMEDATA_Math_checkIfGameWon_");
+                    }
+                    
+
+                    checkIfGameWon();
                     return true;
                 }
                 return false;
@@ -244,7 +258,7 @@ public class Game_Math_Fragment extends Fragment implements OnClickListener {
     }
 
 
-        @Override
+    @Override
         public void onClick(View view) {
 
             //boolean play = true;
@@ -310,10 +324,7 @@ public class Game_Math_Fragment extends Fragment implements OnClickListener {
 
             Button butPressed = (Button) rootView.findViewById(view.getId());
 
-            butPressed.setBackgroundColor(0xFFFFFFFF);
-
-
-
+            butPressed.setBackgroundColor(0xFFD3D3D3);
 
             if (field == 0){
                 field_one_pressed = true;
@@ -363,16 +374,20 @@ public class Game_Math_Fragment extends Fragment implements OnClickListener {
             getActivity().runOnUiThread(new Runnable() {
                 @Override
                 public void run() {
-                    TextView result1;
-                    TextView result2;
+                    TextView textview1;
+                    TextView textview2;
 
-                    result1 = (TextView) rootView.findViewById(R.id.result1);
-                    result2 = (TextView) rootView.findViewById(R.id.result2);
+                    textview1 = (TextView) rootView.findViewById(R.id.result1);
+                    textview2 = (TextView) rootView.findViewById(R.id.result2);
 
-                    if (processed.startsWith("result1"))
-                     result1.setText(processed.substring(8));
-                     else if (processed.startsWith("result2"))
-                     result2.setText(processed.substring(8));
+                    if (processed.startsWith("result1")) {
+                        textview1.setText(processed.substring(8));
+                        result1 = Integer.parseInt(processed.substring(8));
+                    } else if (processed.startsWith("result2")){
+                        textview2.setText(processed.substring(8));
+                        result2 = Integer.parseInt(processed.substring(8));
+                    }
+
 
                 }
             });
@@ -382,8 +397,52 @@ public class Game_Math_Fragment extends Fragment implements OnClickListener {
         }
 
     public void setCorrectResult(String correctResult){
-        this.correctResult = Integer.parseInt(correctResult);
-        System.out.println("Correct Result: " + correctResult);
+        this.correctResult = Integer.parseInt(correctResult.substring(14));
+        System.out.println("Correct Result: " + correctResult.substring(14));
     }
 
+    private boolean checkIfGameWon() {
+
+        input = Integer.parseInt(editText1.getText().toString());
+        System.out.println("correctResult: " + correctResult + "; operation1: " + operation1.getRightValue() + "; operation2: " + operation2.getRightValue());
+        System.out.println("My input: " + input + "; Result1: " + result1 + "; Result2: " + result2);
+
+        if (wait == true && 
+            correctResult != -9999 && // Check if Result from Partner is set
+            correctResult == operation1.getRightValue() + operation2.getRightValue() && // Check Partner
+            correct1 && correct2 &&
+            input  == result1 + result2 ){ // Check Own
+            if (!ServerData.isServer()) {
+                //send to server
+                BluetoothHelper.sendDataToPairedDevice(ServerData.getServer(), "GAMEDATA_Math_YouWon_");
+            } else {
+                // send to partner of server
+                BluetoothHelper.sendDataToPairedDevice(ServerData.getTeamMembers(1).get(0), "GAMEDATA_Math_YouWon_");
+            }
+            return true;
+        } else if (wait == false){
+            if (!ServerData.isServer()) {
+                //send to server
+                BluetoothHelper.sendDataToPairedDevice(ServerData.getServer(), "GAMEDATA_Math_WaitForPartner_");
+            } else {
+                // send to partner of server
+                BluetoothHelper.sendDataToPairedDevice(ServerData.getTeamMembers(1).get(0), "GAMEDATA_Math_WaitForPartner_");
+            }
+        } else {
+            if (!ServerData.isServer()) {
+                //send to server
+                BluetoothHelper.sendDataToPairedDevice(ServerData.getServer(), "GAMEDATA_Math_YouLost_");
+            } else {
+                // send to partner of server
+                BluetoothHelper.sendDataToPairedDevice(ServerData.getTeamMembers(1).get(0), "GAMEDATA_Math_YouLost_");
+            }
+        }
+    return false;
+    }
+
+
+    public void setWaitIfGameWon() {
+        
+        wait = true;
+    }
 }

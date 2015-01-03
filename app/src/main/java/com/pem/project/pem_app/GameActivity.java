@@ -108,6 +108,9 @@ public class GameActivity extends Activity implements BluetoothListener.IListenC
         } else if(processed.startsWith("correctResult")){
             Game_Math_Fragment fragment = (Game_Math_Fragment)fragmentManager.findFragmentByTag("MATH");
             fragment.setCorrectResult(processed);
+        } else if(processed.equals("checkIfGameWon")){
+            Game_Math_Fragment fragment = (Game_Math_Fragment)fragmentManager.findFragmentByTag("MATH");
+            fragment.setWaitIfGameWon();
         }
     }
 
@@ -131,5 +134,9 @@ public class GameActivity extends Activity implements BluetoothListener.IListenC
     @Override
     public void onFragmentInteraction(Uri uri) {
 
+    }
+
+    @Override
+    public void onBackPressed() {
     }
 }

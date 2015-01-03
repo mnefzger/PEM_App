@@ -191,11 +191,13 @@
                 android:id="@+id/result"
                 android:background="@color/white"
                 android:hint="@string/questionMark"
-                android:inputType="number"
+
                 android:textSize="13pt"
                 android:layout_weight="0.51"
                 android:padding="10dp"
                 android:width="80dp"
+
+                android:digits="1234567890-"
                 android:textColor="@color/black"/>
         </LinearLayout>
 
