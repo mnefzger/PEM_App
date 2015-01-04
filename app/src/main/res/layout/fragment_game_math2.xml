@@ -196,7 +196,7 @@
                 android:layout_weight="0.51"
                 android:padding="10dp"
                 android:width="80dp"
-
+                android:imeOptions="actionDone"
                 android:digits="1234567890-"
                 android:textColor="@color/black"/>
         </LinearLayout>

@@ -5,11 +5,13 @@ import android.app.Fragment;
 import android.content.res.Configuration;
 import android.net.Uri;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
+import android.view.inputmethod.EditorInfo;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
@@ -42,22 +44,27 @@ public class Game_Math_Fragment extends Fragment implements OnClickListener {
     private Game_Math_Helper operation2;
     private boolean correct1 = false;
     private boolean correct2 = false;
+    private boolean correct_partner = false;
     private Button buttonOption1;
     private Button buttonOption2;
     private Button buttonOption3;
     private Button buttonOption4;
     private Button buttonOption5;
     private Button buttonOption6;
-    private int input;
-    private int correctResult = -9999;
-    private int result1;
-    private int result2;
+    private int input_my;
+    private int input_partner;
+    private int correctFinalResult_my = -9999;
+    private int correctFinalResult_partner = -9999;
+    private int result1_my;
+    private int result2_my;
+    private int result1_partner;
+    private int result2_partner;
 
     ServerData serverData;
     private boolean field_one_pressed;
     private boolean field_two_pressed;
     private EditText editText1;
-    private boolean wait = false;
+    private boolean wait_partner = false;
     private int player;
 
 
@@ -144,6 +151,7 @@ public class Game_Math_Fragment extends Fragment implements OnClickListener {
         mListener = null;
     }
 
+
     /**
      * This interface must be implemented by activities that contain this
      * fragment to allow an interaction in this fragment to be communicated
@@ -178,32 +186,71 @@ public class Game_Math_Fragment extends Fragment implements OnClickListener {
         buttonOption6.setOnClickListener(this);
 
         editText1.setRawInputType(Configuration.KEYBOARD_12KEY);
-        editText1.setOnKeyListener(new View.OnKeyListener() {
+
+
+        editText1.setOnEditorActionListener(new TextView.OnEditorActionListener() {
+            @Override
+            public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
+                if(actionId== EditorInfo.IME_ACTION_DONE){
+                    //Clear focus here from edittext
+                    editText1.clearFocus();
+
+                    input_my = Integer.parseInt(editText1.getText().toString());
+
+                        if (!ServerData.isServer()) {
+                            //send to server
+                            BluetoothHelper.sendDataToPairedDevice(ServerData.getServer(), "GAMEDATA_Math_checkIfGameWon_\n");
+                            BluetoothHelper.sendDataToPairedDevice(ServerData.getServer(), "GAMEDATA_Math_inputMy:" + input_my + "_\n");
+                            BluetoothHelper.sendDataToPairedDevice(ServerData.getServer(), "GAMEDATA_Math_correctMy:" + (correct1 && correct2) + "_\n");
+
+                        } else {
+                            // send to partner of server
+                            BluetoothHelper.sendDataToPairedDevice(ServerData.getTeamMembers(1).get(0), "GAMEDATA_Math_checkIfGameWon_\n");
+                            BluetoothHelper.sendDataToPairedDevice(ServerData.getTeamMembers(1).get(0), "GAMEDATA_Math_inputMy:" + input_my + "_\n");
+                            BluetoothHelper.sendDataToPairedDevice(ServerData.getTeamMembers(1).get(0), "GAMEDATA_Math_correctMy:" + (correct1 && correct2) + "_\n");
+                        }
+
+                    checkIfGameWon();
+                }
+                return false;
+            }
+        });
+     /**   editText1.setOnKeyListener(new View.OnKeyListener() {
             public boolean onKey(View v, int keyCode, KeyEvent event) {
                 // If the event is a key-down event on the "enter" button
                 if ((event.getAction() == KeyEvent.ACTION_DOWN) &&
                         (keyCode == KeyEvent.KEYCODE_ENTER)) {
                     // Perform action on key press
-                    
+
+                    input_my = Integer.parseInt(editText1.getText().toString());
 
                     if (!ServerData.isServer()) {
                         //send to server
                         BluetoothHelper.sendDataToPairedDevice(ServerData.getServer(), "GAMEDATA_Math_checkIfGameWon_");
+                        BluetoothHelper.sendDataToPairedDevice(ServerData.getServer(), "GAMEDATA_Math_inputMy:" + input_my + "_");
+                        BluetoothHelper.sendDataToPairedDevice(ServerData.getServer(), "GAMEDATA_Math_correctMy:" + (correct1 && correct2) + "_");
+
                     } else {
                         // send to partner of server
                         BluetoothHelper.sendDataToPairedDevice(ServerData.getTeamMembers(1).get(0), "GAMEDATA_Math_checkIfGameWon_");
+                        BluetoothHelper.sendDataToPairedDevice(ServerData.getTeamMembers(1).get(0), "GAMEDATA_Math_inputMy:" + input_my + "_");
+                        BluetoothHelper.sendDataToPairedDevice(ServerData.getTeamMembers(1).get(0), "GAMEDATA_Math_correctMy:" + (correct1 && correct2) + "_");
                     }
-                    
-
                     checkIfGameWon();
+
+                   // editText1.clearFocus();
+
+
                     return true;
                 }
                 return false;
             }
         });
-
+**/
         operation1.createOperation();
         operation2.createOperation();
+
+        correctFinalResult_partner = operation1.getRightValue() + operation2.getRightValue();
 
 
         TextView textViewOperation1 = (TextView) rootView.findViewById(R.id.textViewOperation1);
@@ -324,10 +371,14 @@ public class Game_Math_Fragment extends Fragment implements OnClickListener {
 
             Button butPressed = (Button) rootView.findViewById(view.getId());
 
-            butPressed.setBackgroundColor(0xFFD3D3D3);
-
             if (field == 0){
                 field_one_pressed = true;
+
+                buttonOption1.setBackgroundColor(0xFFFFFFFF);
+                buttonOption2.setBackgroundColor(0xFFFFFFFF);
+                buttonOption3.setBackgroundColor(0xFFFFFFFF);
+
+                butPressed.setBackgroundColor(0xFFD3D3D3);
 
                 if (!ServerData.isServer()) {
                     //send to server
@@ -337,10 +388,18 @@ public class Game_Math_Fragment extends Fragment implements OnClickListener {
                     BluetoothHelper.sendDataToPairedDevice(ServerData.getTeamMembers(1).get(0), "GAMEDATA_Math_result1:" + butPressed.getText() + "_");
                 }
 
+                result1_my = Integer.parseInt(butPressed.getText().toString());
+
 
             } else if (field == 1) {
 
                 field_two_pressed = true;
+
+                buttonOption4.setBackgroundColor(0xFFFFFFFF);
+                buttonOption5.setBackgroundColor(0xFFFFFFFF);
+                buttonOption6.setBackgroundColor(0xFFFFFFFF);
+
+                butPressed.setBackgroundColor(0xFFD3D3D3);
 
                 if (!ServerData.isServer()) {
                     //send to server
@@ -349,6 +408,8 @@ public class Game_Math_Fragment extends Fragment implements OnClickListener {
                     // send to partner of server
                     BluetoothHelper.sendDataToPairedDevice(ServerData.getTeamMembers(1).get(0), "GAMEDATA_Math_result2:" + butPressed.getText() + "_");
                 }
+
+                result2_my = Integer.parseInt(butPressed.getText().toString());
 
             }
 
@@ -382,10 +443,10 @@ public class Game_Math_Fragment extends Fragment implements OnClickListener {
 
                     if (processed.startsWith("result1")) {
                         textview1.setText(processed.substring(8));
-                        result1 = Integer.parseInt(processed.substring(8));
+                        result1_partner = Integer.parseInt(processed.substring(8));
                     } else if (processed.startsWith("result2")){
                         textview2.setText(processed.substring(8));
-                        result2 = Integer.parseInt(processed.substring(8));
+                        result2_partner = Integer.parseInt(processed.substring(8));
                     }
 
 
@@ -397,30 +458,30 @@ public class Game_Math_Fragment extends Fragment implements OnClickListener {
         }
 
     public void setCorrectResult(String correctResult){
-        this.correctResult = Integer.parseInt(correctResult.substring(14));
+        this.correctFinalResult_my = Integer.parseInt(correctResult.substring(14));
         System.out.println("Correct Result: " + correctResult.substring(14));
     }
 
     private boolean checkIfGameWon() {
 
-        input = Integer.parseInt(editText1.getText().toString());
-        System.out.println("correctResult: " + correctResult + "; operation1: " + operation1.getRightValue() + "; operation2: " + operation2.getRightValue());
-        System.out.println("My input: " + input + "; Result1: " + result1 + "; Result2: " + result2);
+        System.out.println(wait_partner + "; " + correctFinalResult_my + "; " + input_my + "; " + correct_partner);
 
-        if (wait == true && 
-            correctResult != -9999 && // Check if Result from Partner is set
-            correctResult == operation1.getRightValue() + operation2.getRightValue() && // Check Partner
-            correct1 && correct2 &&
-            input  == result1 + result2 ){ // Check Own
+        if (wait_partner == true &&
+            correctFinalResult_my != -9999 &&
+            correctFinalResult_my == input_my && // Check own
+            (correct1 && correct2) && // Check own
+            correct_partner ){ // Check Partner
+            Log.d("Math", "won!!");
             if (!ServerData.isServer()) {
                 //send to server
-                BluetoothHelper.sendDataToPairedDevice(ServerData.getServer(), "GAMEDATA_Math_YouWon_");
+                BluetoothHelper.sendDataToPairedDevice(ServerData.getServer(), "WON_null_null");
             } else {
                 // send to partner of server
-                BluetoothHelper.sendDataToPairedDevice(ServerData.getTeamMembers(1).get(0), "GAMEDATA_Math_YouWon_");
+                BluetoothHelper.sendDataToPairedDevice(ServerData.getTeamMembers(1).get(0), "WON_null_null");
             }
+            ((GameActivity) getActivity()).changeFragment(Game_Won_Fragment.newInstance(), "WON");
             return true;
-        } else if (wait == false){
+        } else if (wait_partner == false){
             if (!ServerData.isServer()) {
                 //send to server
                 BluetoothHelper.sendDataToPairedDevice(ServerData.getServer(), "GAMEDATA_Math_WaitForPartner_");
@@ -429,13 +490,15 @@ public class Game_Math_Fragment extends Fragment implements OnClickListener {
                 BluetoothHelper.sendDataToPairedDevice(ServerData.getTeamMembers(1).get(0), "GAMEDATA_Math_WaitForPartner_");
             }
         } else {
+            Log.d("Math", "lost!!");
             if (!ServerData.isServer()) {
                 //send to server
-                BluetoothHelper.sendDataToPairedDevice(ServerData.getServer(), "GAMEDATA_Math_YouLost_");
+                BluetoothHelper.sendDataToPairedDevice(ServerData.getServer(), "LOST_null_null_");
             } else {
                 // send to partner of server
-                BluetoothHelper.sendDataToPairedDevice(ServerData.getTeamMembers(1).get(0), "GAMEDATA_Math_YouLost_");
+                BluetoothHelper.sendDataToPairedDevice(ServerData.getTeamMembers(1).get(0), "LOST_null_null_");
             }
+            ((GameActivity) getActivity()).changeFragment(Game_Lost_Fragment.newInstance(), "LOST");
         }
     return false;
     }
@@ -443,6 +506,17 @@ public class Game_Math_Fragment extends Fragment implements OnClickListener {
 
     public void setWaitIfGameWon() {
         
-        wait = true;
+        wait_partner = true;
+    }
+
+    public void checkCorrectPartner(String processed) {
+
+        if (processed.substring(10).equals("true") && input_partner == correctFinalResult_partner)
+        correct_partner = true;
+
+    }
+
+    public void setInputPartner(String inputPartner) {
+        this.input_partner = Integer.parseInt(inputPartner.substring(8));
     }
 }
