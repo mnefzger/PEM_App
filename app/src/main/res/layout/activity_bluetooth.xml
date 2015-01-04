@@ -70,14 +70,14 @@
 
     <TextView
         android:layout_width="fill_parent"
-        android:layout_height="72dp"
+        android:layout_height="55dp"
         android:textAppearance="?android:attr/textAppearanceLarge"
-        android:text="New Game"
+        android:text="Game Setup"
         android:id="@+id/textView3"
         android:layout_gravity="center_horizontal|top"
         android:gravity="center"
         android:background="#3E6617"
-        android:textSize="35dp"
+        android:textSize="30dp"
         android:textColor="#D5F6B8" />
 
 

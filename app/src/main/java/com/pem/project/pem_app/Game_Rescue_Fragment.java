@@ -7,6 +7,7 @@ import android.graphics.Canvas;
 import android.graphics.Point;
 import android.graphics.drawable.ShapeDrawable;
 import android.graphics.drawable.shapes.RectShape;
+import android.media.Image;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -21,6 +22,7 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.view.animation.TranslateAnimation;
 import android.widget.Button;
 import android.widget.FrameLayout;
@@ -63,10 +65,16 @@ public class Game_Rescue_Fragment extends Fragment implements SensorHandler.rope
         private FrameLayout rescue;
         private FrameLayout rescue2;
         private RelativeLayout end;
+        private ImageView rope;
+
         private int count = 0;
         private String side = "";
         private boolean alive = false;
         private boolean inTime = false;
+
+        private Animation swingLeft;
+        private Animation swingRight;
+
         private SensorHandler sensorHandler;
         private GestureDetector gestureDetector;
         View.OnTouchListener gestureListener;
@@ -114,6 +122,9 @@ public class Game_Rescue_Fragment extends Fragment implements SensorHandler.rope
         pitText = (TextView)v.findViewById(R.id.pitText);
         distanceText = (TextView)v.findViewById(R.id.distanceText);
         pullText = (TextView)v.findViewById(R.id.pull_text);
+        rope = (ImageView)v.findViewById(R.id.rope);
+        swingLeft = AnimationUtils.loadAnimation(getActivity(), R.anim.anim_rope_left);
+        swingRight = AnimationUtils.loadAnimation(getActivity(), R.anim.anim_rope_right);
 
         gestureDetector = new GestureDetector(getActivity().getApplicationContext(), new MyGestureDetector());
         gestureListener = new View.OnTouchListener() {
@@ -202,7 +213,8 @@ public class Game_Rescue_Fragment extends Fragment implements SensorHandler.rope
 
     @Override
     public void ropeSensed(double[] data) {
-        distanceText.setText("You have thrown the rope\n" + data[0] + " meters!\n\n" +
+        String distance = (data[0] + "").substring(0,5);
+        distanceText.setText("You have thrown the rope\n" + distance + " meters!\n\n" +
                 "Your partner can now begin to climb out...\n\n" +
                 "To help him, you have to pull the rope when the time is right!\n" +
                 "Tilt your phone towards you when you see the signal.");
@@ -361,11 +373,13 @@ public class Game_Rescue_Fragment extends Fragment implements SensorHandler.rope
                 if(e1.getX() - e2.getX() > 120 && Math.abs(velocityX) > 100) {
                     if(side.equals("left")){
                         Log.d("SWIPE", "correct left");
+                        rope.startAnimation(swingLeft);
                         alive = true;
                     }
                 }  else if (e2.getX() - e1.getX() > 120 && Math.abs(velocityX) > 100) {
                     if(side.equals("right")){
                         Log.d("SWIPE", "correct right");
+                        rope.startAnimation(swingRight);
                         alive = true;
                     }
                 }

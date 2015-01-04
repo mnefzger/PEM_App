@@ -12,6 +12,10 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -22,7 +26,9 @@ public class BluetoothClientActivity extends Activity implements BluetoothListen
     private BluetoothAdapter bAdapter;
     private BroadcastReceiver mReceiver;
     private TextView text;
-    Activity clientActivity;
+    private ImageView coin;
+    private Animation anim;
+    private Activity clientActivity;
     private BluetoothListener listener;
 
 
@@ -31,6 +37,9 @@ public class BluetoothClientActivity extends Activity implements BluetoothListen
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_bluetooth_client);
         text = (TextView)findViewById(R.id.status);
+        coin = (ImageView)findViewById(R.id.startCoin);
+        anim = AnimationUtils.loadAnimation(this, R.anim.anim_client_welcome);
+
         clientActivity = this;
 
         bAdapter = BluetoothAdapter.getDefaultAdapter();
@@ -110,12 +119,13 @@ public class BluetoothClientActivity extends Activity implements BluetoothListen
 
     public void processReceivedMessage(String m, BluetoothSocket s){
         final BluetoothSocket socket = s;
-        Log.d("BLABLAB", "");
         final String processed = new MessageProcessor().processMessage(m, socket);
         runOnUiThread(new Runnable() {
             @Override
             public void run() {
-                text.setText("From " + socket.getRemoteDevice().getName() + ": " + processed);
+                text.setText("Greetings, brave adventurer!\n\nThe quest can be begin!\nBe careful though, no living soul knows what lies ahead... ");
+                coin.setVisibility(View.VISIBLE);
+                coin.startAnimation(anim);
             }
         });
 
@@ -132,7 +142,6 @@ public class BluetoothClientActivity extends Activity implements BluetoothListen
         private final BluetoothDevice mmDevice;
 
         public ConnectThread(BluetoothDevice device) {
-            Log.d("PEM_Bluetooth", "started ConnectClient");
             // Use a temporary object that is later assigned to mmSocket,
             // because mmSocket is final
             BluetoothSocket tmp = null;
@@ -179,8 +188,6 @@ public class BluetoothClientActivity extends Activity implements BluetoothListen
     public void onStop(){
         super.onStop();
     }
-
-
 
 
 }

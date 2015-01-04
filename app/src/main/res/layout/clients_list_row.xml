@@ -16,8 +16,10 @@
             android:textColor="#D5F6B8"
             android:id="@+id/clientText"
             android:textSize="30dp"
+            android:layout_marginTop="10dp"
             android:layout_marginLeft="20dp"
-            android:layout_marginBottom="20dp"
+            android:layout_marginBottom="10dp"
+            android:gravity="center_vertical"
             />
 
         <TextView
@@ -27,7 +29,9 @@
             android:textColor="#D5F6B8"
             android:textSize="30dp"
             android:text="abc"
-            android:gravity="right" />
+            android:gravity="right"
+            android:layout_marginTop="10dp"
+            android:layout_marginBottom="10dp"/>
     </LinearLayout>
 
 </LinearLayout>
