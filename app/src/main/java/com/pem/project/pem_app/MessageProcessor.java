@@ -17,29 +17,17 @@ public class MessageProcessor {
         //check what kind of message we got [START, INFO, GAMEDATA, UPDATE, LOST]
         if(messageArt.equals("START")){
             //default
-            if(miniGame.equals("null"))  return "START";
-
-            if(miniGame.equals("Rescue")){
-                if(ServerData.isServer()){
+            if(miniGame.equals("null")){
+                return "START";
+            } else {
+                if (ServerData.isServer()) {
                     //check if socket belongs to server's team
-                    if(ServerData.getTeam(socket) == 1){
+                    if (ServerData.getTeam(socket) == 1) {
                         //this message is meant for the server
                         return extra;
                     } else {
                         //this message is meant for a player of the opposite team
-                        BluetoothHelper.sendDataToPairedDevice(ServerData.getOtherTeamMember(socket), "START_Rescue_ropeWait_");
-                    }
-                } else {
-                    return extra;
-                }
-            }
-            if(miniGame.equals("Math")){
-                if(ServerData.isServer()){
-                    //check if socket belongs to server's team
-                    if(ServerData.getTeam(socket) == 1){
-                        return extra;
-                    } else {
-                        BluetoothHelper.sendDataToPairedDevice(ServerData.getOtherTeamMember(socket), "START_Math_Player2_");
+                        BluetoothHelper.sendDataToPairedDevice(ServerData.getOtherTeamMember(socket), "START_" + miniGame + "_" + extra + "_");
                     }
                 } else {
                     return extra;
@@ -51,39 +39,33 @@ public class MessageProcessor {
 
         } else if(messageArt.equals("GAMEDATA")){
 
-            if(miniGame.equals("Rescue")){
                 if(ServerData.isServer()){
                     //check if socket belongs to server's team
                     if(ServerData.getTeam(socket) == 1){
                         return extra;
                     } else {
-                        BluetoothHelper.sendDataToPairedDevice(ServerData.getOtherTeamMember(socket), "GAMEDATA_Rescue_" + extra + "_");
+                        BluetoothHelper.sendDataToPairedDevice(ServerData.getOtherTeamMember(socket), "GAMEDATA_"+ miniGame + "_" + extra + "_");
                     }
 
                     if(extra.equals("pitSuccess")){
                         // update ServerData and broadcast new data
                         // to do
                         for(BluetoothSocket client : ServerData.getClients()){
-                            BluetoothHelper.sendDataToPairedDevice(client, "UPDATE_Null_team1_keyYellow");
+                            BluetoothHelper.sendDataToPairedDevice(client, "UPDATE_null_team1_keyYellow");
                         }
                     }
-                } else {
-                    return extra;
-                }
-            }
-
-            if(miniGame.equals("Math")){
-                if(ServerData.isServer()){
-                    //check if socket belongs to server's team
-                    if(ServerData.getTeam(socket) == 1){
-                        return extra;
-                    } else {
-                        BluetoothHelper.sendDataToPairedDevice(ServerData.getOtherTeamMember(socket), "GAMEDATA_Math_" + extra + "_");
+                    if(extra.equals("mathSuccess")){
+                        // update ServerData and broadcast new data
+                        // to do
+                        for(BluetoothSocket client : ServerData.getClients()){
+                            BluetoothHelper.sendDataToPairedDevice(client, "UPDATE_null_team1_keyBlue");
+                        }
                     }
+
                 } else {
                     return extra;
                 }
-            }
+
 
         } else if(messageArt.equals("UPDATE")){
            // to do

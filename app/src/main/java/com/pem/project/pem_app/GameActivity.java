@@ -109,6 +109,14 @@ public class GameActivity extends Activity implements BluetoothListener.IListenC
             Game_Math_Fragment fragment = (Game_Math_Fragment)fragmentManager.findFragmentByTag("MATH");
             fragment.setCorrectResult(processed);
         }
+
+        //RUN
+        if(processed.equals("runInfo")){
+            this.changeFragment(Game_Run_Fragment.newInstance(), "RUN");
+        } else if(processed.equals("startRunning")){
+            Game_Run_Fragment fragment = (Game_Run_Fragment)fragmentManager.findFragmentByTag("RUN");
+            //fragment.startRunning();
+        }
     }
 
     public void changeFragment(Fragment f, String tag){

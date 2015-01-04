@@ -24,6 +24,7 @@ public class Game_Main_Fragment extends Fragment {
     private OnFragmentInteractionListener mListener;
     private Button startMiniGameButton;
     private Button startMiniGameButton2;
+    private Button startMiniGameButton3;
 
     /**
      * Use this factory method to create a new instance of
@@ -108,6 +109,22 @@ public class Game_Main_Fragment extends Fragment {
                 } else {
                     // send to partner of server
                     BluetoothHelper.sendDataToPairedDevice(ServerData.getTeamMembers(1).get(0), "START_Math_Player2_");
+                }
+            }
+        });
+
+        startMiniGameButton3 = (Button)view.findViewById(R.id.startMiniGameButton3);
+        startMiniGameButton3.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                ((GameActivity)getActivity()).changeFragment(Game_Run_Fragment.newInstance(), "RUN");
+
+                if (!ServerData.isServer()){
+                    //send to server
+                    BluetoothHelper.sendDataToPairedDevice(ServerData.getServer(), "START_Run_runInfo_");
+                } else {
+                    // send to partner of server
+                    BluetoothHelper.sendDataToPairedDevice(ServerData.getTeamMembers(1).get(0), "START_Run_runInfo_");
                 }
             }
         });

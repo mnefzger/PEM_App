@@ -23,11 +23,17 @@ public class SensorHandler implements SensorEventListener{
         public void pullSensed(double[] data);
     }
 
+    public interface runCallback{
+        public void runSensed(double[] data);
+    }
+
     SensorManager sensorManager;
     private Sensor sensor;
     private ropeCallback callback;
     private pullCallback callback2;
+    private runCallback callback3;
     private String mode;
+    private int count = 0;
 
     public SensorHandler(Fragment f, Context c, String mode){
         sensorManager = (SensorManager) c.getSystemService(Context.SENSOR_SERVICE);
@@ -39,6 +45,9 @@ public class SensorHandler implements SensorEventListener{
         } else if(mode.equals("gyroscope")){
             sensor = sensorManager.getDefaultSensor(Sensor.TYPE_GYROSCOPE);
             callback2 = (pullCallback) f;
+        } else if(mode.equals("shake")){
+            sensor = sensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
+            callback3 = (runCallback) f;
         }
 
         sensorManager.registerListener(this, sensor, sensorManager.SENSOR_DELAY_GAME);
@@ -75,6 +84,19 @@ public class SensorHandler implements SensorEventListener{
                 double[] data = new double[1];
                 pullSensed(data);
             }
+        } else if(this.mode.equals("shake")) {
+            double speed = event.values[0] + event.values[1] + event.values[2] - 9.5;
+            count++;
+
+            if(count%25 == 0){
+                double[] data = new double[1];
+                data[0] = speed;
+                runSensed(data);
+            }
+
+            if(count == 1000){
+                sensorManager.unregisterListener(this);
+            }
         }
 
     }
@@ -107,4 +129,6 @@ public class SensorHandler implements SensorEventListener{
     public void pullSensed(double[] data){
         callback2.pullSensed(data);
     }
+
+    public void runSensed(double[] data) {  callback3.runSensed(data);}
 }

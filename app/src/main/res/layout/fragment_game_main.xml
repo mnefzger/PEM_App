@@ -20,6 +20,23 @@ tools:context="com.pem.project.pem_app.GameActivity">
     android:orientation="vertical"
     android:paddingBottom="6dip"
     android:paddingTop="4dip">
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Speed"
+        android:id="@+id/startMiniGameButton3"
+        android:layout_gravity="right" />
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="MathGame"
+        android:id="@+id/startMiniGameButton2"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
+        android:layout_gravity="center_horizontal" />
+
     <Button
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -28,14 +45,6 @@ tools:context="com.pem.project.pem_app.GameActivity">
         android:layout_alignParentBottom="true"
         android:layout_centerHorizontal="true"
         android:layout_marginBottom="89dp" />
-
-    <Button
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="MathGame"
-        android:id="@+id/startMiniGameButton2"
-        android:layout_alignParentBottom="true"
-        android:layout_centerHorizontal="true" />
 
     <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
         android:id="@+id/team1_state"
