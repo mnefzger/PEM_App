@@ -1,7 +1,7 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools" android:layout_width="match_parent"
     android:layout_height="match_parent" tools:context="com.pem.project.pem_app.Game_Run_Fragment"
-    android:background="#293127">
+    android:background="#ffadcfa5">
 
     <!-- TODO: Update blank fragment layout -->
 
@@ -21,7 +21,8 @@
         android:layout_width="fill_parent"
         android:layout_height="fill_parent"
         android:padding="0dp"
-        android:id="@+id/runInfoText">
+        android:id="@+id/runInfoText"
+        android:alpha="1">
 
         <TextView
             android:layout_width="wrap_content"
@@ -30,17 +31,20 @@
                          \nYou can run by shaking your phone."
             android:id="@+id/textView4"
             android:layout_marginTop="69dp"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="10dp"
             android:gravity="center"
             android:textSize="18dp"
             android:layout_alignParentTop="true"
             android:layout_alignParentLeft="true"
-            android:layout_alignParentStart="true" />
+            android:layout_alignParentStart="true"
+            android:textColor="@color/black"/>
 
         <ImageView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:id="@+id/imageView3"
-            android:src="@drawable/monster"
+            android:src="@drawable/spider"
             android:layout_alignParentBottom="true"
             android:layout_alignParentLeft="true"
             android:layout_alignParentStart="true" />
@@ -54,11 +58,118 @@
             android:layout_centerHorizontal="true" />
     </RelativeLayout>
 
-    <RelativeLayout
+    <FrameLayout
         android:layout_width="fill_parent"
         android:layout_height="fill_parent"
         android:id="@+id/runGame"
-        android:visibility="invisible">
+        android:visibility="invisible"
+        android:orientation="vertical"
+        >
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/left_foot"
+            android:src="@drawable/left_foot"
+            android:layout_gravity="center_horizontal"
+            android:layout_below="@+id/imageView11"
+            android:layout_toLeftOf="@+id/imageView11"
+            android:layout_toStartOf="@+id/imageView11"
+            android:layout_marginRight="20dp"
+            android:layout_marginTop="250dp" />
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/right_foot"
+            android:src="@drawable/right_foot"
+            android:layout_gravity="center_horizontal"
+            android:layout_below="@+id/left_foot"
+            android:layout_alignLeft="@+id/runSpeed"
+            android:layout_alignStart="@+id/runSpeed"
+            android:layout_marginLeft="20dp"
+            android:layout_marginTop="190dp" />
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/imageView6"
+            android:src="@drawable/left_foot"
+            android:layout_gravity="center_horizontal"
+            android:layout_below="@+id/right_foot"
+            android:layout_alignLeft="@+id/left_foot"
+            android:layout_alignStart="@+id/left_foot"
+            android:layout_marginRight="20dp"
+            android:layout_marginTop="150dp" />
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/imageView7"
+            android:src="@drawable/right_foot"
+            android:layout_gravity="center_horizontal"
+            android:layout_below="@+id/imageView6"
+            android:layout_alignLeft="@+id/runSpeed"
+            android:layout_alignStart="@+id/runSpeed"
+            android:layout_marginLeft="20dp"
+            android:layout_marginTop="100dp" />
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/imageView9"
+            android:src="@drawable/left_foot"
+            android:layout_gravity="center_horizontal"
+            android:layout_below="@+id/imageView7"
+            android:layout_alignLeft="@+id/imageView6"
+            android:layout_alignStart="@+id/imageView6"
+            android:layout_marginRight="20dp"
+            android:layout_marginTop="60dp" />
+
+
+        <ImageView
+            android:layout_width="593dp"
+            android:layout_height="242dp"
+            android:id="@+id/imageView5"
+            android:src="@drawable/spider2"
+            android:layout_below="@+id/runSpeed"
+            android:layout_centerHorizontal="true"
+            android:layout_gravity="center_horizontal|bottom" />
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/imageView10"
+            android:src="@drawable/left_foot"
+            android:layout_gravity="center"
+            android:layout_below="@+id/imageView8"
+            android:layout_alignLeft="@+id/imageView9"
+            android:layout_alignStart="@+id/imageView9"
+            android:layout_marginRight="20dp"
+            android:layout_marginTop="80dp" />
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/imageView8"
+            android:src="@drawable/right_foot"
+            android:layout_gravity="center"
+            android:layout_below="@+id/runSpeed"
+            android:layout_alignLeft="@+id/runSpeed"
+            android:layout_alignStart="@+id/runSpeed"
+            android:layout_marginLeft="20dp"
+            android:layout_marginTop="20dp" />
+
+        <ImageView
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:id="@+id/runIndicator"
+            android:src="@drawable/coin_both"
+            android:layout_alignParentTop="true"
+            android:layout_centerHorizontal="true"
+            android:alpha="1"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginTop="60dp" />
 
         <TextView
             android:layout_width="wrap_content"
@@ -68,25 +179,8 @@
             android:id="@+id/runSpeed"
             android:layout_centerVertical="true"
             android:layout_centerHorizontal="true"
-            android:textSize="40dp"/>
+            android:textSize="40dp"
+            android:layout_gravity="center" />
 
-        <ImageView
-            android:layout_width="75dp"
-            android:layout_height="75dp"
-            android:id="@+id/runIndicator"
-            android:src="@drawable/coin_both"
-            android:layout_alignParentTop="true"
-            android:layout_centerHorizontal="true"
-            android:layout_marginTop="78dp" />
-
-        <ImageView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:id="@+id/imageView5"
-            android:src="@drawable/monster"
-            android:layout_marginTop="156dp"
-            android:layout_below="@+id/runSpeed"
-            android:layout_alignParentLeft="true"
-            android:layout_alignParentStart="true" />
-    </RelativeLayout>
+    </FrameLayout>
 </RelativeLayout>

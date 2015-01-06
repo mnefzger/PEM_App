@@ -232,7 +232,7 @@ public class Game_Rescue_Fragment extends Fragment implements SensorHandler.rope
         getActivity().runOnUiThread(new Runnable() {
             @Override
             public void run() {
-                pitText.setText("Your partner managed to throw the rope down your pit!\nYou begin climbing out...\n\nBut as you climb, rocks are getting loose and are falling down on you!\nSwing on the rope to avoid being hit!");
+                pitText.setText("Your partner managed to throw the rope down your pit!\nYou begin climbing out...\n\nBut as you climb, rocks are getting loose and are falling down on you!\nSwing on the rope by swiping away from the rock with your finger.");
                 startTheRescue2.setVisibility(View.VISIBLE);
             }
         });

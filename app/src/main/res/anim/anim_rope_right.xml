@@ -11,21 +11,5 @@
         android:duration="250"
         android:repeatCount="1"
         android:repeatMode="reverse"/>
-    <set
-        android:startOffset="500">
-        <rotate
-            android:fromDegrees="0"
-            android:toDegrees="2"
-            android:pivotX="0"
-            android:pivotY="0"
-            android:duration="20"/>
-        <rotate
-            android:startOffset="20"
-            android:fromDegrees="2"
-            android:toDegrees="0"
-            android:pivotX="0"
-            android:pivotY="0"
-            android:duration="20"/>
-    </set>
 
 </set>

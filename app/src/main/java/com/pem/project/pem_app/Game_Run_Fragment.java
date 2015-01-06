@@ -1,6 +1,7 @@
 package com.pem.project.pem_app;
 
 
+import android.graphics.drawable.Drawable;
 import android.media.Image;
 import android.os.Bundle;
 import android.app.Fragment;
@@ -13,7 +14,9 @@ import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.view.animation.TranslateAnimation;
 import android.widget.Button;
+import android.widget.FrameLayout;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
@@ -26,12 +29,15 @@ public class Game_Run_Fragment extends Fragment implements SensorHandler.runCall
     private SensorHandler sensorHandler;
     private TextView runSpeed;
     private RelativeLayout info;
-    private RelativeLayout runGame;
+    private FrameLayout runGame;
     private ImageView runIndicator;
+    private ImageView leftFoot;
+    private ImageView rightFoot;
     private boolean animated = false;
     private int fails = 0;
     private Animation anim1;
     private Animation anim2;
+    private Animation anim;
 
     public Game_Run_Fragment() {
         // Required empty public constructor
@@ -49,11 +55,14 @@ public class Game_Run_Fragment extends Fragment implements SensorHandler.runCall
         // Inflate the layout for this fragment
         View v = inflater.inflate(R.layout.fragment_game__run_, container, false);
         info = (RelativeLayout)v.findViewById(R.id.runInfoText);
-        runGame = (RelativeLayout)v.findViewById(R.id.runGame);
+        runGame = (FrameLayout)v.findViewById(R.id.runGame);
         runSpeed = (TextView)v.findViewById(R.id.runSpeed);
         runIndicator = (ImageView)v.findViewById(R.id.runIndicator);
+        leftFoot  =(ImageView)v.findViewById(R.id.left_foot);
+        rightFoot  =(ImageView)v.findViewById(R.id.right_foot);
         anim1 = AnimationUtils.loadAnimation(getActivity(), R.anim.anim_run_1);
         anim2 = AnimationUtils.loadAnimation(getActivity(), R.anim.anim_run_2);
+        anim = AnimationUtils.loadAnimation(getActivity(), R.anim.anim_run);
         anim1.setAnimationListener(l);
         anim2.setAnimationListener(l);
 
@@ -130,21 +139,20 @@ public class Game_Run_Fragment extends Fragment implements SensorHandler.runCall
 
     @Override
     public void runSensed(double[] data) {
-        Log.d("RUN", ""+Math.abs(data[0]));
-        if(Math.abs(data[0]) < 9){
+        // too slow
+        if(Math.abs(data[0]) < 8){
 
                 if(animated == false) {
                     if (fails == 0) {
-                        Log.d("ANIM", "1");
                         runIndicator.startAnimation(anim1);
                     }
                     if (fails == 1) {
-                        Log.d("ANIM", "2");
                         runIndicator.startAnimation(anim2);
                     }
                 }
 
         }
+        // player failed two times -> lost
         if(fails == 2){
             sensorHandler.stopSensing();
             if(!ServerData.isServer()) {
@@ -155,6 +163,7 @@ public class Game_Run_Fragment extends Fragment implements SensorHandler.runCall
             ((GameActivity) getActivity()).changeFragment(Game_Lost_Fragment.newInstance(), "LOST");
         }
     }
+
 
     Animation.AnimationListener l = new Animation.AnimationListener() {
         @Override
