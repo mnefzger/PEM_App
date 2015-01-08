@@ -60,10 +60,11 @@ public class Game_Main_Fragment extends Fragment {
         qrcode.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Context context = getActivity().getApplicationContext();
+               /* Context context = getActivity().getApplicationContext();
                 Intent intent= new Intent();
                 intent.setClassName(context.getPackageName(), context.getPackageName()+".QRScanActivity");
-                startActivity(intent);
+                startActivity(intent);*/
+                ((GameActivity)getActivity()).changeFragment(QR_Fragment.newInstance(), "QR");
             }
         });
 

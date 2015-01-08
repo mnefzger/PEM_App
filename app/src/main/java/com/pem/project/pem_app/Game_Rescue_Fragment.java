@@ -207,8 +207,8 @@ public class Game_Rescue_Fragment extends Fragment implements SensorHandler.rope
         mListener = null;
     }
 
-    public void startSensing(String mode){
-        sensorHandler = new SensorHandler(this, getActivity().getApplicationContext(), mode);
+    public void startSensing(String sensor){
+        sensorHandler = new SensorHandler(this, getActivity().getApplicationContext(), sensor);
     }
 
     @Override

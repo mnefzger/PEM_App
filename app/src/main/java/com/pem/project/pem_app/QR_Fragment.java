@@ -1,7 +1,21 @@
 package com.pem.project.pem_app;
 
 
+import android.nfc.Tag;
+import android.os.Bundle;
+import android.app.Fragment;
+import android.os.Handler;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.FrameLayout;
+import android.widget.TextView;
+
+import net.sourceforge.zbar.Config;
+import net.sourceforge.zbar.ImageScanner;
 import android.app.Activity;
+import android.content.Intent;
 import android.content.pm.ActivityInfo;
 import android.os.Bundle;
 import android.os.Handler;
@@ -24,7 +38,10 @@ import net.sourceforge.zbar.Symbol;
 import net.sourceforge.zbar.SymbolSet;
 
 
-public class QRScanActivity extends Activity {
+/**
+ * A simple {@link Fragment} subclass.
+ */
+public class QR_Fragment extends Fragment {
     private Camera mCamera;
     private CameraPreview mPreview;
     private Handler autoFocusHandler;
@@ -41,13 +58,21 @@ public class QRScanActivity extends Activity {
         System.loadLibrary("iconv");
     }
 
+    public static QR_Fragment newInstance() {
+        QR_Fragment fragment = new QR_Fragment();
+        return fragment;
+    }
+
+    public QR_Fragment() {
+        // Required empty public constructor
+    }
+
+
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_qrscan);
-
-        setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
-
+    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+                             Bundle savedInstanceState) {
+        // Inflate the layout for this fragment
+        View v =  inflater.inflate(R.layout.fragment_qr_, container, false);
         autoFocusHandler = new Handler();
         mCamera = getCameraInstance();
 
@@ -56,13 +81,13 @@ public class QRScanActivity extends Activity {
         scanner.setConfig(0, Config.X_DENSITY, 3);
         scanner.setConfig(0, Config.Y_DENSITY, 3);
 
-        mPreview = new CameraPreview(this, mCamera, previewCb, autoFocusCB);
-        FrameLayout preview = (FrameLayout)findViewById(R.id.cameraPreview);
+        mPreview = new CameraPreview(getActivity(), mCamera, previewCb, autoFocusCB);
+        FrameLayout preview = (FrameLayout)v.findViewById(R.id.cameraPreview);
         preview.addView(mPreview);
 
-        scanText = (TextView)findViewById(R.id.scanText);
+        scanText = (TextView)v.findViewById(R.id.scanText);
 
-        scanButton = (Button)findViewById(R.id.ScanButton);
+        scanButton = (Button)v.findViewById(R.id.ScanButton);
 
         scanButton.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
@@ -77,29 +102,7 @@ public class QRScanActivity extends Activity {
                 }
             }
         });
-    }
-
-
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.menu_qrscan, menu);
-        return true;
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
-        int id = item.getItemId();
-
-        //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
-            return true;
-        }
-
-        return super.onOptionsItemSelected(item);
+        return v;
     }
 
     public void onPause() {
@@ -151,6 +154,7 @@ public class QRScanActivity extends Activity {
                 SymbolSet syms = scanner.getResults();
                 for (Symbol sym : syms) {
                     scanText.setText("Barcode Result: " + sym.getData());
+                    processScan(sym.getData());
                     barcodeScanned = true;
                 }
             }
@@ -163,4 +167,42 @@ public class QRScanActivity extends Activity {
             autoFocusHandler.postDelayed(doAutoFocus, 1000);
         }
     };
+
+    private void processScan(String scan){
+        Fragment f = null;
+        String minigame = "";
+        Double d = Math.random();
+        if(scan.equals("Speed")) {
+            f = Game_Run_Fragment.newInstance();
+            minigame = "Run";
+            //minigame = d>0.5 ? "Run" : "Items";
+        } else if(scan.equals("Fight")) {
+            //f = Game_Fight_Fragment.newInstance();
+            //minigame = "FIGHT";
+        } else if(scan.equals("Puzzle")) {
+            f = Game_Math_Fragment.newInstance("Player1", "");
+            minigame = "Math";
+        } else if(scan.equals("Skill")) {
+            f = Game_Rescue_Fragment.newInstance("rope");
+            minigame = "Rescue";
+        } else if(scan.equals("Luck")) {
+            //f = Game_Luck_Fragment.newInstance();
+            //minigame = "Luck";
+        } else {
+            scanText.setText("Unable to detect Minigame.");
+        }
+
+
+        if(!ServerData.isServer()) {
+            BluetoothHelper.sendDataToPairedDevice(ServerData.getServer(), "START_" + minigame + "_null_");
+        } else {
+            BluetoothHelper.sendDataToPairedDevice(ServerData.getTeamMembers(1).get(0), "START_" + minigame + "_null_");
+        }
+
+        ((GameActivity)getActivity()).changeFragment(f, minigame.toUpperCase());
+
+
+    }
+
+
 }

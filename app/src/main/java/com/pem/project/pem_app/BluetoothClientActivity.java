@@ -131,6 +131,7 @@ public class BluetoothClientActivity extends Activity implements BluetoothListen
 
         if(processed.equals("START")){
             Intent intent = new Intent(getApplicationContext(), GameActivity.class);
+            intent.putExtra("miniGame","first");
             startActivity(intent);
             listener.destroy();
         }

@@ -52,6 +52,7 @@ public class BluetoothServerActivity extends Activity {
                 for(BluetoothSocket client : ServerData.getClients()) BluetoothHelper.sendDataToPairedDevice(client, "START_null_null_");
 
                 Intent intent = new Intent(getApplicationContext(), GameActivity.class);
+                intent.putExtra("miniGame","first");
                 startActivity(intent);
             }
         });

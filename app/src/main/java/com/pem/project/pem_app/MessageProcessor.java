@@ -24,13 +24,13 @@ public class MessageProcessor {
                     //check if socket belongs to server's team
                     if (ServerData.getTeam(socket) == 1) {
                         //this message is meant for the server
-                        return extra;
+                        return "START_" + miniGame + "_" + extra + "_";
                     } else {
                         //this message is meant for a player of the opposite team
                         BluetoothHelper.sendDataToPairedDevice(ServerData.getOtherTeamMember(socket), "START_" + miniGame + "_" + extra + "_");
                     }
                 } else {
-                    return extra;
+                    return "START_" + miniGame + "_" + extra + "_";
                 }
             }
         } else if(messageArt.equals("INFO")){

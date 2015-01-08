@@ -5,6 +5,7 @@ import android.app.Fragment;
 import android.app.FragmentManager;
 import android.app.FragmentTransaction;
 import android.bluetooth.BluetoothSocket;
+import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
@@ -36,9 +37,24 @@ public class GameActivity extends Activity implements BluetoothListener.IListenC
         messageProcessor = new MessageProcessor();
         fragmentManager = getFragmentManager();
 
-        changeFragment(new Game_Main_Fragment(), "MAIN");
+        /*Intent intent = getIntent();
+        String miniGame = intent.getStringExtra("miniGame");
 
-        if(!ServerData.isServer()){
+        if(miniGame.equals("Run")) {
+            changeFragment(Game_Run_Fragment.newInstance(), "RUN");
+        } else if(miniGame.equals("Rescue")) {
+            changeFragment(Game_Rescue_Fragment.newInstance("rope"), "RESCUE");
+        } else if(miniGame.equals("Math")) {
+            changeFragment(Game_Math_Fragment.newInstance("Player1", ""), "MATH");
+        } else if(miniGame.equals("Luck")) {
+            //changeFragment(Game_Luck_Fragment().newInstance(), "LUCK");
+        } else {
+            changeFragment(Game_Main_Fragment.newInstance(), "MAIN");
+        }*/
+
+        changeFragment(Game_Main_Fragment.newInstance(), "MAIN");
+
+        if (!ServerData.isServer()) {
             BluetoothListener listener = new BluetoothListener(this);
             listener.listen(ServerData.getServer());
             BluetoothHelper.sendDataToPairedDevice(ServerData.getServer(), "INFO_null_Hallo Server, Client checking in!_");
@@ -52,6 +68,7 @@ public class GameActivity extends Activity implements BluetoothListener.IListenC
             /*BluetoothListener listener3 = new BluetoothListener(this);
             listener3.listen(ServerData.getClientAt(2)); */
         }
+
     }
 
 
@@ -81,6 +98,17 @@ public class GameActivity extends Activity implements BluetoothListener.IListenC
         String processed = messageProcessor.processMessage(m, s);
         Log.d("Received Processed Message", processed);
 
+        // START
+        if(processed.startsWith("START")){
+            if(processed.contains("Rescue")){
+                this.changeFragment(Game_Rescue_Fragment.newInstance("pit"), "RESCUE");
+            } else if(processed.contains("Math")){
+                this.changeFragment(Game_Math_Fragment.newInstance("Player2", ""), "MATH");
+            } else if(processed.contains("Run")) {
+                this.changeFragment(Game_Run_Fragment.newInstance(), "RUN");
+            }
+        }
+
         // MINIGAME LOST
         if(processed.equals("LOST")){
             this.changeFragment(Game_Lost_Fragment.newInstance(), "LOST");
@@ -92,9 +120,7 @@ public class GameActivity extends Activity implements BluetoothListener.IListenC
         }
 
         // RESCUE
-        if(processed.equals("ropeWait")){
-            this.changeFragment(Game_Rescue_Fragment.newInstance("pit"), "RESCUE");
-        } else if(processed.equals("ropeThrown")){
+        if(processed.equals("ropeThrown")){
             Game_Rescue_Fragment fragment = (Game_Rescue_Fragment)fragmentManager.findFragmentByTag("RESCUE");
             fragment.ropeIsThrown();
         } else if(processed.equals("ropeClimb")){
@@ -105,9 +131,7 @@ public class GameActivity extends Activity implements BluetoothListener.IListenC
         }
 
         // MATH
-        if(processed.equals("Player2")){
-            this.changeFragment(Game_Math_Fragment.newInstance("Player2", ""), "MATH");
-        } else if(processed.startsWith("result")) {
+        if(processed.startsWith("result")) {
             Game_Math_Fragment fragment = (Game_Math_Fragment) fragmentManager.findFragmentByTag("MATH");
             fragment.setResult(processed);
         } else if(processed.startsWith("correctResult")){
@@ -125,9 +149,7 @@ public class GameActivity extends Activity implements BluetoothListener.IListenC
         }
 
         //RUN
-        if(processed.equals("runInfo")){
-            this.changeFragment(Game_Run_Fragment.newInstance(), "RUN");
-        } else if(processed.equals("startRunning")){
+       if(processed.equals("startRunning")){
             Game_Run_Fragment fragment = (Game_Run_Fragment)fragmentManager.findFragmentByTag("RUN");
             fragment.startRunning();
         }
