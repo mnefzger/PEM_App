@@ -5,6 +5,7 @@ import android.app.Fragment;
 import android.content.res.Configuration;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.CountDownTimer;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
@@ -51,6 +52,7 @@ public class Game_Math_Fragment extends Fragment implements OnClickListener {
     private Button buttonOption4;
     private Button buttonOption5;
     private Button buttonOption6;
+    private TextView countTextField;
     private int input_my;
     private int input_partner;
     private int correctFinalResult_my = -9999;
@@ -59,6 +61,8 @@ public class Game_Math_Fragment extends Fragment implements OnClickListener {
     private int result2_my;
     private int result1_partner;
     private int result2_partner;
+    private CountDownTimer countdown;
+    private boolean won;
 
     ServerData serverData;
     private boolean field_one_pressed;
@@ -122,6 +126,29 @@ public class Game_Math_Fragment extends Fragment implements OnClickListener {
         operation2 = new Game_Math_Helper();
 
         createOperation();
+
+        countTextField = (TextView) rootView.findViewById(R.id.countTextField);
+
+        countdown = new CountDownTimer(30000, 1000) {
+
+            public void onTick(long millisUntilFinished) {
+                countTextField.setText("seconds remaining: " + millisUntilFinished / 1000);
+            }
+
+            public void onFinish() {
+                if (!won) {
+                    Log.d("Math", "lost!!");
+                    if (!ServerData.isServer()) {
+                        //send to server
+                        BluetoothHelper.sendDataToPairedDevice(ServerData.getServer(), "LOST_null_null_");
+                    } else {
+                        // send to partner of server
+                        BluetoothHelper.sendDataToPairedDevice(ServerData.getTeamMembers(1).get(0), "LOST_null_null_");
+                    }
+                    ((GameActivity) getActivity()).changeFragment(Game_Lost_Fragment.newInstance(), "LOST");
+                }
+            }
+        }.start();
 
 
         return rootView;
@@ -198,15 +225,18 @@ public class Game_Math_Fragment extends Fragment implements OnClickListener {
                     input_my = Integer.parseInt(editText1.getText().toString());
 
 
-                    checkIfGameWon();
+                    won = checkIfGameWon();
 
-                    if (!ServerData.isServer()) {
-                        //send to server
-                        BluetoothHelper.sendDataToPairedDevice(ServerData.getServer(), "GAMEDATA_Math_waitIfGameWon:" + input_my + ":" + (correct1 && correct2) + "_");
 
-                    } else {
-                        // send to partner of server
-                        BluetoothHelper.sendDataToPairedDevice(ServerData.getTeamMembers(1).get(0), "GAMEDATA_Math_waitIfGameWon:" + input_my + ":" + (correct1 && correct2) + "_");
+                    if (!won) {
+                        if (!ServerData.isServer()) {
+                            //send to server
+                            BluetoothHelper.sendDataToPairedDevice(ServerData.getServer(), "GAMEDATA_Math_waitIfGameWon:" + input_my + ":" + (correct1 && correct2) + "_");
+
+                        } else {
+                            // send to partner of server
+                            BluetoothHelper.sendDataToPairedDevice(ServerData.getTeamMembers(1).get(0), "GAMEDATA_Math_waitIfGameWon:" + input_my + ":" + (correct1 && correct2) + "_");
+                        }
                     }
                 }
                 return false;
@@ -469,7 +499,8 @@ public class Game_Math_Fragment extends Fragment implements OnClickListener {
             (correct1 && correct2) && // Check own
             correct_partner ){ // Check Partner
             Log.d("Math", "won!!");
-            ((GameActivity)getActivity()).changeFragment(Game_Main_Fragment.newInstance(), "MAIN");
+
+
             if (!ServerData.isServer()) {
                 //send to server
                 BluetoothHelper.sendDataToPairedDevice(ServerData.getServer(), "GAMEDATA_Math_mathSuccess");
@@ -477,6 +508,8 @@ public class Game_Math_Fragment extends Fragment implements OnClickListener {
                 // send to partner of server
                 BluetoothHelper.sendDataToPairedDevice(ServerData.getTeamMembers(1).get(0), "GAMEDATA_Math_mathSuccess");
             }
+            CancelCountDown();
+            ((GameActivity)getActivity()).changeFragment(Game_Main_Fragment.newInstance(), "MAIN");
 
             return true;
         } else if (wait_partner == false){
@@ -497,8 +530,13 @@ public class Game_Math_Fragment extends Fragment implements OnClickListener {
                 BluetoothHelper.sendDataToPairedDevice(ServerData.getTeamMembers(1).get(0), "LOST_null_null_");
             }
             ((GameActivity) getActivity()).changeFragment(Game_Lost_Fragment.newInstance(), "LOST");
+            CancelCountDown();
         }
     return false;
+    }
+
+    public void CancelCountDown() {
+        countdown.cancel();
     }
 
 
@@ -529,5 +567,11 @@ public class Game_Math_Fragment extends Fragment implements OnClickListener {
 
         setInputPartner(input_partner);
         checkCorrectPartner(correct_partner);
+    }
+
+    public void setWon() {
+        CancelCountDown();
+        won = true;
+        System.out.println("Won: " + won);
     }
 }

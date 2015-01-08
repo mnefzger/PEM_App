@@ -136,6 +136,10 @@ public class GameActivity extends Activity implements BluetoothListener.IListenC
             Game_Math_Fragment fragment = (Game_Math_Fragment)fragmentManager.findFragmentByTag("MATH");
             fragment.setWaitIfGameWon();
             fragment.getData(processed);
+        } else if(processed.equals("mathSuccess")){
+            Game_Math_Fragment fragment = (Game_Math_Fragment)fragmentManager.findFragmentByTag("MATH");
+            fragment.setWon();
+            this.changeFragment(Game_Main_Fragment.newInstance(), "MAIN");
         }
 
         //RUN
