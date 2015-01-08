@@ -1,7 +1,6 @@
 package com.pem.project.pem_app;
 
 import android.bluetooth.BluetoothSocket;
-import android.util.Log;
 
 /**
  * Created by Matthias on 04.12.2014.
@@ -78,6 +77,17 @@ public class MessageProcessor {
                     return messageArt;
                 } else {
                     BluetoothHelper.sendDataToPairedDevice(ServerData.getOtherTeamMember(socket), "LOST_null_null_");
+                }
+            } else {
+                return messageArt;
+            }
+        } else if(messageArt.equals("WON")){
+            if(ServerData.isServer()){
+                //check if socket belongs to server's team
+                if(ServerData.getTeam(socket) == 1){
+                    return messageArt;
+                } else {
+                    BluetoothHelper.sendDataToPairedDevice(ServerData.getOtherTeamMember(socket), "WON_null_null_");
                 }
             } else {
                 return messageArt;

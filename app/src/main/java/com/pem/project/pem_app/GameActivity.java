@@ -5,7 +5,6 @@ import android.app.Fragment;
 import android.app.FragmentManager;
 import android.app.FragmentTransaction;
 import android.bluetooth.BluetoothSocket;
-import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
@@ -114,10 +113,6 @@ public class GameActivity extends Activity implements BluetoothListener.IListenC
             this.changeFragment(Game_Lost_Fragment.newInstance(), "LOST");
         }
 
-        // MINIGAME WON
-        if(processed.equals("WON")){
-            this.changeFragment(Game_Won_Fragment.newInstance(), "WON");
-        }
 
         // RESCUE
         if(processed.equals("ropeThrown")){
@@ -137,15 +132,10 @@ public class GameActivity extends Activity implements BluetoothListener.IListenC
         } else if(processed.startsWith("correctResult")){
             Game_Math_Fragment fragment = (Game_Math_Fragment)fragmentManager.findFragmentByTag("MATH");
             fragment.setCorrectResult(processed);
-        } else if(processed.startsWith("inputMy")){
-            Game_Math_Fragment fragment = (Game_Math_Fragment)fragmentManager.findFragmentByTag("MATH");
-            fragment.setInputPartner(processed);
-        } else if(processed.startsWith("correctMy")){
-            Game_Math_Fragment fragment = (Game_Math_Fragment)fragmentManager.findFragmentByTag("MATH");
-            fragment.checkCorrectPartner(processed);
-        } else if(processed.equals("checkIfGameWon")){
+        } else if(processed.startsWith("waitIfGameWon")){
             Game_Math_Fragment fragment = (Game_Math_Fragment)fragmentManager.findFragmentByTag("MATH");
             fragment.setWaitIfGameWon();
+            fragment.getData(processed);
         }
 
         //RUN

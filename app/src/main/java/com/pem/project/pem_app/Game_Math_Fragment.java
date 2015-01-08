@@ -197,20 +197,17 @@ public class Game_Math_Fragment extends Fragment implements OnClickListener {
 
                     input_my = Integer.parseInt(editText1.getText().toString());
 
-                        if (!ServerData.isServer()) {
-                            //send to server
-                            BluetoothHelper.sendDataToPairedDevice(ServerData.getServer(), "GAMEDATA_Math_checkIfGameWon_\n");
-                            BluetoothHelper.sendDataToPairedDevice(ServerData.getServer(), "GAMEDATA_Math_inputMy:" + input_my + "_\n");
-                            BluetoothHelper.sendDataToPairedDevice(ServerData.getServer(), "GAMEDATA_Math_correctMy:" + (correct1 && correct2) + "_\n");
-
-                        } else {
-                            // send to partner of server
-                            BluetoothHelper.sendDataToPairedDevice(ServerData.getTeamMembers(1).get(0), "GAMEDATA_Math_checkIfGameWon_\n");
-                            BluetoothHelper.sendDataToPairedDevice(ServerData.getTeamMembers(1).get(0), "GAMEDATA_Math_inputMy:" + input_my + "_\n");
-                            BluetoothHelper.sendDataToPairedDevice(ServerData.getTeamMembers(1).get(0), "GAMEDATA_Math_correctMy:" + (correct1 && correct2) + "_\n");
-                        }
 
                     checkIfGameWon();
+
+                    if (!ServerData.isServer()) {
+                        //send to server
+                        BluetoothHelper.sendDataToPairedDevice(ServerData.getServer(), "GAMEDATA_Math_waitIfGameWon:" + input_my + ":" + (correct1 && correct2) + "_");
+
+                    } else {
+                        // send to partner of server
+                        BluetoothHelper.sendDataToPairedDevice(ServerData.getTeamMembers(1).get(0), "GAMEDATA_Math_waitIfGameWon:" + input_my + ":" + (correct1 && correct2) + "_");
+                    }
                 }
                 return false;
             }
@@ -472,14 +469,15 @@ public class Game_Math_Fragment extends Fragment implements OnClickListener {
             (correct1 && correct2) && // Check own
             correct_partner ){ // Check Partner
             Log.d("Math", "won!!");
+            ((GameActivity)getActivity()).changeFragment(Game_Main_Fragment.newInstance(), "MAIN");
             if (!ServerData.isServer()) {
                 //send to server
-                BluetoothHelper.sendDataToPairedDevice(ServerData.getServer(), "WON_null_null");
+                BluetoothHelper.sendDataToPairedDevice(ServerData.getServer(), "GAMEDATA_Math_mathSuccess");
             } else {
                 // send to partner of server
-                BluetoothHelper.sendDataToPairedDevice(ServerData.getTeamMembers(1).get(0), "WON_null_null");
+                BluetoothHelper.sendDataToPairedDevice(ServerData.getTeamMembers(1).get(0), "GAMEDATA_Math_mathSuccess");
             }
-            ((GameActivity) getActivity()).changeFragment(Game_Won_Fragment.newInstance(), "WON");
+
             return true;
         } else if (wait_partner == false){
             if (!ServerData.isServer()) {
@@ -511,12 +509,25 @@ public class Game_Math_Fragment extends Fragment implements OnClickListener {
 
     public void checkCorrectPartner(String processed) {
 
-        if (processed.substring(10).equals("true") && input_partner == correctFinalResult_partner)
-        correct_partner = true;
+        if (processed.equals("true") && input_partner == correctFinalResult_partner){
+            correct_partner = true;
+
+        }
+        System.out.println("correct_partner: " + correct_partner + "; correctFinalResult_partner: " + correctFinalResult_partner + "; input_partner: " + input_partner);
 
     }
 
     public void setInputPartner(String inputPartner) {
-        this.input_partner = Integer.parseInt(inputPartner.substring(8));
+        this.input_partner = Integer.parseInt(inputPartner);
+        System.out.println("Set input_partner: " + this.input_partner);
+    }
+
+    public void getData(String processed) {
+        String[] messageParameters = processed.split(":");
+        String input_partner = messageParameters[1];
+        String correct_partner = messageParameters[2];
+
+        setInputPartner(input_partner);
+        checkCorrectPartner(correct_partner);
     }
 }
