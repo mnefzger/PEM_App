@@ -40,17 +40,17 @@
         android:layout_height="wrap_content"
         android:id="@+id/imageView11"
         android:src="@drawable/title2"
+        android:layout_marginBottom="214dp"
+        android:layout_above="@+id/findGame"
         android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true"
-        android:layout_alignRight="@+id/findGame"
-        android:layout_alignEnd="@+id/findGame" />
+        android:layout_alignParentStart="true" />
 
     <ImageView
         android:layout_width="150dp"
         android:layout_height="wrap_content"
         android:id="@+id/imageView12"
         android:src="@drawable/coin_both"
-        android:layout_above="@+id/findGame"
+        android:layout_centerVertical="true"
         android:layout_centerHorizontal="true" />
 
 </RelativeLayout>
