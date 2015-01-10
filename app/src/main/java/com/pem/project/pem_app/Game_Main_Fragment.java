@@ -25,6 +25,8 @@ public class Game_Main_Fragment extends Fragment {
     private Button startMiniGameButton;
     private Button startMiniGameButton2;
     private Button startMiniGameButton3;
+    private Button startMiniGameButton4;
+
 
     /**
      * Use this factory method to create a new instance of
@@ -127,9 +129,25 @@ public class Game_Main_Fragment extends Fragment {
                     // send to partner of server
                     BluetoothHelper.sendDataToPairedDevice(ServerData.getTeamMembers(1).get(0), "START_Run_runInfo_");
                 }
+
             }
         });
 
+        startMiniGameButton4 = (Button)view.findViewById(R.id.startMiniGameButton4);
+        startMiniGameButton4.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                ((GameActivity)getActivity()).changeFragment(Game_Scream_Fragment.newInstance("Player1S",""), "SCREAM");
+
+                if (!ServerData.isServer()){
+                    //send to server
+                    BluetoothHelper.sendDataToPairedDevice(ServerData.getServer(), "START_Scream_Player2S_");
+                } else {
+                    // send to partner of server
+                    BluetoothHelper.sendDataToPairedDevice(ServerData.getTeamMembers(1).get(0), "START_Scream_Player2S_");
+                }
+            }
+        });
 
         return view;
     }

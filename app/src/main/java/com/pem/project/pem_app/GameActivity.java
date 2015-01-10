@@ -17,7 +17,8 @@ import android.widget.ImageView;
 public class GameActivity extends Activity implements BluetoothListener.IListenCallback,
         Game_Main_Fragment.OnFragmentInteractionListener,
         Game_Rescue_Fragment.OnFragmentInteractionListener,
-        Game_Math_Fragment.OnFragmentInteractionListener
+        Game_Math_Fragment.OnFragmentInteractionListener,
+        Game_Scream_Fragment.OnFragmentInteractionListener
         {
     private FragmentManager fragmentManager;
     private FragmentTransaction fragmentTransaction;
@@ -146,6 +147,23 @@ public class GameActivity extends Activity implements BluetoothListener.IListenC
        if(processed.equals("startRunning")){
             Game_Run_Fragment fragment = (Game_Run_Fragment)fragmentManager.findFragmentByTag("RUN");
             fragment.startRunning();
+        }
+
+        // Scream
+        if(processed.equals("Player2S")) {
+            this.changeFragment(Game_Scream_Fragment.newInstance("Player2S", ""), "SCREAM");
+        } else if(processed.startsWith("myVolume")) {
+            Game_Scream_Fragment fragment = (Game_Scream_Fragment) fragmentManager.findFragmentByTag("SCREAM");
+            fragment.setOtherVol(processed);
+        } else if(processed.startsWith("myRounds")) {
+            Game_Scream_Fragment fragment = (Game_Scream_Fragment) fragmentManager.findFragmentByTag("SCREAM");
+            fragment.getPlayedRounds(processed);
+        } else if(processed.startsWith("isPlaying")) {
+            Game_Scream_Fragment fragment = (Game_Scream_Fragment) fragmentManager.findFragmentByTag("SCREAM");
+            fragment.getWhosTurn(processed);
+        } else if(processed.startsWith("end")) {
+            Game_Scream_Fragment fragment = (Game_Scream_Fragment) fragmentManager.findFragmentByTag("SCREAM");
+            fragment.endGame(processed);
         }
     }
 
