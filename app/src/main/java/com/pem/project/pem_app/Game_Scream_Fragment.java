@@ -258,7 +258,7 @@ public class Game_Scream_Fragment extends Fragment{
                 BluetoothHelper.sendDataToPairedDevice(ServerData.getTeamMembers(1).get(0), "WON_null_null_");
            //     BluetoothHelper.sendDataToPairedDevice(ServerData.getTeamMembers(1).get(0), "GAMEDATA_Scream_end:" +"Iwon" + "_\n");
             }
-            ((GameActivity) getActivity()).changeFragment(Game_Won_Fragment.newInstance(), "WON");
+            ((GameActivity) getActivity()).changeFragment(Game_Lost_Fragment.newInstance(), "WON");
             return true;
         }  else {
             Log.d("Scream", "lost!!");
@@ -307,7 +307,6 @@ public class Game_Scream_Fragment extends Fragment{
     }
 
     public void endGame(final String processed) {
-        Log.d("Sarooon", "JAAAAAAAA");
 
         getActivity().runOnUiThread(new Runnable() {
             @Override
@@ -321,7 +320,7 @@ public class Game_Scream_Fragment extends Fragment{
                         // send to partner of server
                         BluetoothHelper.sendDataToPairedDevice(ServerData.getTeamMembers(1).get(0), "WON_null_null");
                     }
-                    ((GameActivity) getActivity()).changeFragment(Game_Won_Fragment.newInstance(), "WON");
+                    ((GameActivity) getActivity()).changeFragment(Game_Lost_Fragment.newInstance(), "WON");
                 } else if (processed.substring(4) == "Iwon") {
                     Log.d("Scream", "lost!!");
                     if (!ServerData.isServer()) {
