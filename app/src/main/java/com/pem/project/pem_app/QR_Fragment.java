@@ -172,36 +172,32 @@ public class QR_Fragment extends Fragment {
         Fragment f = null;
         String minigame = "";
         Double d = Math.random();
-        if(scan.equals("Speed")) {
+        if(scan.equals("Category:Speed")) {
             f = Game_Run_Fragment.newInstance();
             minigame = "Run";
             //minigame = d>0.5 ? "Run" : "Items";
-        } else if(scan.equals("Fight")) {
-            //f = Game_Fight_Fragment.newInstance();
-            //minigame = "FIGHT";
-        } else if(scan.equals("Puzzle")) {
+        }else if(scan.equals("Category:Puzzle")) {
             f = Game_Math_Fragment.newInstance("Player1", "");
             minigame = "Math";
-        } else if(scan.equals("Skill")) {
+        } else if(scan.equals("Category:Skill")) {
             f = Game_Rescue_Fragment.newInstance("rope");
             minigame = "Rescue";
-        } else if(scan.equals("Luck")) {
+        } else if(scan.equals("Category:Luck")) {
             //f = Game_Luck_Fragment.newInstance();
             //minigame = "Luck";
         } else {
             scanText.setText("Unable to detect Minigame.");
         }
 
+        if(minigame != "") {
+            if (!ServerData.isServer()) {
+                BluetoothHelper.sendDataToPairedDevice(ServerData.getServer(), "START_" + minigame + "_null_");
+            } else{
+                BluetoothHelper.sendDataToPairedDevice(ServerData.getTeamMembers(1).get(0), "START_" + minigame + "_null_");
+            }
 
-        if(!ServerData.isServer()) {
-            BluetoothHelper.sendDataToPairedDevice(ServerData.getServer(), "START_" + minigame + "_null_");
-        } else {
-            BluetoothHelper.sendDataToPairedDevice(ServerData.getTeamMembers(1).get(0), "START_" + minigame + "_null_");
+            ((GameActivity) getActivity()).changeFragment(f, minigame.toUpperCase());
         }
-
-        ((GameActivity)getActivity()).changeFragment(f, minigame.toUpperCase());
-
-
     }
 
 
