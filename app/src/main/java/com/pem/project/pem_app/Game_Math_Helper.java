@@ -44,13 +44,13 @@ public class Game_Math_Helper {
 
 
 
-    public void createOperation() {
+    public void createOperation(int upToInt) {
 
         random = new Random();
         Operation operation = generateRandOperation();
 
-        operand1 = random.nextInt(98)+2;
-        operand2 = random.nextInt(98)+2;
+        operand1 = random.nextInt(upToInt)+2;
+        operand2 = random.nextInt(upToInt)+2;
 
         operationText= String.valueOf(operand1) + " " +
                 getOperationString(operation) + " " + String.valueOf(operand2) + "?";
@@ -102,6 +102,26 @@ public class Game_Math_Helper {
             operationText = "/";
         }
         return operationText;
+    }
+
+    private int[] getRunesArray(int operand){
+
+        int[] runesArray = new int[20];
+        int i = 0;
+
+        while (operand >0){
+            if (operand >= 5) {
+                operand = operand - 5;
+                runesArray[i] = 5;
+            }
+            else {
+                operand = operand - 1;
+                runesArray[i] = 1;
+            }
+            i++;
+        }
+
+        return runesArray;
     }
 
     private Operation generateRandOperation() {
