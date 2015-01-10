@@ -164,7 +164,7 @@ tools:context="com.pem.project.pem_app.GameActivity">
             android:textColor="#cde657"
             android:background="#95000000"
             android:layout_height="65dp"
-            android:layout_weight="0.33"
+            android:layout_weight="0.2"
             android:layout_marginRight="5dp"/>
 
         <Button
@@ -177,7 +177,7 @@ tools:context="com.pem.project.pem_app.GameActivity">
             android:textColor="#cde657"
             android:background="#95000000"
             android:layout_height="65dp"
-            android:layout_weight="0.33"
+            android:layout_weight="0.2"
             android:layout_marginRight="5dp"/>
 
         <Button
@@ -189,7 +189,7 @@ tools:context="com.pem.project.pem_app.GameActivity">
             android:textColor="#cde657"
             android:background="#95000000"
             android:layout_height="65dp"
-            android:layout_weight="0.33" />
+            android:layout_weight="0.2" />
         <Button
             android:layout_width="100dp"
             android:text="Scream"
@@ -199,7 +199,18 @@ tools:context="com.pem.project.pem_app.GameActivity">
             android:textColor="#cde657"
             android:background="#95000000"
             android:layout_height="65dp"
-            android:layout_weight="0.33" />
+            android:layout_weight="0.2" />
+        <Button
+            android:layout_width="100dp"
+            android:text="Luck"
+            android:id="@+id/startMiniGameButton5"
+            android:textStyle="bold"
+            android:textSize="22dp"
+            android:textColor="#cde657"
+            android:background="#95000000"
+            android:layout_height="65dp"
+            android:layout_weight="0.2"
+            android:layout_marginRight="5dp"/>
     </LinearLayout>
 
 </LinearLayout>

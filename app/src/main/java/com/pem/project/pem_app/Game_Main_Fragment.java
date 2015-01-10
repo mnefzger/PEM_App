@@ -26,6 +26,7 @@ public class Game_Main_Fragment extends Fragment {
     private Button startMiniGameButton2;
     private Button startMiniGameButton3;
     private Button startMiniGameButton4;
+    private Button startMiniGameButton5;
 
 
     /**
@@ -146,6 +147,23 @@ public class Game_Main_Fragment extends Fragment {
                     // send to partner of server
                     BluetoothHelper.sendDataToPairedDevice(ServerData.getTeamMembers(1).get(0), "START_Scream_Player2S_");
                 }
+            }
+        });
+
+        startMiniGameButton5 = (Button)view.findViewById(R.id.startMiniGameButton5);
+        startMiniGameButton5.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                ((GameActivity)getActivity()).changeFragment(Game_Luck_Fragment.newInstance(), "LUCK");
+            /*
+                if (!ServerData.isServer()){
+                    //send to server
+                    BluetoothHelper.sendDataToPairedDevice(ServerData.getServer(), "START_Luck_Player2_");
+                } else {
+                    // send to partner of server
+                    BluetoothHelper.sendDataToPairedDevice(ServerData.getTeamMembers(1).get(0), "START_Luck_Player2_");
+                }
+                */
             }
         });
 
