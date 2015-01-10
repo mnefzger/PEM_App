@@ -222,11 +222,13 @@ public class Game_Math_Fragment extends Fragment implements OnClickListener {
                     //Clear focus here from edittext
                     editText1.clearFocus();
 
-                    input_my = Integer.parseInt(editText1.getText().toString());
+                    String input = editText1.getText().toString();
 
+                    if (input != null && !input.isEmpty()) {
+                        input_my = Integer.parseInt(editText1.getText().toString());
 
-                    won = checkIfGameWon();
-
+                        won = checkIfGameWon();
+                    }
 
                     if (!won) {
                         if (!ServerData.isServer()) {
@@ -242,38 +244,7 @@ public class Game_Math_Fragment extends Fragment implements OnClickListener {
                 return false;
             }
         });
-     /**   editText1.setOnKeyListener(new View.OnKeyListener() {
-            public boolean onKey(View v, int keyCode, KeyEvent event) {
-                // If the event is a key-down event on the "enter" button
-                if ((event.getAction() == KeyEvent.ACTION_DOWN) &&
-                        (keyCode == KeyEvent.KEYCODE_ENTER)) {
-                    // Perform action on key press
 
-                    input_my = Integer.parseInt(editText1.getText().toString());
-
-                    if (!ServerData.isServer()) {
-                        //send to server
-                        BluetoothHelper.sendDataToPairedDevice(ServerData.getServer(), "GAMEDATA_Math_checkIfGameWon_");
-                        BluetoothHelper.sendDataToPairedDevice(ServerData.getServer(), "GAMEDATA_Math_inputMy:" + input_my + "_");
-                        BluetoothHelper.sendDataToPairedDevice(ServerData.getServer(), "GAMEDATA_Math_correctMy:" + (correct1 && correct2) + "_");
-
-                    } else {
-                        // send to partner of server
-                        BluetoothHelper.sendDataToPairedDevice(ServerData.getTeamMembers(1).get(0), "GAMEDATA_Math_checkIfGameWon_");
-                        BluetoothHelper.sendDataToPairedDevice(ServerData.getTeamMembers(1).get(0), "GAMEDATA_Math_inputMy:" + input_my + "_");
-                        BluetoothHelper.sendDataToPairedDevice(ServerData.getTeamMembers(1).get(0), "GAMEDATA_Math_correctMy:" + (correct1 && correct2) + "_");
-                    }
-                    checkIfGameWon();
-
-                   // editText1.clearFocus();
-
-
-                    return true;
-                }
-                return false;
-            }
-        });
-**/
         operation1.createOperation();
         operation2.createOperation();
 
@@ -503,10 +474,10 @@ public class Game_Math_Fragment extends Fragment implements OnClickListener {
 
             if (!ServerData.isServer()) {
                 //send to server
-                BluetoothHelper.sendDataToPairedDevice(ServerData.getServer(), "GAMEDATA_Math_mathSuccess");
+                BluetoothHelper.sendDataToPairedDevice(ServerData.getServer(), "GAMEDATA_Math_mathSuccess_");
             } else {
                 // send to partner of server
-                BluetoothHelper.sendDataToPairedDevice(ServerData.getTeamMembers(1).get(0), "GAMEDATA_Math_mathSuccess");
+                BluetoothHelper.sendDataToPairedDevice(ServerData.getTeamMembers(1).get(0), "GAMEDATA_Math_mathSuccess_");
             }
             CancelCountDown();
             ((GameActivity)getActivity()).changeFragment(Game_Main_Fragment.newInstance(), "MAIN");
