@@ -3,6 +3,7 @@ package com.pem.project.pem_app;
 
 import android.graphics.drawable.Drawable;
 import android.media.Image;
+import android.media.MediaPlayer;
 import android.os.Bundle;
 import android.app.Fragment;
 import android.os.Handler;
@@ -19,6 +20,7 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.os.Vibrator;
 
 
 
@@ -38,6 +40,8 @@ public class Game_Run_Fragment extends Fragment implements SensorHandler.runCall
     private Animation anim1;
     private Animation anim2;
     private Animation anim;
+
+
 
     public Game_Run_Fragment() {
         // Required empty public constructor
@@ -65,6 +69,9 @@ public class Game_Run_Fragment extends Fragment implements SensorHandler.runCall
         anim = AnimationUtils.loadAnimation(getActivity(), R.anim.anim_run);
         anim1.setAnimationListener(l);
         anim2.setAnimationListener(l);
+
+        MediaPlayer mediaPlayer = MediaPlayer.create(getActivity(), R.raw.monster);
+        mediaPlayer.start(); // no need to call prepare(); create() does that for you
 
 
         Button startRun = (Button)v.findViewById(R.id.startRun);
@@ -127,7 +134,11 @@ public class Game_Run_Fragment extends Fragment implements SensorHandler.runCall
                                      @Override
                                      public void run() {
                                          sensorHandler.stopSensing();
-                                         runSpeed.setText("geschafft");
+                                         runSpeed.setText("You made it!");
+                                         MediaPlayer mediaPlayer = MediaPlayer.create(getActivity(), R.raw.win);
+                                         mediaPlayer.start(); // no need to call prepare(); create() does that for you
+                                         Vibrator v = (Vibrator) getActivity().getSystemService(getActivity().VIBRATOR_SERVICE);
+                                         v.vibrate(500);
                                      }},
                         13000
                 );
@@ -145,6 +156,8 @@ public class Game_Run_Fragment extends Fragment implements SensorHandler.runCall
                 if(animated == false) {
                     if (fails == 0) {
                         runIndicator.startAnimation(anim1);
+                        MediaPlayer mediaPlayer = MediaPlayer.create(getActivity(), R.raw.monster2);
+                        mediaPlayer.start(); // no need to call prepare(); create() does that for you
                     }
                     if (fails == 1) {
                         runIndicator.startAnimation(anim2);

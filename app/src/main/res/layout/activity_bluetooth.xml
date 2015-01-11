@@ -59,13 +59,17 @@
             android:layout_below="@+id/textView" />
 
         <Button
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="fill_parent"
             android:text="Start Game"
             android:id="@+id/startGameButton"
             android:layout_alignParentBottom="true"
             android:layout_centerHorizontal="true"
-            android:enabled="false"/>
+            android:enabled="false"
+            android:layout_height="65dp"
+            android:textStyle="bold"
+            android:textSize="22dp"
+            android:textColor="#cde657"
+            android:background="#95000000"/>
     </RelativeLayout>
 
     <TextView

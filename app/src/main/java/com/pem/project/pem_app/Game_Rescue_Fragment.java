@@ -8,6 +8,7 @@ import android.graphics.Point;
 import android.graphics.drawable.ShapeDrawable;
 import android.graphics.drawable.shapes.RectShape;
 import android.media.Image;
+import android.media.MediaPlayer;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -273,9 +274,18 @@ public class Game_Rescue_Fragment extends Fragment implements SensorHandler.rope
                         ((GameActivity) getActivity()).changeFragment(Game_Lost_Fragment.newInstance(), "LOST");
                     }
                     if(count == 5 && alive == true){
-                        Log.d("SUCCESS", "you win");
-                        rescue2.setVisibility(View.GONE);
-                        end.setVisibility(View.VISIBLE);
+                        Handler three = new Handler();
+                        three.postDelayed(new Runnable() {
+                                              @Override
+                                              public void run() {
+                                                  Log.d("SUCCESS", "you win");
+                                                  rescue2.setVisibility(View.GONE);
+                                                  end.setVisibility(View.VISIBLE);
+                                                  MediaPlayer mediaPlayer = MediaPlayer.create(getActivity(), R.raw.win);
+                                                  mediaPlayer.start(); // no need to call prepare(); create() does that for you
+                                              }},
+                               1500 //wait shortly for other player to finish
+                        );
                     }
                     side = "";
                }
@@ -335,7 +345,7 @@ public class Game_Rescue_Fragment extends Fragment implements SensorHandler.rope
                         pullText.setVisibility(View.VISIBLE);
                         startSensing("gyroscope");
                         pullRope();
-                    } else if(!alive){
+                    } else if(count <= 3 && !alive){
                         if(!ServerData.isServer()) {
                             BluetoothHelper.sendDataToPairedDevice(ServerData.getServer(), "LOST_null_null_");
                         } else {

@@ -2,6 +2,7 @@ package com.pem.project.pem_app;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.media.MediaPlayer;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -37,6 +38,9 @@ public class MainActivity extends Activity {
                 startActivity(intent);
             }
         });
+
+        MediaPlayer mediaPlayer = MediaPlayer.create(this, R.raw.jungle);
+        mediaPlayer.start(); // no need to call prepare(); create() does that for you
 
     }
 
