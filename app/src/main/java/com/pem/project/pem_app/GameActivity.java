@@ -106,6 +106,8 @@ public class GameActivity extends Activity implements BluetoothListener.IListenC
                 this.changeFragment(Game_Math_Fragment.newInstance("Player2", ""), "MATH");
             } else if(processed.contains("Run")) {
                 this.changeFragment(Game_Run_Fragment.newInstance(), "RUN");
+            } else if(processed.contains("Luck")) {
+                this.changeFragment(Game_Luck_Fragment.newInstance(), "LUCK");
             }
         }
 
