@@ -11,7 +11,7 @@
     <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:tools="http://schemas.android.com/tools"
         android:layout_width="match_parent"
-        android:layout_height="207dp"
+        android:layout_height="192dp"
         android:paddingLeft="@dimen/activity_horizontal_margin"
         android:paddingRight="@dimen/activity_horizontal_margin"
         android:paddingTop="@dimen/activity_vertical_margin"
@@ -30,7 +30,7 @@
             android:textColor="@color/white"/>
 
         <Button
-            android:text="@string/questionMark"
+            android:text="@string/nulls"
             android:textSize="11pt"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -45,7 +45,7 @@
             />
 
         <Button
-            android:text="@string/questionMark"
+            android:text="@string/nulls"
             android:textSize="11pt"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -59,7 +59,7 @@
             android:height="50dp"/>
 
         <Button
-            android:text="@string/questionMark"
+            android:text="@string/nulls"
             android:textSize="11pt"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -98,7 +98,7 @@
             android:textColor="@color/white" />
 
         <Button
-            android:text="@string/questionMark"
+            android:text="@string/nulls"
             android:textSize="11pt"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -112,7 +112,7 @@
             android:layout_alignParentStart="true" />
 
         <Button
-            android:text="@string/questionMark"
+            android:text="@string/nulls"
             android:textSize="11pt"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -126,7 +126,7 @@
             android:height="50dp"/>
 
         <Button
-            android:text="@string/questionMark"
+            android:text="@string/nulls"
             android:textSize="11pt"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -152,66 +152,77 @@
         android:paddingRight="@dimen/activity_horizontal_margin"
         android:paddingTop="@dimen/activity_vertical_margin"
         android:paddingBottom="@dimen/activity_vertical_margin"
-        android:layout_weight="0.58">
+        android:layout_weight="0.58"
+        android:gravity="center">
 
         <TextView
             android:text="@string/questionMark"
-            android:layout_width="wrap_content"
+            android:layout_width="90dp"
             android:layout_height="wrap_content"
             android:id="@+id/result1"
             android:background="@color/red"
             android:textSize="12pt"
             android:padding="10dp"
-            android:width="80dp"
-            android:textColor="@color/white"/>
+            android:textColor="@color/white"
+            android:layout_gravity="center"
+            android:gravity="center"/>
 
         <TextView
             android:text="@string/plus"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:id="@+id/plusSign"
-            android:padding="10dp"
-            android:textSize="20pt" />
+            android:padding="5dp"
+            android:textSize="20pt"
+            android:textColor="@color/white"
+            android:layout_gravity="center"
+            android:gravity="center"/>
 
         <TextView
             android:text="@string/questionMark"
-            android:layout_width="wrap_content"
+            android:layout_width="90dp"
             android:layout_height="wrap_content"
             android:id="@+id/result2"
             android:background="@color/yellow"
             android:textSize="12pt"
             android:padding="10dp"
-            android:width="80dp"
-            android:textColor="@color/white"/>
+            android:textColor="@color/white"
+            android:layout_gravity="center"
+            android:gravity="center"/>
 
         <TextView
             android:text="@string/equals"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:id="@+id/textView"
-            android:padding="10dp"
-            android:textSize="20pt"/>
+            android:padding="5dp"
+            android:textSize="20pt"
+            android:textColor="@color/white"
+            android:layout_gravity="center"
+            android:gravity="center"/>
 
         <EditText
-            android:layout_width="wrap_content"
+            android:layout_width="85dp"
             android:layout_height="wrap_content"
             android:id="@+id/result"
             android:background="@color/white"
             android:hint="@string/questionMark"
 
-            android:textSize="13pt"
+            android:textSize="12pt"
             android:layout_weight="0.51"
             android:padding="10dp"
-            android:width="80dp"
+
             android:imeOptions="actionDone"
             android:digits="1234567890-"
-            android:textColor="@color/black"/>
+            android:textColor="@color/black"
+            android:layout_gravity="center"
+            android:gravity="center"/>
     </LinearLayout>
 
     <TextView
-        android:layout_width="150dp"
+        android:layout_width="wrap_content"
         android:textAppearance="?android:attr/textAppearanceMedium"
-        android:text="seconds remaining:"
+        android:text="seconds remaining: 000"
         android:id="@+id/countTextField"
         android:layout_gravity="center_horizontal"
         android:textColor="#cde657"
@@ -221,7 +232,8 @@
         android:layout_height="65dp"
         android:layout_weight="0.33"
         android:layout_marginRight="5dp"
-        android:padding="5dp"/>
+        android:padding="5dp"
+        android:gravity="center"/>
 
 
 </LinearLayout>

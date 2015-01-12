@@ -21,13 +21,13 @@ import android.widget.TextView;
 /**
  * A simple {@link android.app.Fragment} subclass.
  * Activities that contain this fragment must implement the
- * {@link Game_Math_Fragment.OnFragmentInteractionListener} interface
+ * {@link com.pem.project.pem_app.Game_MathRunes_Fragment.OnFragmentInteractionListener} interface
  * to handle interaction events.
- * Use the {@link Game_Math_Fragment#newInstance} factory method to
+ * Use the {@link com.pem.project.pem_app.Game_MathRunes_Fragment#newInstance} factory method to
  * create an instance of this fragment.
  *
  */
-public class Game_Math_Fragment extends Fragment implements OnClickListener {
+public class Game_MathRunes_Fragment extends Fragment implements OnClickListener {
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "param1";
@@ -81,15 +81,15 @@ public class Game_Math_Fragment extends Fragment implements OnClickListener {
      * @return A new instance of fragment MathGameFragment.
      */
     // TODO: Rename and change types and number of parameters
-    public static Game_Math_Fragment newInstance(String param1, String param2) {
-        Game_Math_Fragment fragment = new Game_Math_Fragment();
+    public static Game_MathRunes_Fragment newInstance(String param1, String param2) {
+        Game_MathRunes_Fragment fragment = new Game_MathRunes_Fragment();
         Bundle args = new Bundle();
         args.putString(ARG_PARAM1, param1);
         args.putString(ARG_PARAM2, param2);
         fragment.setArguments(args);
         return fragment;
     }
-    public Game_Math_Fragment() {
+    public Game_MathRunes_Fragment() {
         // Required empty public constructor
     }
 
@@ -247,16 +247,16 @@ public class Game_Math_Fragment extends Fragment implements OnClickListener {
             }
         });
 
-        operation1.createOperation(98);
-        operation2.createOperation(98);
+        operation1.createOperation(18);
+        operation2.createOperation(18);
 
         correctFinalResult_partner = operation1.getRightValue() + operation2.getRightValue();
 
 
         TextView textViewOperation1 = (TextView) rootView.findViewById(R.id.textViewOperation1);
-        textViewOperation1.setText(operation1.getOperationText());
-
         TextView textViewOperation2 = (TextView) rootView.findViewById(R.id.textViewOperation2);
+
+        textViewOperation1.setText(operation1.getOperationText());
         textViewOperation2.setText(operation2.getOperationText());
 
         buttonOption1 = (Button) rootView.findViewById(R.id.buttonMath1);

@@ -9,6 +9,7 @@
     <string name="title_activity_game">GameActivity</string>
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="questionMark">"?"</string>
+    <string name="nulls">"0000"</string>
     <string name="plus">+</string>
     <string name="equals">=</string>
     <string name="title_activity_qrscan">QRScanActivity</string>
