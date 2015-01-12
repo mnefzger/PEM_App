@@ -60,6 +60,13 @@ public class MessageProcessor {
                             BluetoothHelper.sendDataToPairedDevice(client, "UPDATE_null_team1_keyBlue");
                         }
                     }
+                    if(extra.equals("mathRunesSuccess")){
+                        // update ServerData and broadcast new data
+                        // to do
+                        for(BluetoothSocket client : ServerData.getClients()){
+                            BluetoothHelper.sendDataToPairedDevice(client, "UPDATE_null_team1_keyBlue");
+                        }
+                    }
 
                 } else {
                     return extra;

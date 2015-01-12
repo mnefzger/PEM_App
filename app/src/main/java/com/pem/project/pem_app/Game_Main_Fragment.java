@@ -2,8 +2,6 @@ package com.pem.project.pem_app;
 
 import android.app.Activity;
 import android.app.Fragment;
-import android.content.Context;
-import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -27,6 +25,7 @@ public class Game_Main_Fragment extends Fragment {
     private Button startMiniGameButton3;
     private Button startMiniGameButton4;
     private Button startMiniGameButton5;
+    private Button startMiniGameButton6;
 
 
     /**
@@ -113,6 +112,22 @@ public class Game_Main_Fragment extends Fragment {
                 } else {
                     // send to partner of server
                     BluetoothHelper.sendDataToPairedDevice(ServerData.getTeamMembers(1).get(0), "START_Math_Player2_");
+                }
+            }
+        });
+
+        startMiniGameButton6 = (Button)view.findViewById(R.id.startMiniGameButton6);
+        startMiniGameButton6.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                ((GameActivity)getActivity()).changeFragment(Game_MathRunes_Fragment.newInstance("Player1",""), "MATHRUNES");
+
+                if (!ServerData.isServer()){
+                    //send to server
+                    BluetoothHelper.sendDataToPairedDevice(ServerData.getServer(), "START_MathRunes_Player2_");
+                } else {
+                    // send to partner of server
+                    BluetoothHelper.sendDataToPairedDevice(ServerData.getTeamMembers(1).get(0), "START_MathRunes_Player2_");
                 }
             }
         });
