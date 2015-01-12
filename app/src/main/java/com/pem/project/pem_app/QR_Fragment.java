@@ -161,7 +161,7 @@ public class QR_Fragment extends Fragment {
             minigame = "Run";
             //minigame = d>0.5 ? "Run" : "Items";
         }else if(scan.equals("Category:Puzzle")) {
-            f = Game_Math_Fragment.newInstance("Player1", "");
+            f = d>0.5 ? Game_MathRunes_Fragment.newInstance("Player1", "") : Game_Math_Fragment.newInstance("Player1", "");
             //minigame = "Math";
             minigame = d>0.5 ? "MathRunes" : "Math";
         } else if(scan.equals("Category:Skill")) {
