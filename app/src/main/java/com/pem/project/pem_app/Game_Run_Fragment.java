@@ -133,12 +133,14 @@ public class Game_Run_Fragment extends Fragment implements SensorHandler.runCall
                 wait.postDelayed(new Runnable() {
                                      @Override
                                      public void run() {
-                                         sensorHandler.stopSensing();
-                                         runSpeed.setText("You made it!");
-                                         MediaPlayer mediaPlayer = MediaPlayer.create(getActivity(), R.raw.win);
-                                         mediaPlayer.start(); // no need to call prepare(); create() does that for you
-                                         Vibrator v = (Vibrator) getActivity().getSystemService(getActivity().VIBRATOR_SERVICE);
-                                         v.vibrate(500);
+                                         if(fails < 2) {
+                                             sensorHandler.stopSensing();
+                                             runSpeed.setText("You made it!");
+                                             MediaPlayer mediaPlayer = MediaPlayer.create(getActivity(), R.raw.win);
+                                             mediaPlayer.start(); // no need to call prepare(); create() does that for you
+                                             Vibrator v = (Vibrator) getActivity().getSystemService(getActivity().VIBRATOR_SERVICE);
+                                             v.vibrate(500);
+                                         }
                                      }},
                         13000
                 );
