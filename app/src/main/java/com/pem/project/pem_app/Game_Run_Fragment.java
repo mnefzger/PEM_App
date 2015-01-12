@@ -19,6 +19,7 @@ import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
+import android.widget.TableRow;
 import android.widget.TextView;
 import android.os.Vibrator;
 
@@ -30,7 +31,7 @@ import android.os.Vibrator;
 public class Game_Run_Fragment extends Fragment implements SensorHandler.runCallback{
     private SensorHandler sensorHandler;
     private TextView runSpeed;
-    private RelativeLayout info;
+    private LinearLayout info;
     private FrameLayout runGame;
     private ImageView runIndicator;
     private ImageView leftFoot;
@@ -58,7 +59,7 @@ public class Game_Run_Fragment extends Fragment implements SensorHandler.runCall
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View v = inflater.inflate(R.layout.fragment_game__run_, container, false);
-        info = (RelativeLayout)v.findViewById(R.id.runInfoText);
+        info = (LinearLayout)v.findViewById(R.id.runInfoText);
         runGame = (FrameLayout)v.findViewById(R.id.runGame);
         runSpeed = (TextView)v.findViewById(R.id.runSpeed);
         runIndicator = (ImageView)v.findViewById(R.id.runIndicator);
@@ -74,7 +75,7 @@ public class Game_Run_Fragment extends Fragment implements SensorHandler.runCall
         mediaPlayer.start(); // no need to call prepare(); create() does that for you
 
 
-        Button startRun = (Button)v.findViewById(R.id.startRun);
+        TableRow startRun = (TableRow)v.findViewById(R.id.startRun);
         startRun.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {

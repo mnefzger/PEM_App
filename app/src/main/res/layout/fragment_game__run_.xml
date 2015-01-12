@@ -5,67 +5,6 @@
 
     <!-- TODO: Update blank fragment layout -->
 
-    <TextView
-        android:layout_width="fill_parent"
-        android:layout_height="55dp"
-        android:textAppearance="?android:attr/textAppearanceLarge"
-        android:text="The Monster"
-        android:id="@+id/textView3"
-        android:layout_gravity="center_horizontal|top"
-        android:gravity="center"
-        android:background="#3E6617"
-        android:textSize="30dp"
-        android:textColor="#D5F6B8" />
-
-    <RelativeLayout
-        android:layout_width="fill_parent"
-        android:layout_height="fill_parent"
-        android:padding="0dp"
-        android:id="@+id/runInfoText"
-        android:alpha="1">
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="You have woken a terrible monster from it's sleep!\nThe only way to come out of this alive is to run as fast as you can.\n
-                         \nYou can run by shaking your phone."
-            android:id="@+id/textView4"
-            android:layout_marginTop="69dp"
-            android:layout_marginLeft="10dp"
-            android:layout_marginRight="10dp"
-            android:gravity="center"
-            android:textSize="18dp"
-            android:layout_alignParentTop="true"
-            android:layout_alignParentLeft="true"
-            android:layout_alignParentStart="true"
-            android:textColor="@color/black"/>
-
-        <ImageView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:id="@+id/imageView3"
-            android:src="@drawable/spider"
-            android:layout_alignParentBottom="true"
-            android:layout_alignParentLeft="true"
-            android:layout_alignParentStart="true"
-            android:layout_marginBottom="25dp" />
-
-        <Button
-            android:layout_width="fill_parent"
-            android:layout_height="65dp"
-            android:text="Run for your life!"
-            android:id="@+id/startRun"
-            android:layout_alignParentBottom="true"
-            android:layout_centerHorizontal="true"
-            android:textStyle="bold"
-            android:textSize="22dp"
-            android:textColor="#cde657"
-            android:background="#95000000"
-            android:layout_marginBottom="20dp"
-            android:layout_marginLeft="15dp"
-        />
-    </RelativeLayout>
-
     <FrameLayout
         android:layout_width="fill_parent"
         android:layout_height="fill_parent"
@@ -192,5 +131,156 @@
             android:layout_gravity="right|bottom"
             android:layout_marginBottom="0dp" />
 
+        <TextView
+            android:layout_width="fill_parent"
+            android:layout_height="55dp"
+            android:textAppearance="?android:attr/textAppearanceLarge"
+            android:text="The Monster"
+            android:id="@+id/textView3"
+            android:layout_gravity="center_horizontal|top"
+            android:gravity="center"
+            android:background="#3E6617"
+            android:textSize="30dp"
+            android:textColor="#D5F6B8" />
+
     </FrameLayout>
+
+    <LinearLayout
+        android:orientation="vertical"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:background="#304135"
+        android:id="@+id/runInfoText">
+
+        <FrameLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="top|center_horizontal"
+            android:layout_weight="1">
+
+            <ImageView
+                android:layout_width="fill_parent"
+                android:layout_height="fill_parent"
+                android:id="@+id/imageView13"
+                android:layout_gravity="top|center_horizontal"
+                android:src="@drawable/spider_top"
+                android:scaleType="centerCrop" />
+
+            <TableRow
+                android:layout_width="fill_parent"
+                android:layout_height="70dp"
+                android:layout_gravity="bottom"
+                android:background="#202d24"
+                android:alpha="0.6">
+
+            </TableRow>
+
+            <TableRow
+                android:layout_width="fill_parent"
+                android:layout_height="70dp"
+                android:layout_gravity="bottom">
+
+                <LinearLayout
+                    android:orientation="vertical"
+                    android:layout_width="fill_parent"
+                    android:layout_height="fill_parent">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textAppearance="?android:attr/textAppearanceLarge"
+                        android:text="THE MONSTER"
+                        android:id="@+id/textView10"
+                        android:textColor="#ff84ea29"
+                        android:layout_marginTop="10dp"
+                        android:layout_marginLeft="25dp" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textAppearance="?android:attr/textAppearanceMedium"
+                        android:text="SPEED"
+                        android:id="@+id/textView11"
+                        android:layout_marginLeft="25dp"
+                        android:fontFamily="sans-serif-light" />
+
+                </LinearLayout>
+
+            </TableRow>
+        </FrameLayout>
+
+        <LinearLayout
+            android:orientation="vertical"
+            android:layout_width="fill_parent"
+            android:layout_height="327dp"
+            android:layout_gravity="bottom"
+            android:layout_weight="6">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textAppearance="?android:attr/textAppearanceLarge"
+                android:text="RUN FOR YOUR LIFE!"
+                android:id="@+id/textView8"
+                android:paddingLeft="25dp"
+                android:layout_marginBottom="20dp"
+                android:layout_marginTop="25dp"
+                android:textColor="#FF0066" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="You have woken a terrible monster from it's sleep!\nThe only way to come out of this alive is to run as fast as you can.\n
+                         \nYou can run by shaking your phone."
+                android:id="@+id/textView7"
+                android:gravity="left"
+                android:textSize="20dp"
+                android:paddingLeft="25dp"
+                android:paddingRight="25dp" />
+
+            <TableRow
+                android:layout_width="fill_parent"
+                android:layout_height="0dp"
+                android:layout_gravity="bottom"
+                android:layout_weight="1">
+
+                <LinearLayout
+                    android:orientation="horizontal"
+                    android:layout_width="fill_parent"
+                    android:layout_height="fill_parent">
+
+                    <TableRow
+                        android:layout_width="fill_parent"
+                        android:layout_height="70dp"
+                        android:background="#202d24"
+                        android:layout_gravity="bottom"
+                        android:layout_weight="1"
+                        android:id="@+id/startRun">
+
+                        <TextView
+                            android:layout_width="fill_parent"
+                            android:layout_height="fill_parent"
+                            android:textAppearance="?android:attr/textAppearanceLarge"
+                            android:text="Start"
+                            android:id="@+id/textView9"
+                            android:background="#202d24"
+                            android:layout_gravity="bottom|center_horizontal"
+                            android:gravity="center_vertical|right"
+                            android:paddingRight="5dp"
+                            android:textColor="#ff84ea29"
+                            android:layout_weight="1" />
+
+                        <ImageView
+                            android:layout_width="125dp"
+                            android:layout_height="70dp"
+                            android:id="@+id/imageView14"
+                            android:layout_weight="1"
+                            android:src="@drawable/start_arrow"
+                            android:paddingRight="25dp" />
+                    </TableRow>
+                </LinearLayout>
+            </TableRow>
+
+        </LinearLayout>
+    </LinearLayout>
 </RelativeLayout>
