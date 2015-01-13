@@ -338,7 +338,7 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Your Partner has fallen into a pit! Only you can help him out.\nFirstly, you have to throw the rope so he can climb out.\n\nTo throw the rope, simulate the throwing motion with your phone."
+                android:text="You fell into a pit!\nLuckily, your partner came to your rescue.\nYou will have to wait until your partner throws the rope so you can climb out."
                 android:id="@+id/pitText"
                 android:gravity="left"
                 android:textSize="20dp"
@@ -362,7 +362,8 @@
                         android:background="#202d24"
                         android:layout_gravity="bottom"
                         android:layout_weight="1"
-                        android:id="@+id/startTheRescue2">
+                        android:id="@+id/startTheRescue2"
+                        android:visibility="invisible">
 
                         <TextView
                             android:layout_width="fill_parent"

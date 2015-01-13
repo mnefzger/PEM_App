@@ -73,6 +73,7 @@ public class Game_Rescue_Fragment extends Fragment implements SensorHandler.rope
         private String side = "";
         private boolean alive = false;
         private boolean inTime = false;
+        private boolean lost = false;
 
         private Animation swingLeft;
         private Animation swingRight;
@@ -265,7 +266,7 @@ public class Game_Rescue_Fragment extends Fragment implements SensorHandler.rope
 
                @Override
                public void onAnimationEnd(Animation animation) {
-                    if(alive == false){
+                    if(alive == false && !lost){
                         Log.d("Rocks","verloren!!");
                         if(!ServerData.isServer()) {
                             BluetoothHelper.sendDataToPairedDevice(ServerData.getServer(), "LOST_null_null_");
@@ -346,7 +347,7 @@ public class Game_Rescue_Fragment extends Fragment implements SensorHandler.rope
                         pullText.setVisibility(View.VISIBLE);
                         startSensing("gyroscope");
                         pullRope();
-                    } else if(count <= 3 && !alive){
+                    } else if(count <= 3 && !alive && !lost){
                         if(!ServerData.isServer()) {
                             BluetoothHelper.sendDataToPairedDevice(ServerData.getServer(), "LOST_null_null_");
                         } else {
@@ -362,6 +363,10 @@ public class Game_Rescue_Fragment extends Fragment implements SensorHandler.rope
        }
        });
 
+    }
+
+    public void markAsLost(){
+        lost = true;
     }
 
     @Override

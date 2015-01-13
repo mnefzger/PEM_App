@@ -117,6 +117,13 @@ public class GameActivity extends Activity implements BluetoothListener.IListenC
         // MINIGAME LOST
         if(processed.equals("LOST")){
             this.changeFragment(Game_Lost_Fragment.newInstance(), "LOST");
+
+            //to stop things happening in the background
+            Game_Rescue_Fragment fragment = (Game_Rescue_Fragment)fragmentManager.findFragmentByTag("RESCUE");
+            if(fragment!=null) fragment.markAsLost();
+
+            Game_Run_Fragment fragment2 = (Game_Run_Fragment)fragmentManager.findFragmentByTag("RUN");
+            if(fragment2!=null) fragment2.markAsLost();
         }
 
 

@@ -34,13 +34,11 @@ public class Game_Run_Fragment extends Fragment implements SensorHandler.runCall
     private LinearLayout info;
     private FrameLayout runGame;
     private ImageView runIndicator;
-    private ImageView leftFoot;
-    private ImageView rightFoot;
     private boolean animated = false;
+    private boolean lost = false;
     private int fails = 0;
     private Animation anim1;
     private Animation anim2;
-    private Animation anim;
 
 
 
@@ -63,11 +61,8 @@ public class Game_Run_Fragment extends Fragment implements SensorHandler.runCall
         runGame = (FrameLayout)v.findViewById(R.id.runGame);
         runSpeed = (TextView)v.findViewById(R.id.runSpeed);
         runIndicator = (ImageView)v.findViewById(R.id.runIndicator);
-        leftFoot  =(ImageView)v.findViewById(R.id.left_foot);
-        rightFoot  =(ImageView)v.findViewById(R.id.right_foot);
         anim1 = AnimationUtils.loadAnimation(getActivity(), R.anim.anim_run_1);
         anim2 = AnimationUtils.loadAnimation(getActivity(), R.anim.anim_run_2);
-        anim = AnimationUtils.loadAnimation(getActivity(), R.anim.anim_run);
         anim1.setAnimationListener(l);
         anim2.setAnimationListener(l);
 
@@ -134,7 +129,7 @@ public class Game_Run_Fragment extends Fragment implements SensorHandler.runCall
                 wait.postDelayed(new Runnable() {
                                      @Override
                                      public void run() {
-                                         if(fails < 2) {
+                                         if(fails < 2 && !lost) {
                                              sensorHandler.stopSensing();
                                              runSpeed.setText("You made it!");
                                              MediaPlayer mediaPlayer = MediaPlayer.create(getActivity(), R.raw.win);
@@ -178,6 +173,10 @@ public class Game_Run_Fragment extends Fragment implements SensorHandler.runCall
             }
             ((GameActivity) getActivity()).changeFragment(Game_Lost_Fragment.newInstance(), "LOST");
         }
+    }
+
+    public void markAsLost(){
+        lost = true;
     }
 
 
