@@ -18,7 +18,8 @@ public class GameActivity extends Activity implements BluetoothListener.IListenC
         Game_Main_Fragment.OnFragmentInteractionListener,
         Game_Rescue_Fragment.OnFragmentInteractionListener,
         Game_Math_Fragment.OnFragmentInteractionListener,
-        Game_Scream_Fragment.OnFragmentInteractionListener
+        Game_Scream_Fragment.OnFragmentInteractionListener,
+        Game_MathRunes_Fragment.OnFragmentInteractionListener
         {
     private FragmentManager fragmentManager;
     private FragmentTransaction fragmentTransaction;
@@ -100,8 +101,10 @@ public class GameActivity extends Activity implements BluetoothListener.IListenC
 
         // START
         if(processed.startsWith("START")){
-            if(processed.contains("Rescue")){
+            if(processed.contains("Rescue")) {
                 this.changeFragment(Game_Rescue_Fragment.newInstance("pit"), "RESCUE");
+            } else if(processed.contains("MathRunes")){
+                this.changeFragment(Game_MathRunes_Fragment.newInstance("Player2", ""), "MATHRUNES");
             } else if(processed.contains("Math")){
                 this.changeFragment(Game_Math_Fragment.newInstance("Player2", ""), "MATH");
             } else if(processed.contains("Run")) {
@@ -141,6 +144,23 @@ public class GameActivity extends Activity implements BluetoothListener.IListenC
             fragment.getData(processed);
         } else if(processed.equals("mathSuccess")){
             Game_Math_Fragment fragment = (Game_Math_Fragment)fragmentManager.findFragmentByTag("MATH");
+            fragment.setWon();
+            this.changeFragment(Game_Main_Fragment.newInstance(), "MAIN");
+        }
+
+        // MATHRUNES
+        if(processed.startsWith("MR:result")) {
+            Game_MathRunes_Fragment fragment = (Game_MathRunes_Fragment) fragmentManager.findFragmentByTag("MATHRUNES");
+            fragment.setResult(processed);
+        } else if(processed.startsWith("MR:correctResult")){
+            Game_MathRunes_Fragment fragment = (Game_MathRunes_Fragment)fragmentManager.findFragmentByTag("MATHRUNES");
+            fragment.setCorrectResult(processed);
+        } else if(processed.startsWith("MR:waitIfGameWon")){
+            Game_MathRunes_Fragment fragment = (Game_MathRunes_Fragment)fragmentManager.findFragmentByTag("MATHRUNES");
+            fragment.setWaitIfGameWon();
+            fragment.getData(processed);
+        } else if(processed.equals("MR:mathSuccess")){
+            Game_MathRunes_Fragment fragment = (Game_MathRunes_Fragment)fragmentManager.findFragmentByTag("MATHRUNES");
             fragment.setWon();
             this.changeFragment(Game_Main_Fragment.newInstance(), "MAIN");
         }

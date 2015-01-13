@@ -2,6 +2,7 @@ package com.pem.project.pem_app;
 
 import android.app.Activity;
 import android.app.Fragment;
+import android.content.Context;
 import android.content.res.Configuration;
 import android.net.Uri;
 import android.os.Bundle;
@@ -13,8 +14,11 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.view.inputmethod.EditorInfo;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.GridView;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 
@@ -70,6 +74,10 @@ public class Game_MathRunes_Fragment extends Fragment implements OnClickListener
     private EditText editText1;
     private boolean wait_partner = false;
     private int player;
+    private GridView listView1;
+    private GridView listView2;
+    private GridView listView3;
+    private GridView listView4;
 
 
     /**
@@ -113,10 +121,10 @@ public class Game_MathRunes_Fragment extends Fragment implements OnClickListener
 
         if (mParam1.equals("Player2")){
             player = 2;
-            rootView = inflater.inflate(R.layout.fragment_game_math2, container, false);
+            rootView = inflater.inflate(R.layout.fragment_game_mathrunes, container, false);
         } else {
             player = 1;
-            rootView = inflater.inflate(R.layout.fragment_game_math, container, false);
+            rootView = inflater.inflate(R.layout.fragment_game_mathrunes, container, false);
 
         }
 
@@ -129,7 +137,7 @@ public class Game_MathRunes_Fragment extends Fragment implements OnClickListener
 
         countTextField = (TextView) rootView.findViewById(R.id.countTextField);
 
-        countdown = new CountDownTimer(30000, 1000) {
+        countdown = new CountDownTimer(40000, 1000) {
 
             public void onTick(long millisUntilFinished) {
                 countTextField.setText("seconds remaining: " + millisUntilFinished / 1000);
@@ -137,7 +145,7 @@ public class Game_MathRunes_Fragment extends Fragment implements OnClickListener
 
             public void onFinish() {
                 if (!won) {
-                    Log.d("Math", "lost!!");
+                    Log.d("MathRunes", "lost!!");
                     if (!ServerData.isServer()) {
                         //send to server
                         BluetoothHelper.sendDataToPairedDevice(ServerData.getServer(), "LOST_null_null_");
@@ -234,11 +242,11 @@ public class Game_MathRunes_Fragment extends Fragment implements OnClickListener
                     if (!won) {
                         if (!ServerData.isServer()) {
                             //send to server
-                            BluetoothHelper.sendDataToPairedDevice(ServerData.getServer(), "GAMEDATA_Math_waitIfGameWon:" + input_my + ":" + (correct1 && correct2) + "_");
+                            BluetoothHelper.sendDataToPairedDevice(ServerData.getServer(), "GAMEDATA_MathRunes_MR:waitIfGameWon:" + input_my + ":" + (correct1 && correct2) + "_");
 
                         } else {
                             // send to partner of server
-                            BluetoothHelper.sendDataToPairedDevice(ServerData.getTeamMembers(1).get(0), "GAMEDATA_Math_waitIfGameWon:" + input_my + ":" + (correct1 && correct2) + "_");
+                            BluetoothHelper.sendDataToPairedDevice(ServerData.getTeamMembers(1).get(0), "GAMEDATA_MathRunes_MR:waitIfGameWon:" + input_my + ":" + (correct1 && correct2) + "_");
                         }
 
                     }
@@ -253,11 +261,38 @@ public class Game_MathRunes_Fragment extends Fragment implements OnClickListener
         correctFinalResult_partner = operation1.getRightValue() + operation2.getRightValue();
 
 
-        TextView textViewOperation1 = (TextView) rootView.findViewById(R.id.textViewOperation1);
-        TextView textViewOperation2 = (TextView) rootView.findViewById(R.id.textViewOperation2);
+     //   TextView textViewOperation1 = (TextView) rootView.findViewById(R.id.textViewOperation1);
+     //   TextView textViewOperation2 = (TextView) rootView.findViewById(R.id.textViewOperation2);
 
-        textViewOperation1.setText(operation1.getOperationText());
-        textViewOperation2.setText(operation2.getOperationText());
+       // textViewOperation1.setText(operation1.getOperationText());
+       // textViewOperation2.setText(operation2.getOperationText());
+
+        //ImageView imageviewOperation1 = (ImageView) rootView.findViewById(R.id.imageViewOperation1);
+
+        listView1 = (GridView) rootView.findViewById(R.id.listView1);
+        listView2 = (GridView) rootView.findViewById(R.id.listView2);
+        listView3 = (GridView) rootView.findViewById(R.id.listView3);
+        listView4 = (GridView) rootView.findViewById(R.id.listView4);
+
+        final RowAdapter rowAdapter1 = new RowAdapter(getActivity().getApplicationContext(), operation1.getRunesArray(1));
+        final RowAdapter rowAdapter2 = new RowAdapter(getActivity().getApplicationContext(), operation1.getRunesArray(2));
+        final RowAdapter rowAdapter3 = new RowAdapter(getActivity().getApplicationContext(), operation2.getRunesArray(1));
+        final RowAdapter rowAdapter4 = new RowAdapter(getActivity().getApplicationContext(), operation2.getRunesArray(2));
+
+        listView1.setAdapter(rowAdapter1);
+        listView2.setAdapter(rowAdapter2);
+        listView3.setAdapter(rowAdapter3);
+        listView4.setAdapter(rowAdapter4);
+
+        TextView textView_operation1 = (TextView) rootView.findViewById((R.id.operation1));
+        TextView textView_operation2 = (TextView) rootView.findViewById((R.id.operation2));
+
+        textView_operation1.setText(operation1.getOperationString(operation1.getOperation()));
+        textView_operation2.setText(operation2.getOperationString(operation2.getOperation()));
+
+        System.out.println("Operation1: " + operation1.getOperationText());
+        System.out.println("Operation2: " + operation2.getOperationText());
+
 
         buttonOption1 = (Button) rootView.findViewById(R.id.buttonMath1);
         buttonOption2 = (Button) rootView.findViewById(R.id.buttonMath2);
@@ -382,10 +417,10 @@ public class Game_MathRunes_Fragment extends Fragment implements OnClickListener
 
                 if (!ServerData.isServer()) {
                     //send to server
-                    BluetoothHelper.sendDataToPairedDevice(ServerData.getServer(), "GAMEDATA_Math_result1:" + butPressed.getText() + "_");
+                    BluetoothHelper.sendDataToPairedDevice(ServerData.getServer(), "GAMEDATA_MathRunes_MR:result1:" + butPressed.getText() + "_");
                 } else {
                     // send to partner of server
-                    BluetoothHelper.sendDataToPairedDevice(ServerData.getTeamMembers(1).get(0), "GAMEDATA_Math_result1:" + butPressed.getText() + "_");
+                    BluetoothHelper.sendDataToPairedDevice(ServerData.getTeamMembers(1).get(0), "GAMEDATA_MathRunes_MR:result1:" + butPressed.getText() + "_");
                 }
 
                 result1_my = Integer.parseInt(butPressed.getText().toString());
@@ -403,10 +438,10 @@ public class Game_MathRunes_Fragment extends Fragment implements OnClickListener
 
                 if (!ServerData.isServer()) {
                     //send to server
-                    BluetoothHelper.sendDataToPairedDevice(ServerData.getServer(), "GAMEDATA_Math_result2:" + butPressed.getText() + "_");
+                    BluetoothHelper.sendDataToPairedDevice(ServerData.getServer(), "GAMEDATA_MathRunes_MR:result2:" + butPressed.getText() + "_");
                 } else {
                     // send to partner of server
-                    BluetoothHelper.sendDataToPairedDevice(ServerData.getTeamMembers(1).get(0), "GAMEDATA_Math_result2:" + butPressed.getText() + "_");
+                    BluetoothHelper.sendDataToPairedDevice(ServerData.getTeamMembers(1).get(0), "GAMEDATA_MathRunes_MR:result2:" + butPressed.getText() + "_");
                 }
 
                 result2_my = Integer.parseInt(butPressed.getText().toString());
@@ -419,10 +454,10 @@ public class Game_MathRunes_Fragment extends Fragment implements OnClickListener
 
                 if (!ServerData.isServer()) {
                     //send to server
-                    BluetoothHelper.sendDataToPairedDevice(ServerData.getServer(), "GAMEDATA_Math_correctResult:" + correctResult + "_");
+                    BluetoothHelper.sendDataToPairedDevice(ServerData.getServer(), "GAMEDATA_MathRunes_MR:correctResult:" + correctResult + "_");
                 } else {
                     // send to partner of server
-                    BluetoothHelper.sendDataToPairedDevice(ServerData.getTeamMembers(1).get(0), "GAMEDATA_Math_correctResult:" + correctResult + "_");
+                    BluetoothHelper.sendDataToPairedDevice(ServerData.getTeamMembers(1).get(0), "GAMEDATA_MathRunes_MR:correctResult:" + correctResult + "_");
                 }
 
             }
@@ -441,12 +476,12 @@ public class Game_MathRunes_Fragment extends Fragment implements OnClickListener
                     textview1 = (TextView) rootView.findViewById(R.id.result1);
                     textview2 = (TextView) rootView.findViewById(R.id.result2);
 
-                    if (processed.startsWith("result1")) {
-                        textview1.setText(processed.substring(8));
-                        result1_partner = Integer.parseInt(processed.substring(8));
-                    } else if (processed.startsWith("result2")){
-                        textview2.setText(processed.substring(8));
-                        result2_partner = Integer.parseInt(processed.substring(8));
+                    if (processed.startsWith("MR:result1")) {
+                        textview1.setText(processed.substring(11));
+                        result1_partner = Integer.parseInt(processed.substring(11));
+                    } else if (processed.startsWith("MR:result2")){
+                        textview2.setText(processed.substring(11));
+                        result2_partner = Integer.parseInt(processed.substring(11));
                     }
 
 
@@ -458,8 +493,8 @@ public class Game_MathRunes_Fragment extends Fragment implements OnClickListener
         }
 
     public void setCorrectResult(String correctResult){
-        this.correctFinalResult_my = Integer.parseInt(correctResult.substring(14));
-        System.out.println("Correct Result: " + correctResult.substring(14));
+        this.correctFinalResult_my = Integer.parseInt(correctResult.substring(17));
+        System.out.println("Correct Result: " + correctResult.substring(17));
     }
 
     private boolean checkIfGameWon() {
@@ -471,15 +506,15 @@ public class Game_MathRunes_Fragment extends Fragment implements OnClickListener
             correctFinalResult_my == input_my && // Check own
             (correct1 && correct2) && // Check own
             correct_partner ){ // Check Partner
-            Log.d("Math", "won!!");
+            Log.d("MathRunes", "won!!");
 
 
             if (!ServerData.isServer()) {
                 //send to server
-                BluetoothHelper.sendDataToPairedDevice(ServerData.getServer(), "GAMEDATA_Math_mathSuccess_");
+                BluetoothHelper.sendDataToPairedDevice(ServerData.getServer(), "GAMEDATA_MathRunes_MR:mathSuccess_");
             } else {
                 // send to partner of server
-                BluetoothHelper.sendDataToPairedDevice(ServerData.getTeamMembers(1).get(0), "GAMEDATA_Math_mathSuccess_");
+                BluetoothHelper.sendDataToPairedDevice(ServerData.getTeamMembers(1).get(0), "GAMEDATA_MathRunes_MR:mathSuccess_");
             }
             CancelCountDown();
             ((GameActivity)getActivity()).changeFragment(Game_Main_Fragment.newInstance(), "MAIN");
@@ -488,13 +523,13 @@ public class Game_MathRunes_Fragment extends Fragment implements OnClickListener
         } else if (wait_partner == false){
             if (!ServerData.isServer()) {
                 //send to server
-                BluetoothHelper.sendDataToPairedDevice(ServerData.getServer(), "GAMEDATA_Math_WaitForPartner_");
+                BluetoothHelper.sendDataToPairedDevice(ServerData.getServer(), "GAMEDATA_MathRunes_MR:WaitForPartner_");
             } else {
                 // send to partner of server
-                BluetoothHelper.sendDataToPairedDevice(ServerData.getTeamMembers(1).get(0), "GAMEDATA_Math_WaitForPartner_");
+                BluetoothHelper.sendDataToPairedDevice(ServerData.getTeamMembers(1).get(0), "GAMEDATA_MathRunes_MR:WaitForPartner_");
             }
         } else {
-            Log.d("Math", "lost!!");
+            Log.d("MathRunes", "lost!!");
             if (!ServerData.isServer()) {
                 //send to server
                 BluetoothHelper.sendDataToPairedDevice(ServerData.getServer(), "LOST_null_null_");
@@ -535,8 +570,8 @@ public class Game_MathRunes_Fragment extends Fragment implements OnClickListener
 
     public void getData(String processed) {
         String[] messageParameters = processed.split(":");
-        String input_partner = messageParameters[1];
-        String correct_partner = messageParameters[2];
+        String input_partner = messageParameters[2];
+        String correct_partner = messageParameters[3];
 
         setInputPartner(input_partner);
         checkCorrectPartner(correct_partner);
@@ -547,4 +582,53 @@ public class Game_MathRunes_Fragment extends Fragment implements OnClickListener
         won = true;
         System.out.println("Won: " + won);
     }
+}
+
+class RowAdapter extends ArrayAdapter {
+
+    private Context context;
+    private LayoutInflater layoutInflater;
+    private int[] runesArray;
+
+
+    public RowAdapter(Context context, int[] runesArray) {
+        super(context, 0);
+        layoutInflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        this.context = context;
+        this.runesArray = runesArray;
+
+    }
+
+
+
+    public View getView(int position, View view, ViewGroup viewGroup){
+        if(view==null)
+            view = layoutInflater.inflate(R.layout.fragment_game_mathrunes_listitem, null);
+
+        ImageView imageView1 = (ImageView) view.findViewById(R.id.rune);
+
+        if (runesArray[position] == 5) {
+            imageView1.setImageResource(R.drawable.five);
+        } else {
+            imageView1.setImageResource(R.drawable.one);
+        }
+
+        return view;
+    }
+
+
+    public int getCount(){
+        int x = 0;
+        int counter = 0;
+        while(x<runesArray.length){
+            if(runesArray[x] != 0){
+                counter++;
+            }
+            x++;
+        }
+
+        return counter;
+    }
+
+
 }

@@ -90,7 +90,7 @@ public class Game_Math_Helper {
         return calculation;
     }
 
-    private String getOperationString(Operation oper) {
+    public String getOperationString(Operation oper) {
         String operationText = "";
         if (oper == Operation.SUM) {
             operationText = "+";
@@ -104,17 +104,20 @@ public class Game_Math_Helper {
         return operationText;
     }
 
-    private int[] getRunesArray(int operand){
+    public int[] getRunesArray(int operand_index){
 
         int[] runesArray = new int[20];
         int i = 0;
+        int operand;
+
+        if (operand_index == 1) operand = this.getOperand1();
+        else operand = this.getOperand2();
 
         while (operand >0){
             if (operand >= 5) {
                 operand = operand - 5;
                 runesArray[i] = 5;
-            }
-            else {
+            } else {
                 operand = operand - 1;
                 runesArray[i] = 1;
             }
