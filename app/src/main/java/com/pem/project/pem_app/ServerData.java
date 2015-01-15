@@ -4,6 +4,7 @@ import android.bluetooth.BluetoothSocket;
 import android.util.Log;
 
 import java.util.ArrayList;
+import java.util.Random;
 
 /**
  * Created by Matthias on 23.11.2014.
@@ -14,6 +15,10 @@ public class ServerData {
     private static ArrayList<BluetoothSocket> clients = new ArrayList<BluetoothSocket>();
     private static ArrayList<BluetoothSocket> team1 = new ArrayList<BluetoothSocket>();
     private static ArrayList<BluetoothSocket> team2 = new ArrayList<BluetoothSocket>();
+    private static ArrayList<String> team1_keys = new ArrayList<String>();
+    private static ArrayList<String> team2_keys = new ArrayList<String>();
+    private static String team1_coin = "coin_left";
+    private static String team2_coin = "coin_right";
     private static boolean isServer = false;
     private static BluetoothSocket server;
 
@@ -52,6 +57,69 @@ public class ServerData {
             return member;
         }
     }
+
+
+
+    // add key after successful minigame
+    public static void addKey(String team, String key){
+        if(team.equals("team1")){
+            if(!team1_keys.contains(key))
+                team1_keys.add(key);
+        }else{ // team2
+            if(!team2_keys.contains(key))
+                team2_keys.add(key);
+        }
+    }
+
+    // remove key after minigame failure
+    public static void removeKey(String team, String key){
+        if(team.equals("team1")){
+            if(team1_keys.contains(key))
+                team1_keys.remove(key);
+        }else{ // team2
+            if(team2_keys.contains(key))
+                team2_keys.remove(key);
+        }
+    }
+
+    // remove random key after LUCK minigame failure
+    public static String removeRandomKey(String team){
+        String removedKey = "";
+        if(team.equals("team1")){
+            if(!team1_keys.isEmpty()){
+                int s = team1_keys.size();
+                Random random = new Random();
+                int r = random.nextInt(s);
+                removedKey = team1_keys.get(r);
+                team1_keys.remove(r);
+            }
+        }else{ // team2
+            if(!team2_keys.isEmpty()){
+                int s = team2_keys.size();
+                Random random = new Random();
+                int r = random.nextInt(s);
+                removedKey = team2_keys.get(r);
+                team2_keys.remove(r);
+            }
+        }
+        return removedKey;
+    }
+
+    // for updating the view
+    public static ArrayList<String> getTeam1_keys(){
+        return team1_keys;
+    }
+    public static ArrayList<String> getTeam2_keys(){
+        return team2_keys;
+    }
+    public static String getTeam1_coin(){
+        return team1_coin;
+    }
+    public static String getTeam2_coin(){
+        return team2_coin;
+    }
+
+
 
     //only the server calls this method
     public static void markLocalAsServer(){

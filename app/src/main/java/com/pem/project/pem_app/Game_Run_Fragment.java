@@ -19,6 +19,7 @@ import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
+import android.widget.TableRow;
 import android.widget.TextView;
 import android.os.Vibrator;
 
@@ -30,16 +31,14 @@ import android.os.Vibrator;
 public class Game_Run_Fragment extends Fragment implements SensorHandler.runCallback{
     private SensorHandler sensorHandler;
     private TextView runSpeed;
-    private RelativeLayout info;
+    private LinearLayout info;
     private FrameLayout runGame;
     private ImageView runIndicator;
-    private ImageView leftFoot;
-    private ImageView rightFoot;
     private boolean animated = false;
+    private boolean lost = false;
     private int fails = 0;
     private Animation anim1;
     private Animation anim2;
-    private Animation anim;
 
 
 
@@ -58,15 +57,12 @@ public class Game_Run_Fragment extends Fragment implements SensorHandler.runCall
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View v = inflater.inflate(R.layout.fragment_game__run_, container, false);
-        info = (RelativeLayout)v.findViewById(R.id.runInfoText);
+        info = (LinearLayout)v.findViewById(R.id.runInfoText);
         runGame = (FrameLayout)v.findViewById(R.id.runGame);
         runSpeed = (TextView)v.findViewById(R.id.runSpeed);
         runIndicator = (ImageView)v.findViewById(R.id.runIndicator);
-        leftFoot  =(ImageView)v.findViewById(R.id.left_foot);
-        rightFoot  =(ImageView)v.findViewById(R.id.right_foot);
         anim1 = AnimationUtils.loadAnimation(getActivity(), R.anim.anim_run_1);
         anim2 = AnimationUtils.loadAnimation(getActivity(), R.anim.anim_run_2);
-        anim = AnimationUtils.loadAnimation(getActivity(), R.anim.anim_run);
         anim1.setAnimationListener(l);
         anim2.setAnimationListener(l);
 
@@ -74,7 +70,7 @@ public class Game_Run_Fragment extends Fragment implements SensorHandler.runCall
         mediaPlayer.start(); // no need to call prepare(); create() does that for you
 
 
-        Button startRun = (Button)v.findViewById(R.id.startRun);
+        TableRow startRun = (TableRow)v.findViewById(R.id.startRun);
         startRun.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -133,7 +129,7 @@ public class Game_Run_Fragment extends Fragment implements SensorHandler.runCall
                 wait.postDelayed(new Runnable() {
                                      @Override
                                      public void run() {
-                                         if(fails < 2) {
+                                         if(fails < 2 && !lost) {
                                              sensorHandler.stopSensing();
                                              runSpeed.setText("You made it!");
                                              MediaPlayer mediaPlayer = MediaPlayer.create(getActivity(), R.raw.win);
@@ -177,6 +173,10 @@ public class Game_Run_Fragment extends Fragment implements SensorHandler.runCall
             }
             ((GameActivity) getActivity()).changeFragment(Game_Lost_Fragment.newInstance(), "LOST");
         }
+    }
+
+    public void markAsLost(){
+        lost = true;
     }
 
 

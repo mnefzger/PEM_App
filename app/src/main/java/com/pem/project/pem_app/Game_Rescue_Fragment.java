@@ -32,6 +32,7 @@ import android.widget.Gallery;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
+import android.widget.TableRow;
 import android.widget.TextView;
 
 
@@ -58,11 +59,11 @@ public class Game_Rescue_Fragment extends Fragment implements SensorHandler.rope
         private TextView distanceText;
         private TextView pitText;
         private TextView pullText;
-        private Button startTheRescue;
-        private Button startTheRescue2;
+        private TableRow startTheRescue;
+        private TableRow startTheRescue2;
         private Button backToMain;
-        private RelativeLayout info;
-        private RelativeLayout info2;
+        private LinearLayout info;
+        private LinearLayout info2;
         private FrameLayout rescue;
         private FrameLayout rescue2;
         private RelativeLayout end;
@@ -72,6 +73,7 @@ public class Game_Rescue_Fragment extends Fragment implements SensorHandler.rope
         private String side = "";
         private boolean alive = false;
         private boolean inTime = false;
+        private boolean lost = false;
 
         private Animation swingLeft;
         private Animation swingRight;
@@ -115,8 +117,8 @@ public class Game_Rescue_Fragment extends Fragment implements SensorHandler.rope
         display = getActivity().getWindowManager().getDefaultDisplay();
         size = new Point();
         display.getSize(size);
-        info = (RelativeLayout)v.findViewById(R.id.theRescueIntroText);
-        info2 = (RelativeLayout)v.findViewById(R.id.theRescueIntroText2);
+        info = (LinearLayout)v.findViewById(R.id.theRescueIntroText);
+        info2 = (LinearLayout)v.findViewById(R.id.theRescueIntroText2);
         rescue = (FrameLayout)v.findViewById(R.id.theRescueLayout);
         rescue2 = (FrameLayout)v.findViewById(R.id.theRescueLayout2);
         end = (RelativeLayout)v.findViewById(R.id.endScreen);
@@ -144,7 +146,7 @@ public class Game_Rescue_Fragment extends Fragment implements SensorHandler.rope
             info2.setVisibility(View.INVISIBLE);
         }
 
-        startTheRescue = (Button)v.findViewById(R.id.startTheRescue);
+        startTheRescue = (TableRow)v.findViewById(R.id.startTheRescue);
         startTheRescue.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -155,7 +157,7 @@ public class Game_Rescue_Fragment extends Fragment implements SensorHandler.rope
         });
 
 
-        startTheRescue2 = (Button)v.findViewById(R.id.startTheRescue2);
+        startTheRescue2 = (TableRow)v.findViewById(R.id.startTheRescue2);
         startTheRescue2.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -264,7 +266,7 @@ public class Game_Rescue_Fragment extends Fragment implements SensorHandler.rope
 
                @Override
                public void onAnimationEnd(Animation animation) {
-                    if(alive == false){
+                    if(alive == false && !lost){
                         Log.d("Rocks","verloren!!");
                         if(!ServerData.isServer()) {
                             BluetoothHelper.sendDataToPairedDevice(ServerData.getServer(), "LOST_null_null_");
@@ -345,7 +347,7 @@ public class Game_Rescue_Fragment extends Fragment implements SensorHandler.rope
                         pullText.setVisibility(View.VISIBLE);
                         startSensing("gyroscope");
                         pullRope();
-                    } else if(count <= 3 && !alive){
+                    } else if(count <= 3 && !alive && !lost){
                         if(!ServerData.isServer()) {
                             BluetoothHelper.sendDataToPairedDevice(ServerData.getServer(), "LOST_null_null_");
                         } else {
@@ -361,6 +363,10 @@ public class Game_Rescue_Fragment extends Fragment implements SensorHandler.rope
        }
        });
 
+    }
+
+    public void markAsLost(){
+        lost = true;
     }
 
     @Override

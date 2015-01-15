@@ -1,9 +1,12 @@
 package com.pem.project.pem_app;
 
 
-import android.nfc.Tag;
-import android.os.Bundle;
 import android.app.Fragment;
+import android.hardware.Camera;
+import android.hardware.Camera.AutoFocusCallback;
+import android.hardware.Camera.PreviewCallback;
+import android.hardware.Camera.Size;
+import android.os.Bundle;
 import android.os.Handler;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -13,27 +16,8 @@ import android.widget.FrameLayout;
 import android.widget.TextView;
 
 import net.sourceforge.zbar.Config;
-import net.sourceforge.zbar.ImageScanner;
-import android.app.Activity;
-import android.content.Intent;
-import android.content.pm.ActivityInfo;
-import android.os.Bundle;
-import android.os.Handler;
-import android.view.Menu;
-import android.view.MenuItem;
-import android.view.View;
-import android.widget.Button;
-import android.widget.FrameLayout;
-import android.widget.TextView;
-
-import net.sourceforge.zbar.Config;
-import net.sourceforge.zbar.ImageScanner;
-import android.hardware.Camera;
-import android.hardware.Camera.PreviewCallback;
-import android.hardware.Camera.AutoFocusCallback;
-import android.hardware.Camera.Size;
-
 import net.sourceforge.zbar.Image;
+import net.sourceforge.zbar.ImageScanner;
 import net.sourceforge.zbar.Symbol;
 import net.sourceforge.zbar.SymbolSet;
 
@@ -177,14 +161,15 @@ public class QR_Fragment extends Fragment {
             minigame = "Run";
             //minigame = d>0.5 ? "Run" : "Items";
         }else if(scan.equals("Category:Puzzle")) {
-            f = Game_Math_Fragment.newInstance("Player1", "");
-            minigame = "Math";
+            f = d>0.5 ? Game_MathRunes_Fragment.newInstance("Player1", "") : Game_Math_Fragment.newInstance("Player1", "");
+            //minigame = "Math";
+            minigame = d>0.5 ? "MathRunes" : "Math";
         } else if(scan.equals("Category:Skill")) {
             f = Game_Rescue_Fragment.newInstance("rope");
             minigame = "Rescue";
         } else if(scan.equals("Category:Luck")) {
-            //f = Game_Luck_Fragment.newInstance();
-            //minigame = "Luck";
+            f = Game_Luck_Fragment.newInstance();
+            minigame = "Luck";
         } else {
             scanText.setText("Unable to detect Minigame.");
         }
