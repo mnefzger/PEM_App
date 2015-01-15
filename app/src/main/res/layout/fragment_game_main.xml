@@ -153,7 +153,8 @@ tools:context="com.pem.project.pem_app.GameActivity">
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_gravity="center_horizontal"
-        android:layout_weight="0.01">
+        android:layout_weight="0.01"
+        android:alpha="0">
 
         <Button
             android:layout_width="100dp"
