@@ -124,6 +124,12 @@ public class GameActivity extends Activity implements BluetoothListener.IListenC
 
             Game_Run_Fragment fragment2 = (Game_Run_Fragment)fragmentManager.findFragmentByTag("RUN");
             if(fragment2!=null) fragment2.markAsLost();
+
+            Game_Math_Fragment fragment3 = (Game_Math_Fragment)fragmentManager.findFragmentByTag("MATH");
+            if(fragment3!=null) fragment3.CancelCountDown();
+
+            Game_MathRunes_Fragment fragment4 = (Game_MathRunes_Fragment)fragmentManager.findFragmentByTag("MATHRUNES");
+            if(fragment4!=null) fragment4.CancelCountDown();
         }
 
 
