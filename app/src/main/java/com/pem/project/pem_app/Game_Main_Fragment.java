@@ -8,6 +8,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
+import java.util.ArrayList;
 
 
 /**
@@ -74,15 +75,88 @@ public class Game_Main_Fragment extends Fragment {
         ImageView team1_coin = (ImageView) view.findViewById(R.id.team1_coin);
         ImageView team2_coin = (ImageView) view.findViewById(R.id.team2_coin);
 
-        ImageView team1_keyyellow = (ImageView) view.findViewById(R.id.team1_keyyellow);
-        ImageView team1_keyred = (ImageView) view.findViewById(R.id.team1_keyred);
-        ImageView team1_keygreen = (ImageView) view.findViewById(R.id.team1_keygreen);
-        ImageView team1_keyblue = (ImageView) view.findViewById(R.id.team1_keyblue);
+        ImageView team1_keyYellow = (ImageView) view.findViewById(R.id.team1_keyYellow);
+        ImageView team1_keyRed = (ImageView) view.findViewById(R.id.team1_keyRed);
+        ImageView team1_keyGreen = (ImageView) view.findViewById(R.id.team1_keyGreen);
+        ImageView team1_keyBlue = (ImageView) view.findViewById(R.id.team1_keyBlue);
 
-        ImageView team2_keyyellow = (ImageView) view.findViewById(R.id.team2_keyyellow);
-        ImageView team2_keyred = (ImageView) view.findViewById(R.id.team2_keyred);
-        ImageView team2_keygreen = (ImageView) view.findViewById(R.id.team2_keygreen);
-        ImageView team2_keyblue = (ImageView) view.findViewById(R.id.team2_keyblue);
+        ImageView team2_keyYellow = (ImageView) view.findViewById(R.id.team2_keyYellow);
+        ImageView team2_keyRed = (ImageView) view.findViewById(R.id.team2_keyRed);
+        ImageView team2_keyGreen = (ImageView) view.findViewById(R.id.team2_keyGreen);
+        ImageView team2_keyBlue = (ImageView) view.findViewById(R.id.team2_keyBlue);
+
+
+        // retrieve data
+        String coin1 = ServerData.getTeam1_coin();
+        String coin2 = ServerData.getTeam2_coin();
+        ArrayList<String> keys1 = ServerData.getTeam1_keys();
+        ArrayList<String> keys2 = ServerData.getTeam2_keys();
+
+        // update game state view
+        // -> coins
+        if(coin1.equals("coin_left")){
+            team1_coin.setImageResource(R.drawable.coin_left);
+        }else if(coin1.equals("coin_right")){
+            team1_coin.setImageResource(R.drawable.coin_right);
+        }else if(coin1.equals("coin_both")){
+            team1_coin.setImageResource(R.drawable.coin_both);
+        }else {
+            team1_coin.setImageResource(R.drawable.coin_no);
+        }
+        if(coin2.equals("coin_left")){
+            team2_coin.setImageResource(R.drawable.coin_left);
+        }else if(coin2.equals("coin_right")){
+            team2_coin.setImageResource(R.drawable.coin_right);
+        }else if(coin2.equals("coin_both")){
+            team2_coin.setImageResource(R.drawable.coin_both);
+        }else {
+            team2_coin.setImageResource(R.drawable.coin_no);
+        }
+
+        // -> keys
+        if(keys1.contains("keyYellow")){
+            team1_keyYellow.setImageResource(R.drawable.key_yellow_yes);
+        }else{
+            team1_keyYellow.setImageResource(R.drawable.key_yellow_no);
+        }
+        if(keys1.contains("keyRed")){
+            team1_keyRed.setImageResource(R.drawable.key_red_yes);
+        }else{
+            team1_keyRed.setImageResource(R.drawable.key_red_no);
+        }
+        if(keys1.contains("keyGreen")){
+            team1_keyGreen.setImageResource(R.drawable.key_green_yes);
+        }else{
+            team1_keyGreen.setImageResource(R.drawable.key_green_no);
+        }
+        if(keys1.contains("keyBlue")){
+            team1_keyBlue.setImageResource(R.drawable.key_blue_yes);
+        }else{
+            team1_keyBlue.setImageResource(R.drawable.key_blue_no);
+        }
+
+        if(keys2.contains("keyYellow")){
+            team2_keyYellow.setImageResource(R.drawable.key_yellow_yes);
+        }else{
+            team2_keyYellow.setImageResource(R.drawable.key_yellow_no);
+        }
+        if(keys2.contains("keyRed")){
+            team2_keyRed.setImageResource(R.drawable.key_red_yes);
+        }else{
+            team2_keyRed.setImageResource(R.drawable.key_red_no);
+        }
+        if(keys2.contains("keyGreen")){
+            team2_keyGreen.setImageResource(R.drawable.key_green_yes);
+        }else{
+            team2_keyGreen.setImageResource(R.drawable.key_green_no);
+        }
+        if(keys2.contains("keyBlue")){
+            team2_keyBlue.setImageResource(R.drawable.key_blue_yes);
+        }else{
+            team2_keyBlue.setImageResource(R.drawable.key_blue_no);
+        }
+
+        // testing buttons
 
         startMiniGameButton = (Button)view.findViewById(R.id.startMiniGameButton);
         startMiniGameButton.setOnClickListener(new View.OnClickListener() {
