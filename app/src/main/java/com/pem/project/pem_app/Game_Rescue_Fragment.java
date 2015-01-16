@@ -2,6 +2,7 @@ package com.pem.project.pem_app;
 
 import android.app.ActionBar;
 import android.app.Activity;
+import android.bluetooth.BluetoothSocket;
 import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.Point;
@@ -179,13 +180,16 @@ public class Game_Rescue_Fragment extends Fragment implements SensorHandler.rope
         backToMain.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                ((GameActivity)getActivity()).changeFragment(Game_Main_Fragment.newInstance(), "MAIN");
+
                 if (!ServerData.isServer()){
                     //send to server
-                    BluetoothHelper.sendDataToPairedDevice(ServerData.getServer(), "GAMEDATA_Rescue_pitSuccess_");
+                    BluetoothHelper.sendDataToPairedDevice(ServerData.getServer(), "UPDATE_Rescue_pitSuccess_");
                 } else {
-                    // send to partner of server
-                    BluetoothHelper.sendDataToPairedDevice(ServerData.getTeamMembers(1).get(0), "GAMEDATA_Rescue_pitSuccess_");
+                    for(BluetoothSocket client : ServerData.getClients()){
+                        BluetoothHelper.sendDataToPairedDevice(client, "UPDATE_Rescue_team1_keyYellow_");
+                    }
+                    ServerData.toggleKey("team1", "keyYellow");
+                    ((GameActivity)getActivity()).changeFragment(Game_Main_Fragment.newInstance(), "MAIN");
                 }
             }
         });

@@ -102,7 +102,7 @@
             android:layout_width="75dp"
             android:layout_height="75dp"
             android:id="@+id/runIndicator"
-            android:src="@drawable/key_green_yes_2"
+            android:src="@drawable/key_green_yes"
             android:layout_alignParentTop="true"
             android:layout_centerHorizontal="true"
             android:alpha="1"

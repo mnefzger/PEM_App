@@ -59,28 +59,28 @@ tools:context="com.pem.project.pem_app.GameActivity">
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_weight="0.2"
-                android:src="@drawable/key_yellow_no_2" />
+                android:src="@drawable/key_yellow_no" />
 
             <ImageView
                 android:id="@+id/team1_keyRed"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_weight="0.2"
-                android:src="@drawable/key_red_no_2" />
+                android:src="@drawable/key_red_no" />
 
             <ImageView
                 android:id="@+id/team1_keyGreen"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_weight="0.2"
-                android:src="@drawable/key_green_no_2" />
+                android:src="@drawable/key_green_no" />
 
             <ImageView
                 android:id="@+id/team1_keyBlue"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_weight="0.2"
-                android:src="@drawable/key_blue_no_2" />
+                android:src="@drawable/key_blue_no" />
         </LinearLayout>
 
     </LinearLayout>
@@ -123,28 +123,28 @@ tools:context="com.pem.project.pem_app.GameActivity">
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_weight="0.2"
-                android:src="@drawable/key_yellow_no_2" />
+                android:src="@drawable/key_yellow_no" />
 
             <ImageView
                 android:id="@+id/team2_keyRed"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_weight="0.2"
-                android:src="@drawable/key_red_no_2" />
+                android:src="@drawable/key_red_no" />
 
             <ImageView
                 android:id="@+id/team2_keyGreen"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_weight="0.2"
-                android:src="@drawable/key_green_no_2" />
+                android:src="@drawable/key_green_no" />
 
             <ImageView
                 android:id="@+id/team2_keyBlue"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_weight="0.2"
-                android:src="@drawable/key_blue_no_2" />
+                android:src="@drawable/key_blue_no" />
         </LinearLayout>
     </LinearLayout>
 

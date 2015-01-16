@@ -24,10 +24,6 @@ public class GameActivity extends Activity implements BluetoothListener.IListenC
     private FragmentManager fragmentManager;
     private FragmentTransaction fragmentTransaction;
     private MessageProcessor messageProcessor;
-            private Button qrcode, fight;
-            private ImageView team1_coin, team2_coin,
-                    team1_keyyellow, team1_keyred, team1_keygreen, team1_keyblue,
-                    team2_keyyellow, team2_keyred, team2_keygreen, team2_keyblue;
 
 
     @Override
@@ -38,20 +34,6 @@ public class GameActivity extends Activity implements BluetoothListener.IListenC
         messageProcessor = new MessageProcessor();
         fragmentManager = getFragmentManager();
 
-        /*Intent intent = getIntent();
-        String miniGame = intent.getStringExtra("miniGame");
-
-        if(miniGame.equals("Run")) {
-            changeFragment(Game_Run_Fragment.newInstance(), "RUN");
-        } else if(miniGame.equals("Rescue")) {
-            changeFragment(Game_Rescue_Fragment.newInstance("rope"), "RESCUE");
-        } else if(miniGame.equals("Math")) {
-            changeFragment(Game_Math_Fragment.newInstance("Player1", ""), "MATH");
-        } else if(miniGame.equals("Luck")) {
-            //changeFragment(Game_Luck_Fragment().newInstance(), "LUCK");
-        } else {
-            changeFragment(Game_Main_Fragment.newInstance(), "MAIN");
-        }*/
 
         changeFragment(Game_Main_Fragment.newInstance(), "MAIN");
 
@@ -112,6 +94,14 @@ public class GameActivity extends Activity implements BluetoothListener.IListenC
             } else if(processed.contains("Luck")) {
                 this.changeFragment(Game_Luck_Fragment.newInstance(), "LUCK");
             }
+        }
+
+        //UPDATE
+        if(processed.startsWith("UPDATE")) {
+            String key = processed.split("_")[2];
+            String team = processed.split("_")[1];
+            ServerData.toggleKey(team, key);
+            this.changeFragment(Game_Main_Fragment.newInstance(), "MAIN");
         }
 
         // MINIGAME LOST

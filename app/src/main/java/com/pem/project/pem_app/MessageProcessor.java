@@ -1,6 +1,7 @@
 package com.pem.project.pem_app;
 
 import android.bluetooth.BluetoothSocket;
+import android.util.Log;
 
 /**
  * Created by Matthias on 04.12.2014.
@@ -46,36 +47,47 @@ public class MessageProcessor {
                         BluetoothHelper.sendDataToPairedDevice(ServerData.getOtherTeamMember(socket), "GAMEDATA_"+ miniGame + "_" + extra + "_");
                     }
 
-                    if(extra.equals("pitSuccess")){
-                        // update ServerData and broadcast new data
-                        // to do
-                        for(BluetoothSocket client : ServerData.getClients()){
-                            BluetoothHelper.sendDataToPairedDevice(client, "UPDATE_null_team1_keyYellow");
-                        }
-                    }
-                    if(extra.equals("mathSuccess")){
-                        // update ServerData and broadcast new data
-                        // to do
-                        for(BluetoothSocket client : ServerData.getClients()){
-                            BluetoothHelper.sendDataToPairedDevice(client, "UPDATE_null_team1_keyBlue");
-                        }
-                    }
-                    if(extra.equals("mathRunesSuccess")){
-                        // update ServerData and broadcast new data
-                        // to do
-                        for(BluetoothSocket client : ServerData.getClients()){
-                            BluetoothHelper.sendDataToPairedDevice(client, "UPDATE_null_team1_keyBlue");
-                        }
-                    }
-
                 } else {
                     return extra;
                 }
 
 
         } else if(messageArt.equals("UPDATE")){
-           // to do
-           return extra+messageParameters[3];
+            if(ServerData.isServer()){
+                int team = ServerData.getTeam(socket);
+                String t = "team"+team;
+
+                if(extra.equals("pitSuccess")){
+                    for(BluetoothSocket client : ServerData.getClients()){
+                        BluetoothHelper.sendDataToPairedDevice(client, "UPDATE_Rescue_"+t+"_keyYellow_");
+                    }
+                    return "UPDATE_"+t+"_keyYellow_";
+                }
+                if(extra.equals("mathRunesSuccess")){
+                    for(BluetoothSocket client : ServerData.getClients()){
+                        BluetoothHelper.sendDataToPairedDevice(client, "UPDATE_MathRunes_"+t+"_keyGreen_");
+                    }
+                    return "UPDATE_"+t+"_keyGreen_";
+                }
+                if(extra.equals("luckSuccess")){
+                    for(BluetoothSocket client : ServerData.getClients()){
+                        BluetoothHelper.sendDataToPairedDevice(client, "UPDATE_Luck_"+t+"_keyBlue_");
+                    }
+
+                    return "UPDATE_"+t+"_keyBlue_";
+                }
+                if(extra.equals("fightSuccess")){
+                    // to do
+                    for(BluetoothSocket client : ServerData.getClients()){
+                        //BluetoothHelper.sendDataToPairedDevice(client, "UPDATE_Fight_"+t+"_keyBlue_");
+                    }
+                }
+
+
+            } else {
+                // e.g "UPDATE_team1_keyBlue"
+                return messageArt+"_"+extra+"_"+messageParameters[3]+"_";
+            }
 
         } else if(messageArt.equals("LOST")){
             if(ServerData.isServer()){

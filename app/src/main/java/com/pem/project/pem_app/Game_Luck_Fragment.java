@@ -1,6 +1,7 @@
 package com.pem.project.pem_app;
 
 import android.app.Fragment;
+import android.bluetooth.BluetoothSocket;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -63,12 +64,25 @@ public class Game_Luck_Fragment extends Fragment implements View.OnClickListener
         done.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if(outcome.equals("success"))
-                    BluetoothHelper.sendDataToPairedDevice(ServerData.getServer(), "UPDATE_Luck_luckSuccess");
-                else if(outcome.equals("fail"))
-                    BluetoothHelper.sendDataToPairedDevice(ServerData.getServer(), "UPDATE_Luck_luckFail");
-                else
+                /*if(!ServerData.isServer()) {
+                    if (outcome.equals("success"))
+                        BluetoothHelper.sendDataToPairedDevice(ServerData.getServer(), "UPDATE_Luck_luckSuccess");
+                    else if (outcome.equals("fail"))
+                        BluetoothHelper.sendDataToPairedDevice(ServerData.getServer(), "UPDATE_Luck_luckFail");
+                    else
+                        ((GameActivity) getActivity()).changeFragment(Game_Main_Fragment.newInstance(), "MAIN");
+                }*/
+
+                if (!ServerData.isServer()){
+                    //send to server
+                    BluetoothHelper.sendDataToPairedDevice(ServerData.getServer(), "UPDATE_Luck_luckSuccess_");
+                } else {
+                    for(BluetoothSocket client : ServerData.getClients()){
+                        BluetoothHelper.sendDataToPairedDevice(client, "UPDATE_Luck_team1_keyBlue_");
+                    }
+                    ServerData.toggleKey("team1", "keyBlue");
                     ((GameActivity)getActivity()).changeFragment(Game_Main_Fragment.newInstance(), "MAIN");
+                }
             }
         });
 

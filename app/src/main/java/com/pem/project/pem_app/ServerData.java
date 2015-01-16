@@ -61,23 +61,18 @@ public class ServerData {
 
 
     // add key after successful minigame
-    public static void addKey(String team, String key){
+    public static void toggleKey(String team, String key){
+        Log.d("TOGGLE", team+", "+key);
+
         if(team.equals("team1")){
             if(!team1_keys.contains(key))
                 team1_keys.add(key);
+            else
+                team1_keys.remove(key);
         }else{ // team2
             if(!team2_keys.contains(key))
                 team2_keys.add(key);
-        }
-    }
-
-    // remove key after minigame failure
-    public static void removeKey(String team, String key){
-        if(team.equals("team1")){
-            if(team1_keys.contains(key))
-                team1_keys.remove(key);
-        }else{ // team2
-            if(team2_keys.contains(key))
+            else
                 team2_keys.remove(key);
         }
     }
@@ -129,6 +124,7 @@ public class ServerData {
         return isServer;
     }
 
+    //only the clients call this method
     public static void markRemoteAsServer(BluetoothSocket socket){
         server = socket;
     }

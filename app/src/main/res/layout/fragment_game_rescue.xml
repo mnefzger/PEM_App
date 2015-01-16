@@ -46,8 +46,7 @@
         android:layout_gravity="left|bottom"
         android:id="@+id/theRescueLayout"
         android:visibility="invisible"
-        android:padding="10dp"
-        android:alpha="1">
+        android:padding="10dp">
 
         <TextView
             android:layout_width="wrap_content"
@@ -82,7 +81,7 @@
         android:layout_gravity="center_horizontal|bottom"
         android:padding="10dp"
         android:alpha="1"
-        android:visibility="gone">
+        android:visibility="invisible">
 
         <TextView
             android:layout_width="fill_parent"
@@ -120,7 +119,8 @@
         android:layout_width="fill_parent"
         android:layout_height="fill_parent"
         android:background="#304135"
-        android:id="@+id/theRescueIntroText">
+        android:id="@+id/theRescueIntroText"
+        android:visibility="visible">
 
         <FrameLayout
             android:layout_width="match_parent"
@@ -258,7 +258,8 @@
         android:layout_width="fill_parent"
         android:layout_height="fill_parent"
         android:background="#304135"
-        android:id="@+id/theRescueIntroText2">
+        android:id="@+id/theRescueIntroText2"
+        android:visibility="visible">
 
         <FrameLayout
             android:layout_width="match_parent"
