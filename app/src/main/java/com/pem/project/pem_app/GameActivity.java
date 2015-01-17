@@ -24,9 +24,10 @@ public class GameActivity extends Activity implements BluetoothListener.IListenC
     private FragmentManager fragmentManager;
     private FragmentTransaction fragmentTransaction;
     private MessageProcessor messageProcessor;
-            private ImageView team1_coin, team2_coin,
-                    team1_keyyellow, team1_keyred, team1_keygreen, team1_keyblue,
-                    team2_keyyellow, team2_keyred, team2_keygreen, team2_keyblue;
+    private ImageView team1_coin, team2_coin,
+                team1_keyyellow, team1_keyred, team1_keygreen, team1_keyblue,
+                team2_keyyellow, team2_keyred, team2_keygreen, team2_keyblue;
+
 
 
     @Override
@@ -37,20 +38,6 @@ public class GameActivity extends Activity implements BluetoothListener.IListenC
         messageProcessor = new MessageProcessor();
         fragmentManager = getFragmentManager();
 
-        /*Intent intent = getIntent();
-        String miniGame = intent.getStringExtra("miniGame");
-
-        if(miniGame.equals("Run")) {
-            changeFragment(Game_Run_Fragment.newInstance(), "RUN");
-        } else if(miniGame.equals("Rescue")) {
-            changeFragment(Game_Rescue_Fragment.newInstance("rope"), "RESCUE");
-        } else if(miniGame.equals("Math")) {
-            changeFragment(Game_Math_Fragment.newInstance("Player1", ""), "MATH");
-        } else if(miniGame.equals("Luck")) {
-            //changeFragment(Game_Luck_Fragment().newInstance(), "LUCK");
-        } else {
-            changeFragment(Game_Main_Fragment.newInstance(), "MAIN");
-        }*/
 
         changeFragment(Game_Main_Fragment.newInstance(), "MAIN");
 
@@ -115,9 +102,30 @@ public class GameActivity extends Activity implements BluetoothListener.IListenC
             }
         }
 
+        //UPDATE
+        if(processed.startsWith("UPDATE")) {
+            String key = processed.split("_")[2];
+            String team = processed.split("_")[1];
+            ServerData.toggleKey(team, key);
+            this.changeFragment(Game_Main_Fragment.newInstance(), "MAIN");
+        }
+
         // MINIGAME LOST
         if(processed.equals("LOST")){
             this.changeFragment(Game_Lost_Fragment.newInstance(), "LOST");
+
+            //to stop things happening in the background
+            Game_Rescue_Fragment fragment = (Game_Rescue_Fragment)fragmentManager.findFragmentByTag("RESCUE");
+            if(fragment!=null) fragment.markAsLost();
+
+            Game_Run_Fragment fragment2 = (Game_Run_Fragment)fragmentManager.findFragmentByTag("RUN");
+            if(fragment2!=null) fragment2.markAsLost();
+
+            Game_Math_Fragment fragment3 = (Game_Math_Fragment)fragmentManager.findFragmentByTag("MATH");
+            if(fragment3!=null) fragment3.CancelCountDown();
+
+            Game_MathRunes_Fragment fragment4 = (Game_MathRunes_Fragment)fragmentManager.findFragmentByTag("MATHRUNES");
+            if(fragment4!=null) fragment4.CancelCountDown();
         }
 
 

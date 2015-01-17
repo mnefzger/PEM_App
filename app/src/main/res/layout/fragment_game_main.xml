@@ -55,32 +55,32 @@ tools:context="com.pem.project.pem_app.GameActivity">
                 android:src="@drawable/coin_left" />
 
             <ImageView
-                android:id="@+id/team1_keyyellow"
+                android:id="@+id/team1_keyYellow"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_weight="0.2"
-                android:src="@drawable/key_yellow_no_2" />
+                android:src="@drawable/key_yellow_no" />
 
             <ImageView
-                android:id="@+id/team1_keyred"
+                android:id="@+id/team1_keyRed"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_weight="0.2"
-                android:src="@drawable/key_red_no_2" />
+                android:src="@drawable/key_red_no" />
 
             <ImageView
-                android:id="@+id/team1_keygreen"
+                android:id="@+id/team1_keyGreen"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_weight="0.2"
-                android:src="@drawable/key_green_no_2" />
+                android:src="@drawable/key_green_no" />
 
             <ImageView
-                android:id="@+id/team1_keyblue"
+                android:id="@+id/team1_keyBlue"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_weight="0.2"
-                android:src="@drawable/key_blue_no_2" />
+                android:src="@drawable/key_blue_no" />
         </LinearLayout>
 
     </LinearLayout>
@@ -119,32 +119,32 @@ tools:context="com.pem.project.pem_app.GameActivity">
                 android:src="@drawable/coin_right" />
 
             <ImageView
-                android:id="@+id/team2_keyyellow"
+                android:id="@+id/team2_keyYellow"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_weight="0.2"
-                android:src="@drawable/key_yellow_no_2" />
+                android:src="@drawable/key_yellow_no" />
 
             <ImageView
-                android:id="@+id/team2_keyred"
+                android:id="@+id/team2_keyRed"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_weight="0.2"
-                android:src="@drawable/key_red_no_2" />
+                android:src="@drawable/key_red_no" />
 
             <ImageView
-                android:id="@+id/team2_keygreen"
+                android:id="@+id/team2_keyGreen"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_weight="0.2"
-                android:src="@drawable/key_green_no_2" />
+                android:src="@drawable/key_green_no" />
 
             <ImageView
-                android:id="@+id/team2_keyblue"
+                android:id="@+id/team2_keyBlue"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_weight="0.2"
-                android:src="@drawable/key_blue_no_2" />
+                android:src="@drawable/key_blue_no" />
         </LinearLayout>
     </LinearLayout>
 
@@ -153,7 +153,8 @@ tools:context="com.pem.project.pem_app.GameActivity">
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_gravity="center_horizontal"
-        android:layout_weight="0.01">
+        android:layout_weight="0.01"
+        android:alpha="0">
 
         <Button
             android:layout_width="100dp"

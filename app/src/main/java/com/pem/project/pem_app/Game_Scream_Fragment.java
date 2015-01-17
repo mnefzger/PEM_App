@@ -11,7 +11,9 @@ import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.FrameLayout;
+import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
+import android.widget.TableRow;
 import android.widget.TextView;
 import java.text.DecimalFormat;
 
@@ -42,11 +44,13 @@ public class Game_Scream_Fragment extends Fragment{
     private TextView myScreamTextView;
     private RecorderScreamGame recorder;
     private Button buttonStart1;
-    private Button startScream;
+    private TableRow startScream;
+    private Thread thread;
+    private int player;
     private double myVol;
     private double otherVol;
     private FrameLayout screamGame;
-    private RelativeLayout info;
+    private LinearLayout info;
     private int myRoundsPlayed;
     private int roundsPlayedOtherTeam;
     private double ampl;
@@ -94,8 +98,8 @@ public class Game_Scream_Fragment extends Fragment{
         // Inflate the layout for this fragment
         rootView = inflater.inflate(R.layout.fragment_game__scream_, container, false);
 
-        startScream = (Button)rootView.findViewById(R.id.startScream);
-        info = (RelativeLayout)rootView.findViewById(R.id.screamInfoText);
+        info = (LinearLayout)rootView.findViewById(R.id.screamInfoText);
+        startScream = (TableRow)rootView.findViewById(R.id.startScream);
         screamGame = (FrameLayout)rootView.findViewById(R.id.screamGame);
         myVol=0;
         otherVol=0;

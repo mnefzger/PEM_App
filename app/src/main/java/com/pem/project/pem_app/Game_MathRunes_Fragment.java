@@ -2,6 +2,7 @@ package com.pem.project.pem_app;
 
 import android.app.Activity;
 import android.app.Fragment;
+import android.bluetooth.BluetoothSocket;
 import android.content.Context;
 import android.content.res.Configuration;
 import android.net.Uri;
@@ -518,6 +519,17 @@ public class Game_MathRunes_Fragment extends Fragment implements OnClickListener
             }
             CancelCountDown();
             ((GameActivity)getActivity()).changeFragment(Game_Main_Fragment.newInstance(), "MAIN");
+
+            if (!ServerData.isServer()){
+                //send to server
+                BluetoothHelper.sendDataToPairedDevice(ServerData.getServer(), "UPDATE_MathRunes_mathSuccess_");
+            } else {
+                for(BluetoothSocket client : ServerData.getClients()){
+                    BluetoothHelper.sendDataToPairedDevice(client, "UPDATE_MathRunes_team1_keyGreen_");
+                }
+                ServerData.toggleKey("team1", "keyGreen");
+                ((GameActivity)getActivity()).changeFragment(Game_Main_Fragment.newInstance(), "MAIN");
+            }
 
             return true;
         } else if (wait_partner == false){
