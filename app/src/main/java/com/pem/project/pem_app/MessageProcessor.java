@@ -19,6 +19,19 @@ public class MessageProcessor {
             //default
             if(miniGame.equals("null")){
                 return "START";
+            } else if(miniGame.equals("Scream")){
+                if (ServerData.isServer()) {
+                    //check if socket belongs to server's team
+                    if (ServerData.getTeam(socket) == 1) {
+                        //this message is meant for the enemy
+                        BluetoothHelper.sendDataToPairedDevice(ServerData.getTeamMembers(2).get(0), "START_" + miniGame + "_" + extra + "_");
+                    } else {
+                        //this message is meant for the server
+                        return "START_" + miniGame + "_" + extra + "_";
+                    }
+                } else {
+                    return "START_" + miniGame + "_" + extra + "_";
+                }
             } else {
                 if (ServerData.isServer()) {
                     //check if socket belongs to server's team
@@ -42,9 +55,16 @@ public class MessageProcessor {
                 if(ServerData.isServer()){
                     //check if socket belongs to server's team
                     if(ServerData.getTeam(socket) == 1){
-                        return extra;
+                        if(miniGame.equals("Scream")){
+                            BluetoothHelper.sendDataToPairedDevice(ServerData.getTeamMembers(2).get(0), "START_" + miniGame + "_" + extra + "_");
+                        } else return extra;
                     } else {
-                        BluetoothHelper.sendDataToPairedDevice(ServerData.getOtherTeamMember(socket), "GAMEDATA_"+ miniGame + "_" + extra + "_");
+                        if(miniGame.equals("Scream")){
+                            return extra;
+                        } else {
+                            BluetoothHelper.sendDataToPairedDevice(ServerData.getOtherTeamMember(socket), "GAMEDATA_" + miniGame + "_" + extra + "_");
+                        }
+
                     }
 
                 } else {

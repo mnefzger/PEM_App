@@ -93,8 +93,8 @@ public class Game_Main_Fragment extends Fragment {
                     //send to server
                     BluetoothHelper.sendDataToPairedDevice(ServerData.getServer(), "START_Scream_Player2S_");
                 } else {
-                    // send to partner of server
-                    BluetoothHelper.sendDataToPairedDevice(ServerData.getTeamMembers(1).get(0), "START_Scream_Player2S_");
+                    // send to enemy of server
+                    BluetoothHelper.sendDataToPairedDevice(ServerData.getTeamMembers(2).get(0), "START_Scream_Player2S_");
                 }
             }
         });

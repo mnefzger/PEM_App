@@ -484,8 +484,6 @@ public class Game_Math_Fragment extends Fragment implements OnClickListener {
             CancelCountDown();
             ((GameActivity)getActivity()).changeFragment(Game_Main_Fragment.newInstance(), "MAIN");
 
-
-
             return true;
         } else if (wait_partner == false){
             if (!ServerData.isServer()) {

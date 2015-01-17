@@ -101,6 +101,10 @@ public class Game_Scream_Fragment extends Fragment{
         info = (LinearLayout)rootView.findViewById(R.id.screamInfoText);
         startScream = (TableRow)rootView.findViewById(R.id.startScream);
         screamGame = (FrameLayout)rootView.findViewById(R.id.screamGame);
+        buttonStart1 = (Button) rootView.findViewById(R.id.screamButton1);
+        screamTextView = (TextView) rootView.findViewById(R.id.screamField1);
+        myScreamTextView= (TextView) rootView.findViewById(R.id.myScreamTxtView);
+        otherScreamTextView = (TextView) rootView.findViewById(R.id.otherScreamTxtView);
         myVol=0;
         otherVol=0;
         myRoundsPlayed=0;
@@ -117,13 +121,6 @@ public class Game_Scream_Fragment extends Fragment{
         });
 
         return rootView;
-    }
-
-    // TODO: Rename method, update argument and hook method into UI event
-    public void onButtonPressed(Uri uri) {
-        if (mListener != null) {
-            mListener.onFragmentInteraction(uri);
-        }
     }
 
     @Override
@@ -159,10 +156,7 @@ public class Game_Scream_Fragment extends Fragment{
     }
 
     public void createMediaRecorder() {
-        buttonStart1 = (Button) rootView.findViewById(R.id.screamButton1);
-        screamTextView = (TextView) rootView.findViewById(R.id.screamField1);
-        myScreamTextView= (TextView) rootView.findViewById(R.id.myScreamTxtView);
-        otherScreamTextView = (TextView) rootView.findViewById(R.id.otherScreamTxtView);
+
         df = new DecimalFormat("0.00");
 
         //Player starts
@@ -214,8 +208,8 @@ public class Game_Scream_Fragment extends Fragment{
                             BluetoothHelper.sendDataToPairedDevice(ServerData.getServer(), "GAMEDATA_Scream_myPlayedRounds:" + myRoundsPlayed + "_\n");
                         } else {
                             // send to partner of server
-                            BluetoothHelper.sendDataToPairedDevice(ServerData.getTeamMembers(1).get(0), "GAMEDATA_Scream_myVolume:" + df.format(myVol) + "_\n");
-                            BluetoothHelper.sendDataToPairedDevice(ServerData.getTeamMembers(1).get(0), "GAMEDATA_Scream_myPlayedRounds:" + myRoundsPlayed + "_\n");
+                            BluetoothHelper.sendDataToPairedDevice(ServerData.getTeamMembers(2).get(0), "GAMEDATA_Scream_myVolume:" + df.format(myVol) + "_\n");
+                            BluetoothHelper.sendDataToPairedDevice(ServerData.getTeamMembers(2).get(0), "GAMEDATA_Scream_myPlayedRounds:" + myRoundsPlayed + "_\n");
                         }
                     }
                 }).start();
@@ -263,25 +257,23 @@ public class Game_Scream_Fragment extends Fragment{
                 //send to server
                 BluetoothHelper.sendDataToPairedDevice(ServerData.getServer(), "WON_null_null_");
             } else {
-                // send to partner of server
-                BluetoothHelper.sendDataToPairedDevice(ServerData.getTeamMembers(1).get(0), "WON_null_null_");
+                BluetoothHelper.sendDataToPairedDevice(ServerData.getTeamMembers(2).get(0), "WON_null_null_");
             }
             ((GameActivity) getActivity()).changeFragment(Game_Lost_Fragment.newInstance(), "LOST");
             won = true;
-            return true;
+            return won;
         }  else {
             Log.d("Scream", "lost!!");
             if (!ServerData.isServer()) {
                 //send to server
                 BluetoothHelper.sendDataToPairedDevice(ServerData.getServer(), "LOST_null_null_");
             } else {
-                // send to partner of server
-                BluetoothHelper.sendDataToPairedDevice(ServerData.getTeamMembers(1).get(0), "LOST_null_null_");
+                BluetoothHelper.sendDataToPairedDevice(ServerData.getTeamMembers(2).get(0), "LOST_null_null_");
             }
             ((GameActivity) getActivity()).changeFragment(Game_Lost_Fragment.newInstance(), "LOST");
         }
-        won= false;
-        return false;
+        won = false;
+        return won;
     }
 
     public void getPlayedRounds(final String roundPlayed) {
