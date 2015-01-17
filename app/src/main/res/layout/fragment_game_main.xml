@@ -205,17 +205,6 @@ tools:context="com.pem.project.pem_app.GameActivity">
             android:layout_marginRight="5dp"/>
         <Button
             android:layout_width="100dp"
-            android:text="Scream"
-            android:id="@+id/startMiniGameButton4"
-            android:textStyle="bold"
-            android:textSize="15dp"
-            android:textColor="#cde657"
-            android:background="#95000000"
-            android:layout_height="65dp"
-            android:layout_weight="0.2"
-            android:layout_marginRight="5dp"/>
-        <Button
-            android:layout_width="100dp"
             android:text="Luck"
             android:id="@+id/startMiniGameButton5"
             android:textStyle="bold"

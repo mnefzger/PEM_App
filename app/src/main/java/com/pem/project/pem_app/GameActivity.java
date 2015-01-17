@@ -24,7 +24,6 @@ public class GameActivity extends Activity implements BluetoothListener.IListenC
     private FragmentManager fragmentManager;
     private FragmentTransaction fragmentTransaction;
     private MessageProcessor messageProcessor;
-            private Button qrcode, fight;
             private ImageView team1_coin, team2_coin,
                     team1_keyyellow, team1_keyred, team1_keygreen, team1_keyblue,
                     team2_keyyellow, team2_keyred, team2_keygreen, team2_keyblue;
@@ -111,6 +110,8 @@ public class GameActivity extends Activity implements BluetoothListener.IListenC
                 this.changeFragment(Game_Run_Fragment.newInstance(), "RUN");
             } else if(processed.contains("Luck")) {
                 this.changeFragment(Game_Luck_Fragment.newInstance(), "LUCK");
+            }else if(processed.contains("Scream")) {
+                this.changeFragment(Game_Scream_Fragment.newInstance("Player2S", ""), "SCREAM");
             }
         }
 
@@ -176,16 +177,10 @@ public class GameActivity extends Activity implements BluetoothListener.IListenC
             this.changeFragment(Game_Scream_Fragment.newInstance("Player2S", ""), "SCREAM");
         } else if(processed.startsWith("myVolume")) {
             Game_Scream_Fragment fragment = (Game_Scream_Fragment) fragmentManager.findFragmentByTag("SCREAM");
-            fragment.setOtherVol(processed);
-        } else if(processed.startsWith("myRounds")) {
+            fragment.setOtherTeamVol(processed);
+        } else if(processed.startsWith("myPlayedRounds")) {
             Game_Scream_Fragment fragment = (Game_Scream_Fragment) fragmentManager.findFragmentByTag("SCREAM");
             fragment.getPlayedRounds(processed);
-        } else if(processed.startsWith("isPlaying")) {
-            Game_Scream_Fragment fragment = (Game_Scream_Fragment) fragmentManager.findFragmentByTag("SCREAM");
-            fragment.getWhosTurn(processed);
-        } else if(processed.startsWith("end")) {
-            Game_Scream_Fragment fragment = (Game_Scream_Fragment) fragmentManager.findFragmentByTag("SCREAM");
-            fragment.endGame(processed);
         }
     }
 

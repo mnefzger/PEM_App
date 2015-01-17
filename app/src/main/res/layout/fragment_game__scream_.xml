@@ -55,41 +55,48 @@
         android:id="@+id/screamGame"
         android:visibility="invisible"
         android:orientation="vertical"
-        android:background="#ffadcfa5"
+        android:background="@drawable/game_bg_2"
         >
-        <TextView
-            android:layout_width="182dp"
-            android:layout_height="57dp"
-            android:text="Other Team Highest Scream:"
-            android:id="@+id/otherScreamTxtView"
-            android:layout_gravity="left|top"
-            android:textColor="@color/black"
-            android:textSize="20dp" />
 
         <Button
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Start1"
+            android:text="Start Scream"
             android:id="@+id/screamButton1"
             android:enabled="true"
             android:layout_gravity="center_horizontal|bottom" />
 
-        <TextView android:layout_width="214dp"
-            android:layout_height="253dp"
+        <TextView android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
             android:id="@+id/screamField1"
-            android:text="0"
+            android:text="0,00"
             android:layout_gravity="center"
             android:textColor="@color/black"
-            android:textSize="150dp" />
+            android:textSize="90dp"
+            android:textStyle="normal"
+            android:textIsSelectable="false" />
+
+        <TextView
+            android:layout_width="127dp"
+            android:layout_height="57dp"
+            android:text="Other Teeam: 0,00"
+            android:id="@+id/otherScreamTxtView"
+            android:layout_gravity="right|top"
+            android:textColor="#cde657"
+            android:textSize="20dp"
+            android:visibility="invisible"
+            android:textStyle="bold" />
 
         <TextView
             android:layout_width="180dp"
             android:layout_height="57dp"
-            android:text="my Highest Scream:"
+            android:text="My loudest Scream: 0,00"
             android:id="@+id/myScreamTxtView"
-            android:layout_gravity="right|top"
-            android:textColor="@color/black"
+            android:layout_gravity="left|top"
+            android:textColor="#cde657"
+            android:textStyle="bold"
             android:textSize="20dp" />
+
     </FrameLayout>
 </RelativeLayout>
 

@@ -23,7 +23,6 @@ public class Game_Main_Fragment extends Fragment {
     private Button startMiniGameButton;
     private Button startMiniGameButton2;
     private Button startMiniGameButton3;
-    private Button startMiniGameButton4;
     private Button startMiniGameButton5;
     private Button startMiniGameButton6;
 
@@ -70,6 +69,20 @@ public class Game_Main_Fragment extends Fragment {
             }
         });
 
+        fight.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                ((GameActivity)getActivity()).changeFragment(Game_Scream_Fragment.newInstance("Player1S",""), "SCREAM");
+
+                if (!ServerData.isServer()){
+                    //send to server
+                    BluetoothHelper.sendDataToPairedDevice(ServerData.getServer(), "START_Scream_Player2S_");
+                } else {
+                    // send to partner of server
+                    BluetoothHelper.sendDataToPairedDevice(ServerData.getTeamMembers(1).get(0), "START_Scream_Player2S_");
+                }
+            }
+        });
 
         ImageView team1_coin = (ImageView) view.findViewById(R.id.team1_coin);
         ImageView team2_coin = (ImageView) view.findViewById(R.id.team2_coin);
@@ -148,23 +161,6 @@ public class Game_Main_Fragment extends Fragment {
 
             }
         });
-
-        startMiniGameButton4 = (Button)view.findViewById(R.id.startMiniGameButton4);
-        startMiniGameButton4.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                ((GameActivity)getActivity()).changeFragment(Game_Scream_Fragment.newInstance("Player1S",""), "SCREAM");
-
-                if (!ServerData.isServer()){
-                    //send to server
-                    BluetoothHelper.sendDataToPairedDevice(ServerData.getServer(), "START_Scream_Player2S_");
-                } else {
-                    // send to partner of server
-                    BluetoothHelper.sendDataToPairedDevice(ServerData.getTeamMembers(1).get(0), "START_Scream_Player2S_");
-                }
-            }
-        });
-
         startMiniGameButton5 = (Button)view.findViewById(R.id.startMiniGameButton5);
         startMiniGameButton5.setOnClickListener(new View.OnClickListener() {
             @Override

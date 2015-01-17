@@ -1,7 +1,6 @@
 package com.pem.project.pem_app;
 
 import android.app.Activity;
-import android.media.MediaRecorder;
 import android.net.Uri;
 import android.os.Bundle;
 import android.app.Fragment;
@@ -11,19 +10,11 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.EditText;
 import android.widget.FrameLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import java.text.DecimalFormat;
 
-import java.io.IOException;
-import java.util.Timer;
-import java.util.TimerTask;
-import java.util.concurrent.Executors;
-import java.util.concurrent.ScheduledExecutorService;
-import java.util.concurrent.TimeUnit;
-
-import static android.os.SystemClock.sleep;
 
 
 /**
@@ -46,22 +37,24 @@ public class Game_Scream_Fragment extends Fragment{
 
     private OnFragmentInteractionListener mListener;
     private View rootView;
-    private MediaRecorder mRecorder;
     private TextView screamTextView;
     private TextView otherScreamTextView;
     private TextView myScreamTextView;
     private RecorderScreamGame recorder;
     private Button buttonStart1;
     private Button startScream;
-    private Thread thread;
-    private int player;
     private double myVol;
     private double otherVol;
     private FrameLayout screamGame;
     private RelativeLayout info;
     private int myRoundsPlayed;
     private int roundsPlayedOtherTeam;
-    private boolean isPlaying;
+    private double ampl;
+    private boolean won;
+    private long end;
+    private long start;
+    private DecimalFormat df;
+
 
     /**
      * Use this factory method to create a new instance of
@@ -97,25 +90,18 @@ public class Game_Scream_Fragment extends Fragment{
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
 
-        if (mParam1.equals("Player2S")){
-            player = 2;
-            rootView = inflater.inflate(R.layout.fragment_game__scream_2, container, false);
-        } else {
-            player = 1;
-            rootView = inflater.inflate(R.layout.fragment_game__scream_, container, false);
-        }
+        // Inflate the layout for this fragment
+        rootView = inflater.inflate(R.layout.fragment_game__scream_, container, false);
 
         startScream = (Button)rootView.findViewById(R.id.startScream);
         info = (RelativeLayout)rootView.findViewById(R.id.screamInfoText);
         screamGame = (FrameLayout)rootView.findViewById(R.id.screamGame);
+        myVol=0;
+        otherVol=0;
         myRoundsPlayed=0;
         roundsPlayedOtherTeam=0;
-
-        if(player==1){
-            isPlaying=true;
-        }
+        won = false;
 
         startScream.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -169,81 +155,101 @@ public class Game_Scream_Fragment extends Fragment{
     }
 
     public void createMediaRecorder() {
-        isPlaying=false;
         buttonStart1 = (Button) rootView.findViewById(R.id.screamButton1);
         screamTextView = (TextView) rootView.findViewById(R.id.screamField1);
         myScreamTextView= (TextView) rootView.findViewById(R.id.myScreamTxtView);
         otherScreamTextView = (TextView) rootView.findViewById(R.id.otherScreamTxtView);
+        df = new DecimalFormat("0.00");
+
+        //Player starts
+        if (mParam1.equals("Player2S")) {
+            buttonStart1.setEnabled(false);
+        }
 
         buttonStart1.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View view) {
-                myRoundsPlayed= myRoundsPlayed+1;
+
+                //disable button after click
+                getActivity().runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        buttonStart1.setEnabled(false);
+                    }
+                });
+
                 recorder = new RecorderScreamGame();
                 recorder.start();
+                start = System.currentTimeMillis();
+                end = start + 3 * 1000;
 
-/*
-        ScheduledExecutorService exec = Executors.newScheduledThreadPool(30);
-        exec.scheduleAtFixedRate(new Runnable() {
-            @Override
-            public void run() {
-                double ampl= recorder.getAmplitudeEMA();
-                screamTextView.setText(ampl +"");
+                new Thread(new Runnable() {
+                    @Override
+                    public void run() {
+                        while (System.currentTimeMillis() < end) {
+                            ampl = recorder.getAmplitudeEMA();
+                            Log.d("Scream Ampltude", ampl+"");
+                            updateView();
+
+                            try {
+                                Thread.sleep(100);
+                            } catch (InterruptedException e) {
+                                // TODO Auto-generated catch block
+                                e.printStackTrace();
+                            }
+                        } recorder.stop();
+
+                        myRoundsPlayed++;
+                        if (myRoundsPlayed >= 2 && roundsPlayedOtherTeam >= 2) {
+                            checkIfGameWon();
+                        }
+                        //send to other Device
+                        if (!ServerData.isServer()) {
+                            //send to server
+                            BluetoothHelper.sendDataToPairedDevice(ServerData.getServer(), "GAMEDATA_Scream_myVolume:" + df.format(myVol) + "_\n");
+                            BluetoothHelper.sendDataToPairedDevice(ServerData.getServer(), "GAMEDATA_Scream_myPlayedRounds:" + myRoundsPlayed + "_\n");
+                        } else {
+                            // send to partner of server
+                            BluetoothHelper.sendDataToPairedDevice(ServerData.getTeamMembers(1).get(0), "GAMEDATA_Scream_myVolume:" + df.format(myVol) + "_\n");
+                            BluetoothHelper.sendDataToPairedDevice(ServerData.getTeamMembers(1).get(0), "GAMEDATA_Scream_myPlayedRounds:" + myRoundsPlayed + "_\n");
+                        }
+                    }
+                }).start();
             }
-        }, 0, 1, TimeUnit.SECONDS);
-*/
+        });
+    }
 
-/*
+    private void updateView() {
         getActivity().runOnUiThread(new Runnable() {
+
             @Override
             public void run() {
-                TextView textview1;
-                TextView textview2;
-
-                textview1 = (TextView) rootView.findViewById(R.id.result1);
-                textview2 = (TextView) rootView.findViewById(R.id.result2);
-
-                if (processed.startsWith("result1")) {
-                    textview1.setText(processed.substring(8));
-                    result1_partner = Integer.parseInt(processed.substring(8));
-                } else if (processed.startsWith("result2")){
-                    textview2.setText(processed.substring(8));
-                    result2_partner = Integer.parseInt(processed.substring(8));
-                }
-
-
+                if (ampl > myVol) {
+                    myVol = ampl;
+                    screamTextView.setText(df.format(ampl));
+                    myScreamTextView.setText("My loudest Scream: " + df.format(myVol));
+                }else
+                    screamTextView.setText(df.format(ampl));
             }
+
+        });
+    }
+    public void setOtherTeamVol(final String volPartner) {
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                otherVol= Double.parseDouble(volPartner);
+                getActivity().runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        //otherScreamTextView is invisible
+                        otherScreamTextView.setText("Other Team: " + volPartner.substring(9));
+                    }
+                });
+            }
+
         });
 
-
-*/
-
-                for (int i=0; i<10; i++){
-                    double ampl= recorder.getAmplitudeEMA();
-                    screamTextView.setText(ampl +"");
-                    myVol=ampl;
-                }
-
-               // buttonStart1.setEnabled(true);
-
-                recorder.stop();
-
-                //send Volume to other Device
-                if (!ServerData.isServer()) {
-                    //send to server
-                    BluetoothHelper.sendDataToPairedDevice(ServerData.getServer(), "GAMEDATA_Scream_myVolume:" + myVol + "_\n");
-                    BluetoothHelper.sendDataToPairedDevice(ServerData.getServer(), "GAMEDATA_Scream_myRounds:" + myRoundsPlayed + "_\n");
-                    BluetoothHelper.sendDataToPairedDevice(ServerData.getServer(), "GAMEDATA_Scream_isPlaying:" + isPlaying + "_\n");
-                } else {
-                    // send to partner of server
-                    BluetoothHelper.sendDataToPairedDevice(ServerData.getTeamMembers(1).get(0), "GAMEDATA_Scream_myVolume:" + myVol + "_\n");
-                    BluetoothHelper.sendDataToPairedDevice(ServerData.getTeamMembers(1).get(0), "GAMEDATA_Scream_myRounds:" + myRoundsPlayed + "_\n");
-                    BluetoothHelper.sendDataToPairedDevice(ServerData.getTeamMembers(1).get(0), "GAMEDATA_Scream_isPlaying:" + isPlaying + "_\n");
-
-                }
-
-            }
-        });
     }
 
     private boolean checkIfGameWon() {
@@ -252,88 +258,42 @@ public class Game_Scream_Fragment extends Fragment{
             if (!ServerData.isServer()) {
                 //send to server
                 BluetoothHelper.sendDataToPairedDevice(ServerData.getServer(), "WON_null_null_");
-             //   BluetoothHelper.sendDataToPairedDevice(ServerData.getServer(), "GAMEDATA_Scream_end:" + "Iwon" + "_\n");
             } else {
                 // send to partner of server
                 BluetoothHelper.sendDataToPairedDevice(ServerData.getTeamMembers(1).get(0), "WON_null_null_");
-           //     BluetoothHelper.sendDataToPairedDevice(ServerData.getTeamMembers(1).get(0), "GAMEDATA_Scream_end:" +"Iwon" + "_\n");
             }
-            ((GameActivity) getActivity()).changeFragment(Game_Lost_Fragment.newInstance(), "WON");
+            ((GameActivity) getActivity()).changeFragment(Game_Lost_Fragment.newInstance(), "LOST");
+            won = true;
             return true;
         }  else {
             Log.d("Scream", "lost!!");
             if (!ServerData.isServer()) {
                 //send to server
                 BluetoothHelper.sendDataToPairedDevice(ServerData.getServer(), "LOST_null_null_");
-       //         BluetoothHelper.sendDataToPairedDevice(ServerData.getServer(), "GAMEDATA_Scream_end:" + "Ilost" + "_\n");
             } else {
                 // send to partner of server
                 BluetoothHelper.sendDataToPairedDevice(ServerData.getTeamMembers(1).get(0), "LOST_null_null_");
-  //              BluetoothHelper.sendDataToPairedDevice(ServerData.getTeamMembers(1).get(0), "GAMEDATA_Scream_end:" +"Ilost" + "_\n");
             }
             ((GameActivity) getActivity()).changeFragment(Game_Lost_Fragment.newInstance(), "LOST");
         }
+        won= false;
         return false;
     }
 
-    public void setOtherVol(final String volPartner) {
-
-        /*
-
-        otherScreamTextView.setText(otherVol+"");
-        myScreamTextView.setText(myVol+"");
-        */
-        getActivity().runOnUiThread(new Runnable() {
-            @Override
-            public void run() {
-                otherScreamTextView.setText(volPartner.substring(9));
-            }
-        });
-    }
-
     public void getPlayedRounds(final String roundPlayed) {
-        roundsPlayedOtherTeam = Integer.parseInt(roundPlayed.substring(9));
-        Log.d(roundsPlayedOtherTeam + " otherTeam", "Saron");
-        Log.d(myRoundsPlayed + " Ich", "Saron");
+        roundsPlayedOtherTeam = Integer.parseInt(roundPlayed.substring(15));
 
-        if (myRoundsPlayed >= 2 && roundsPlayedOtherTeam >= 2)
+        if (myRoundsPlayed == 2 && roundsPlayedOtherTeam == 2) {
             checkIfGameWon();
-
-    }
-    public void getWhosTurn(final String whosPlaying) {
-  //      if(whosPlaying.substring(10)=="true"){
-   //     buttonStart1.setEnabled(false);
-
-    }
-
-    public void endGame(final String processed) {
-
-        getActivity().runOnUiThread(new Runnable() {
+        }
+        //enable button to start scream
+         getActivity().runOnUiThread(new Runnable() {
             @Override
             public void run() {
-                if (processed.substring(4) == "Ilost") {
-                    Log.d("Scream", "won!!");
-                    if (!ServerData.isServer()) {
-                        //send to server
-                        BluetoothHelper.sendDataToPairedDevice(ServerData.getServer(), "WON_null_null");
-                    } else {
-                        // send to partner of server
-                        BluetoothHelper.sendDataToPairedDevice(ServerData.getTeamMembers(1).get(0), "WON_null_null");
-                    }
-                    ((GameActivity) getActivity()).changeFragment(Game_Lost_Fragment.newInstance(), "WON");
-                } else if (processed.substring(4) == "Iwon") {
-                    Log.d("Scream", "lost!!");
-                    if (!ServerData.isServer()) {
-                        //send to server
-                        BluetoothHelper.sendDataToPairedDevice(ServerData.getServer(), "LOST_null_null_");
-                    } else {
-                        // send to partner of server
-                        BluetoothHelper.sendDataToPairedDevice(ServerData.getTeamMembers(1).get(0), "LOST_null_null_");
-                    }
-                    ((GameActivity) getActivity()).changeFragment(Game_Lost_Fragment.newInstance(), "LOST");
-                }
+                buttonStart1.setEnabled(true);
             }
-
         });
+
     }
+
 }
