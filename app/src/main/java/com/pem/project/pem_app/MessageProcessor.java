@@ -79,22 +79,22 @@ public class MessageProcessor {
 
                 if(extra.equals("pitSuccess")){
                     for(BluetoothSocket client : ServerData.getClients()){
-                        BluetoothHelper.sendDataToPairedDevice(client, "UPDATE_Rescue_"+t+"_keyYellow_");
+                        BluetoothHelper.sendDataToPairedDevice(client, "UPDATE_Rescue_"+t+"_keyRed_");
                     }
-                    return "UPDATE_"+t+"_keyYellow_";
+                    return "UPDATE_"+miniGame+"_"+t+"_keyRed_";
                 }
                 if(extra.equals("mathRunesSuccess")){
                     for(BluetoothSocket client : ServerData.getClients()){
-                        BluetoothHelper.sendDataToPairedDevice(client, "UPDATE_MathRunes_"+t+"_keyGreen_");
+                        BluetoothHelper.sendDataToPairedDevice(client, "UPDATE_MathRunes_"+t+"_keyBlue_");
                     }
-                    return "UPDATE_"+t+"_keyGreen_";
+                    return "UPDATE_"+miniGame+"_"+t+"_keyBlue_";
                 }
                 if(extra.equals("luckSuccess")){
                     for(BluetoothSocket client : ServerData.getClients()){
-                        BluetoothHelper.sendDataToPairedDevice(client, "UPDATE_Luck_"+t+"_keyBlue_");
+                        BluetoothHelper.sendDataToPairedDevice(client, "UPDATE_Luck_"+t+"_keyYellow_");
                     }
 
-                    return "UPDATE_"+t+"_keyBlue_";
+                    return "UPDATE_"+miniGame+"_"+t+"_keyYellow_";
                 }
                 if(extra.equals("fightSuccess")){
                     // to do
@@ -103,22 +103,27 @@ public class MessageProcessor {
                     }
                 }
 
+                if(miniGame.equals("lost")){
+                    return "UPDATE_lost_" + t + "_" + extra + "_";
+                }
+
 
             } else {
-                // e.g "UPDATE_team1_keyBlue"
-                return messageArt+"_"+extra+"_"+messageParameters[3]+"_";
+                // e.g "UPDATE_Math_team1_keyBlue_"
+                // or "UPDATE_lost_team2_keyYellow_"
+                return messageArt + "_" + miniGame + "_" + extra + "_" + messageParameters[3] + "_";
             }
 
         } else if(messageArt.equals("LOST")){
             if(ServerData.isServer()){
                 //check if socket belongs to server's team
                 if(ServerData.getTeam(socket) == 1){
-                    return messageArt;
+                    return messageArt + "_" + miniGame + "_" + extra;
                 } else {
-                    BluetoothHelper.sendDataToPairedDevice(ServerData.getOtherTeamMember(socket), "LOST_null_null_");
+                    BluetoothHelper.sendDataToPairedDevice(ServerData.getOtherTeamMember(socket), "LOST_" + miniGame + "_" + extra + "_");
                 }
             } else {
-                return messageArt;
+                return messageArt + "_" + miniGame + "_" + extra;
             }
         } else if(messageArt.equals("WON")){
             if(ServerData.isServer()){

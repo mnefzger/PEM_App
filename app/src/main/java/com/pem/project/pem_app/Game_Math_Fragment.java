@@ -146,7 +146,7 @@ public class Game_Math_Fragment extends Fragment implements OnClickListener {
                         BluetoothHelper.sendDataToPairedDevice(ServerData.getTeamMembers(1).get(0), "LOST_null_null_");
                     }
 
-                    ((GameActivity) getActivity()).changeFragment(Game_Lost_Fragment.newInstance(), "LOST");
+                    ((GameActivity) getActivity()).changeFragment(Game_Lost_Fragment.newInstance("keyBlue",1), "LOST");
                 }
             }
         }.start();
@@ -502,7 +502,7 @@ public class Game_Math_Fragment extends Fragment implements OnClickListener {
                 // send to partner of server
                 BluetoothHelper.sendDataToPairedDevice(ServerData.getTeamMembers(1).get(0), "LOST_null_null_");
             }
-            ((GameActivity) getActivity()).changeFragment(Game_Lost_Fragment.newInstance(), "LOST");
+            ((GameActivity) getActivity()).changeFragment(Game_Lost_Fragment.newInstance("keyBlue", 1), "LOST");
             CancelCountDown();
         }
     return false;

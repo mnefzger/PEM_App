@@ -104,15 +104,20 @@ public class GameActivity extends Activity implements BluetoothListener.IListenC
 
         //UPDATE
         if(processed.startsWith("UPDATE")) {
-            String key = processed.split("_")[2];
-            String team = processed.split("_")[1];
-            ServerData.toggleKey(team, key);
+            String key = processed.split("_")[3];
+            String team = processed.split("_")[2];
+
+            if(!processed.contains("lost")) ServerData.addKey(team, key);
+            else ServerData.removeKey(team, key);
+
             this.changeFragment(Game_Main_Fragment.newInstance(), "MAIN");
         }
 
         // MINIGAME LOST
-        if(processed.equals("LOST")){
-            this.changeFragment(Game_Lost_Fragment.newInstance(), "LOST");
+        if(processed.startsWith("LOST")){
+            String key = processed.split("_")[2];
+
+            this.changeFragment(Game_Lost_Fragment.newInstance(key ,2), "LOST");
 
             //to stop things happening in the background
             Game_Rescue_Fragment fragment = (Game_Rescue_Fragment)fragmentManager.findFragmentByTag("RESCUE");

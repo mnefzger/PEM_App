@@ -9,7 +9,8 @@
         android:layout_alignParentEnd="false"
         android:layout_alignParentTop="true"
         android:gravity="center"
-        android:textSize="50dp"/>
+        android:textSize="50dp"
+        android:id="@+id/lostMessage"/>
 
     <Button
         android:layout_width="wrap_content"

@@ -186,9 +186,9 @@ public class Game_Rescue_Fragment extends Fragment implements SensorHandler.rope
                     BluetoothHelper.sendDataToPairedDevice(ServerData.getServer(), "UPDATE_Rescue_pitSuccess_");
                 } else {
                     for(BluetoothSocket client : ServerData.getClients()){
-                        BluetoothHelper.sendDataToPairedDevice(client, "UPDATE_Rescue_team1_keyYellow_");
+                        BluetoothHelper.sendDataToPairedDevice(client, "UPDATE_Rescue_team1_keyRed_");
                     }
-                    ServerData.toggleKey("team1", "keyYellow");
+                    ServerData.addKey("team1", "keyRed");
                     ((GameActivity)getActivity()).changeFragment(Game_Main_Fragment.newInstance(), "MAIN");
                 }
             }
@@ -273,11 +273,11 @@ public class Game_Rescue_Fragment extends Fragment implements SensorHandler.rope
                     if(alive == false && !lost){
                         Log.d("Rocks","verloren!!");
                         if(!ServerData.isServer()) {
-                            BluetoothHelper.sendDataToPairedDevice(ServerData.getServer(), "LOST_null_null_");
+                            BluetoothHelper.sendDataToPairedDevice(ServerData.getServer(), "LOST_Rescue_keyRed_");
                         } else {
-                            BluetoothHelper.sendDataToPairedDevice(ServerData.getTeamMembers(1).get(0), "LOST_null_null_");
+                            BluetoothHelper.sendDataToPairedDevice(ServerData.getTeamMembers(1).get(0), "LOST_Rescue_keyRed_");
                         }
-                        ((GameActivity) getActivity()).changeFragment(Game_Lost_Fragment.newInstance(), "LOST");
+                        ((GameActivity) getActivity()).changeFragment(Game_Lost_Fragment.newInstance("keyRed", 1), "LOST");
                     }
                     if(count == 5 && alive == true){
                         Handler three = new Handler();
@@ -353,11 +353,11 @@ public class Game_Rescue_Fragment extends Fragment implements SensorHandler.rope
                         pullRope();
                     } else if(count <= 3 && !alive && !lost){
                         if(!ServerData.isServer()) {
-                            BluetoothHelper.sendDataToPairedDevice(ServerData.getServer(), "LOST_null_null_");
+                            BluetoothHelper.sendDataToPairedDevice(ServerData.getServer(), "LOST_Rescue_keyRed_");
                         } else {
-                            BluetoothHelper.sendDataToPairedDevice(ServerData.getTeamMembers(1).get(0), "LOST_null_null_");
+                            BluetoothHelper.sendDataToPairedDevice(ServerData.getTeamMembers(1).get(0), "LOST_Rescue_keyRed_");
                         }
-                        ((GameActivity) getActivity()).changeFragment(Game_Lost_Fragment.newInstance(), "LOST");
+                        ((GameActivity) getActivity()).changeFragment(Game_Lost_Fragment.newInstance("keyRed", 1), "LOST");
                         Log.d("Pull", "lost");
                     }
                 }};

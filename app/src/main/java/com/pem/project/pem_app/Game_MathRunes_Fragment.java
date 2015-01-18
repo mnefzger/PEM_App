@@ -110,8 +110,6 @@ public class Game_MathRunes_Fragment extends Fragment implements OnClickListener
             mParam2 = getArguments().getString(ARG_PARAM2);
         }
 
-
-
         serverData = new ServerData();
 
     }
@@ -128,8 +126,6 @@ public class Game_MathRunes_Fragment extends Fragment implements OnClickListener
             rootView = inflater.inflate(R.layout.fragment_game_mathrunes, container, false);
 
         }
-
-
 
         operation1 = new Game_Math_Helper();
         operation2 = new Game_Math_Helper();
@@ -149,13 +145,13 @@ public class Game_MathRunes_Fragment extends Fragment implements OnClickListener
                     Log.d("MathRunes", "lost!!");
                     if (!ServerData.isServer()) {
                         //send to server
-                        BluetoothHelper.sendDataToPairedDevice(ServerData.getServer(), "LOST_null_null_");
+                        BluetoothHelper.sendDataToPairedDevice(ServerData.getServer(), "LOST_MathRunes_keyBlue_");
                     } else {
                         // send to partner of server
-                        BluetoothHelper.sendDataToPairedDevice(ServerData.getTeamMembers(1).get(0), "LOST_null_null_");
+                        BluetoothHelper.sendDataToPairedDevice(ServerData.getTeamMembers(1).get(0), "LOST_MathRunes_keyBlue_");
                     }
 
-                    ((GameActivity) getActivity()).changeFragment(Game_Lost_Fragment.newInstance(), "LOST");
+                    ((GameActivity) getActivity()).changeFragment(Game_Lost_Fragment.newInstance("keyBlue",1), "LOST");
                 }
             }
         }.start();
@@ -187,7 +183,6 @@ public class Game_MathRunes_Fragment extends Fragment implements OnClickListener
         super.onDetach();
         mListener = null;
     }
-
 
     /**
      * This interface must be implemented by activities that contain this
@@ -346,9 +341,6 @@ public class Game_MathRunes_Fragment extends Fragment implements OnClickListener
 
             //boolean play = true;
 
-
-
-
             switch(view.getId()) {
                 case R.id.buttonMath1:
                     if (operation1.getRightBox() == 0) {
@@ -460,11 +452,8 @@ public class Game_MathRunes_Fragment extends Fragment implements OnClickListener
                     // send to partner of server
                     BluetoothHelper.sendDataToPairedDevice(ServerData.getTeamMembers(1).get(0), "GAMEDATA_MathRunes_MR:correctResult:" + correctResult + "_");
                 }
-
             }
-
         }
-
 
         public void setResult(final String processed){
 
@@ -485,12 +474,8 @@ public class Game_MathRunes_Fragment extends Fragment implements OnClickListener
                         result2_partner = Integer.parseInt(processed.substring(11));
                     }
 
-
                 }
             });
-
-
-
         }
 
     public void setCorrectResult(String correctResult){
@@ -509,7 +494,6 @@ public class Game_MathRunes_Fragment extends Fragment implements OnClickListener
             correct_partner ){ // Check Partner
             Log.d("MathRunes", "won!!");
 
-
             if (!ServerData.isServer()) {
                 //send to server
                 BluetoothHelper.sendDataToPairedDevice(ServerData.getServer(), "GAMEDATA_MathRunes_MR:mathSuccess_");
@@ -525,9 +509,9 @@ public class Game_MathRunes_Fragment extends Fragment implements OnClickListener
                 BluetoothHelper.sendDataToPairedDevice(ServerData.getServer(), "UPDATE_MathRunes_mathSuccess_");
             } else {
                 for(BluetoothSocket client : ServerData.getClients()){
-                    BluetoothHelper.sendDataToPairedDevice(client, "UPDATE_MathRunes_team1_keyGreen_");
+                    BluetoothHelper.sendDataToPairedDevice(client, "UPDATE_MathRunes_team1_keyBlue_");
                 }
-                ServerData.toggleKey("team1", "keyGreen");
+                ServerData.addKey("team1", "keyBlue");
                 ((GameActivity)getActivity()).changeFragment(Game_Main_Fragment.newInstance(), "MAIN");
             }
 
@@ -544,12 +528,12 @@ public class Game_MathRunes_Fragment extends Fragment implements OnClickListener
             Log.d("MathRunes", "lost!!");
             if (!ServerData.isServer()) {
                 //send to server
-                BluetoothHelper.sendDataToPairedDevice(ServerData.getServer(), "LOST_null_null_");
+                BluetoothHelper.sendDataToPairedDevice(ServerData.getServer(), "LOST_MathRunes_keyBlue_");
             } else {
                 // send to partner of server
-                BluetoothHelper.sendDataToPairedDevice(ServerData.getTeamMembers(1).get(0), "LOST_null_null_");
+                BluetoothHelper.sendDataToPairedDevice(ServerData.getTeamMembers(1).get(0), "LOST_MathRunes_keyBlue_");
             }
-            ((GameActivity) getActivity()).changeFragment(Game_Lost_Fragment.newInstance(), "LOST");
+            ((GameActivity) getActivity()).changeFragment(Game_Lost_Fragment.newInstance("keyBlue", 1), "LOST");
             CancelCountDown();
         }
     return false;
@@ -561,18 +545,15 @@ public class Game_MathRunes_Fragment extends Fragment implements OnClickListener
 
 
     public void setWaitIfGameWon() {
-        
         wait_partner = true;
     }
 
     public void checkCorrectPartner(String processed) {
-
         if (processed.equals("true") && input_partner == correctFinalResult_partner){
             correct_partner = true;
 
         }
         System.out.println("correct_partner: " + correct_partner + "; correctFinalResult_partner: " + correctFinalResult_partner + "; input_partner: " + input_partner);
-
     }
 
     public void setInputPartner(String inputPartner) {
@@ -601,7 +582,6 @@ class RowAdapter extends ArrayAdapter {
     private Context context;
     private LayoutInflater layoutInflater;
     private int[] runesArray;
-
 
     public RowAdapter(Context context, int[] runesArray) {
         super(context, 0);

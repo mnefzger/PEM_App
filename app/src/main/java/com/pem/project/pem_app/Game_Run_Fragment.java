@@ -167,11 +167,11 @@ public class Game_Run_Fragment extends Fragment implements SensorHandler.runCall
         if(fails == 2){
             sensorHandler.stopSensing();
             if(!ServerData.isServer()) {
-                BluetoothHelper.sendDataToPairedDevice(ServerData.getServer(), "LOST_null_null_");
+                BluetoothHelper.sendDataToPairedDevice(ServerData.getServer(), "LOST_Run_keyGreen_");
             } else {
-                BluetoothHelper.sendDataToPairedDevice(ServerData.getTeamMembers(1).get(0), "LOST_null_null_");
+                BluetoothHelper.sendDataToPairedDevice(ServerData.getTeamMembers(1).get(0), "LOST_Run_keyGreen_");
             }
-            ((GameActivity) getActivity()).changeFragment(Game_Lost_Fragment.newInstance(), "LOST");
+            ((GameActivity) getActivity()).changeFragment(Game_Lost_Fragment.newInstance("keyGreen",1), "LOST");
         }
     }
 

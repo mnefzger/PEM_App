@@ -59,20 +59,26 @@ public class ServerData {
     }
 
 
-
-    // add key after successful minigame
-    public static void toggleKey(String team, String key){
-        Log.d("TOGGLE", team+", "+key);
+    public static void addKey(String team, String key){
+        Log.d("ADD", team+", "+key);
 
         if(team.equals("team1")){
             if(!team1_keys.contains(key))
                 team1_keys.add(key);
-            else
-                team1_keys.remove(key);
         }else{ // team2
             if(!team2_keys.contains(key))
                 team2_keys.add(key);
-            else
+        }
+    }
+
+    public static void removeKey(String team, String key){
+        Log.d("REMOVE", team+", "+key);
+
+        if(team.equals("team1")){
+            if(team1_keys.contains(key))
+                team1_keys.remove(key);
+        }else{
+            if(team2_keys.contains(key))
                 team2_keys.remove(key);
         }
     }

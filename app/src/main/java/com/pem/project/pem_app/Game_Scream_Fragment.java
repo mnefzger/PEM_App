@@ -259,7 +259,7 @@ public class Game_Scream_Fragment extends Fragment{
             } else {
                 BluetoothHelper.sendDataToPairedDevice(ServerData.getTeamMembers(2).get(0), "WON_null_null_");
             }
-            ((GameActivity) getActivity()).changeFragment(Game_Lost_Fragment.newInstance(), "LOST");
+            ((GameActivity) getActivity()).changeFragment(Game_Lost_Fragment.newInstance("coin",1), "LOST");
             won = true;
             return won;
         }  else {
@@ -270,7 +270,7 @@ public class Game_Scream_Fragment extends Fragment{
             } else {
                 BluetoothHelper.sendDataToPairedDevice(ServerData.getTeamMembers(2).get(0), "LOST_null_null_");
             }
-            ((GameActivity) getActivity()).changeFragment(Game_Lost_Fragment.newInstance(), "LOST");
+            ((GameActivity) getActivity()).changeFragment(Game_Lost_Fragment.newInstance("coin",1), "LOST");
         }
         won = false;
         return won;

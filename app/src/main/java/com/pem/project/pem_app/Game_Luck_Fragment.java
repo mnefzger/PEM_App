@@ -78,9 +78,9 @@ public class Game_Luck_Fragment extends Fragment implements View.OnClickListener
                     BluetoothHelper.sendDataToPairedDevice(ServerData.getServer(), "UPDATE_Luck_luckSuccess_");
                 } else {
                     for(BluetoothSocket client : ServerData.getClients()){
-                        BluetoothHelper.sendDataToPairedDevice(client, "UPDATE_Luck_team1_keyBlue_");
+                        BluetoothHelper.sendDataToPairedDevice(client, "UPDATE_Luck_team1_keyYellow_");
                     }
-                    ServerData.toggleKey("team1", "keyBlue");
+                    ServerData.addKey("team1", "keyYellow");
                     ((GameActivity)getActivity()).changeFragment(Game_Main_Fragment.newInstance(), "MAIN");
                 }
             }
