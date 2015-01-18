@@ -106,7 +106,7 @@ public class ServerData {
         return removedKey;
     }
 
-    // for updating the view
+     // for updating the view
     public static ArrayList<String> getTeam1_keys(){
         return team1_keys;
     }

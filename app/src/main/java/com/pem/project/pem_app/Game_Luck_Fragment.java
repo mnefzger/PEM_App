@@ -8,6 +8,8 @@ import android.view.MenuItem;
 import android.widget.Button;
 import android.widget.ImageButton;
 import android.view.View;
+import android.widget.LinearLayout;
+import android.widget.TableRow;
 import android.widget.TextView;
 
 import java.util.Random;
@@ -16,6 +18,8 @@ import android.view.LayoutInflater;
 import android.view.ViewGroup;
 
 public class Game_Luck_Fragment extends Fragment implements View.OnClickListener{
+    private LinearLayout luckInfoText;
+    private TableRow startLuck;
     private TextView luckText;
     private ImageButton path1, path2, path3;
     private Button done;
@@ -43,11 +47,21 @@ public class Game_Luck_Fragment extends Fragment implements View.OnClickListener
         // Inflate the layout for this fragment
         View v = inflater.inflate(R.layout.fragment_game_luck, container, false);
 
+        luckInfoText = (LinearLayout)v.findViewById(R.id.luckInfoText);
+        startLuck = (TableRow) v.findViewById(R.id.startLuck);
+
         luckText = (TextView)v.findViewById(R.id.luckText);
         path1 = (ImageButton)v.findViewById(R.id.luckPath1);
         path2 = (ImageButton)v.findViewById(R.id.luckPath2);
         path3 = (ImageButton)v.findViewById(R.id.luckPath3);
         done = (Button)v.findViewById(R.id.luckDone);
+
+        startLuck.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                luckInfoText.setVisibility(View.GONE);
+            }
+        });
 
 
         View.OnClickListener askFate = new View.OnClickListener() {
@@ -64,25 +78,26 @@ public class Game_Luck_Fragment extends Fragment implements View.OnClickListener
         done.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                /*if(!ServerData.isServer()) {
-                    if (outcome.equals("success"))
-                        BluetoothHelper.sendDataToPairedDevice(ServerData.getServer(), "UPDATE_Luck_luckSuccess");
-                    else if (outcome.equals("fail"))
-                        BluetoothHelper.sendDataToPairedDevice(ServerData.getServer(), "UPDATE_Luck_luckFail");
-                    else
-                        ((GameActivity) getActivity()).changeFragment(Game_Main_Fragment.newInstance(), "MAIN");
-                }*/
 
                 if (!ServerData.isServer()){
                     //send to server
-                    BluetoothHelper.sendDataToPairedDevice(ServerData.getServer(), "UPDATE_Luck_luckSuccess_");
+                    if(outcome.equals("success")) BluetoothHelper.sendDataToPairedDevice(ServerData.getServer(), "UPDATE_Luck_luckSuccess_");
+                    if(outcome.equals("fail")) BluetoothHelper.sendDataToPairedDevice(ServerData.getServer(), "UPDATE_lost_keyYellow_");
                 } else {
-                    for(BluetoothSocket client : ServerData.getClients()){
-                        BluetoothHelper.sendDataToPairedDevice(client, "UPDATE_Luck_team1_keyYellow_");
+                    if(outcome.equals("success")){
+                        for(BluetoothSocket client : ServerData.getClients()){
+                            BluetoothHelper.sendDataToPairedDevice(client, "UPDATE_Luck_team1_keyYellow_");
+                        }
+                        ServerData.addKey("team1", "keyYellow");
+                    } else if(outcome.equals("fail")){
+                        for(BluetoothSocket client : ServerData.getClients()){
+                            BluetoothHelper.sendDataToPairedDevice(client, "UPDATE_lost_team1_keyYellow_");
+                        }
+                        ServerData.removeKey("team1", "keyYellow");
                     }
-                    ServerData.addKey("team1", "keyYellow");
-                    ((GameActivity)getActivity()).changeFragment(Game_Main_Fragment.newInstance(), "MAIN");
                 }
+
+                ((GameActivity)getActivity()).changeFragment(Game_Main_Fragment.newInstance(), "MAIN");
             }
         });
 
@@ -91,21 +106,21 @@ public class Game_Luck_Fragment extends Fragment implements View.OnClickListener
     }
 
     public void playLucky(){
-        path1.setVisibility(View.INVISIBLE);
-        path2.setVisibility(View.INVISIBLE);
-        path3.setVisibility(View.INVISIBLE);
+        path1.setVisibility(View.GONE);
+        path2.setVisibility(View.GONE);
+        path3.setVisibility(View.GONE);
 
         //randomly generate result
         r = new Random();
         chance = r.nextInt(10) + 1;
-        if(chance<=5){
-            //50% lucky
+        if(chance<=4){
+            //40% lucky
             luckText.setText("\nBy the wayside of the path you chose, you found a key!");
             outcome = "success";
             path2.setImageResource(R.drawable.key_yellow_yes);
             path2.setEnabled(false);
         }else if(chance<=8){
-            //30% neutral - no pain & no gain
+            //40% neutral - no pain & no gain
             luckText.setText("\nYou continue your way along the chosen path.");
         }else{
             //20% bad luck

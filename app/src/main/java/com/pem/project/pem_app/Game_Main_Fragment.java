@@ -235,7 +235,6 @@ public class Game_Main_Fragment extends Fragment {
 
         // -> keys
         if(keys1.contains("keyYellow")){
-            Log.d("Should be yellow:" , keys1.get(0));
             team1_keyYellow.setImageResource(R.drawable.key_yellow_yes);
         }else{
             team1_keyYellow.setImageResource(R.drawable.key_yellow_no);
