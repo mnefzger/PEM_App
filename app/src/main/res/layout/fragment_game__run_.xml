@@ -223,7 +223,7 @@
                 android:text="RUN FOR YOUR LIFE!"
                 android:id="@+id/textView8"
                 android:paddingLeft="25dp"
-                android:layout_marginBottom="15dp"
+                android:layout_marginBottom="5dp"
                 android:layout_marginTop="20dp"
                 android:textColor="#FF0066"
                 android:layout_weight="0.05" />
