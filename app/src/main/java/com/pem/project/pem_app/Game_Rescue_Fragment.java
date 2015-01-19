@@ -284,11 +284,17 @@ public class Game_Rescue_Fragment extends Fragment implements SensorHandler.rope
                         three.postDelayed(new Runnable() {
                                               @Override
                                               public void run() {
-                                                  Log.d("SUCCESS", "you win");
-                                                  rescue2.setVisibility(View.GONE);
-                                                  end.setVisibility(View.VISIBLE);
+                                                  //rescue2.setVisibility(View.GONE);
+                                                  //end.setVisibility(View.VISIBLE);
                                                   MediaPlayer mediaPlayer = MediaPlayer.create(getActivity(), R.raw.win);
-                                                  mediaPlayer.start(); // no need to call prepare(); create() does that for you
+                                                  mediaPlayer.start();
+
+                                                  if(!ServerData.isServer()) {
+                                                      BluetoothHelper.sendDataToPairedDevice(ServerData.getServer(), "WON_Rescue_keyRed_");
+                                                  } else {
+                                                      BluetoothHelper.sendDataToPairedDevice(ServerData.getTeamMembers(1).get(0), "WON_Rescue_keyRed_");
+                                                  }
+                                                  ((GameActivity) getActivity()).changeFragment(Game_Won_Fragment.newInstance("keyRed",1), "WON");
                                               }},
                                1500 //wait shortly for other player to finish
                         );

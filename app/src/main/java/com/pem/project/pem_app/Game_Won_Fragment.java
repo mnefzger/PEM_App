@@ -70,9 +70,9 @@ public class Game_Won_Fragment extends Fragment {
                         ServerData.setCoin("team1", "coinBoth");
                         ServerData.setCoin("team2", "coinNo");
                     }
-                    ((GameActivity)getActivity()).changeFragment(Game_Main_Fragment.newInstance(), "MAIN");
-                }
 
+                }
+                ((GameActivity)getActivity()).changeFragment(Game_Main_Fragment.newInstance(), "MAIN");
             }
         });
 

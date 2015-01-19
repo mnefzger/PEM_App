@@ -81,7 +81,7 @@ public class Game_Luck_Fragment extends Fragment implements View.OnClickListener
 
                 if (!ServerData.isServer()){
                     //send to server
-                    if(outcome.equals("success")) BluetoothHelper.sendDataToPairedDevice(ServerData.getServer(), "UPDATE_Luck_luckSuccess_");
+                    if(outcome.equals("success")) BluetoothHelper.sendDataToPairedDevice(ServerData.getServer(), "UPDATE_Luck_keyYellow_");
                     if(outcome.equals("fail")) BluetoothHelper.sendDataToPairedDevice(ServerData.getServer(), "UPDATE_lost_keyYellow_");
                 } else {
                     if(outcome.equals("success")){

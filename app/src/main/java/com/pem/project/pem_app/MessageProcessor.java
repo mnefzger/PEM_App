@@ -77,30 +77,11 @@ public class MessageProcessor {
                 int team = ServerData.getTeam(socket);
                 String t = "team"+team;
 
-                if(extra.equals("pitSuccess")){
+                if(miniGame.equals("won")){
                     for(BluetoothSocket client : ServerData.getClients()){
-                        BluetoothHelper.sendDataToPairedDevice(client, "UPDATE_Rescue_"+t+"_keyRed_");
+                        BluetoothHelper.sendDataToPairedDevice(client, "UPDATE_won_" + t + "_" + extra + "_");
                     }
-                    return "UPDATE_"+miniGame+"_"+t+"_keyRed_";
-                }
-                if(extra.equals("MR:mathSuccess")){
-                    for(BluetoothSocket client : ServerData.getClients()){
-                        BluetoothHelper.sendDataToPairedDevice(client, "UPDATE_MathRunes_"+t+"_keyBlue_");
-                    }
-                    return "UPDATE_"+miniGame+"_"+t+"_keyBlue_";
-                }
-                if(extra.equals("luckSuccess")){
-                    for(BluetoothSocket client : ServerData.getClients()){
-                        BluetoothHelper.sendDataToPairedDevice(client, "UPDATE_Luck_"+t+"_keyYellow_");
-                    }
-
-                    return "UPDATE_"+miniGame+"_"+t+"_keyYellow_";
-                }
-                if(extra.equals("fightSuccess")){
-                    // to do
-                    for(BluetoothSocket client : ServerData.getClients()){
-                        //BluetoothHelper.sendDataToPairedDevice(client, "UPDATE_Fight_"+t+"_keyBlue_");
-                    }
+                    return "UPDATE_won_" + t + "_" + extra + "_";
                 }
 
                 if(miniGame.equals("lost")){
