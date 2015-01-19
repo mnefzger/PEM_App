@@ -136,6 +136,13 @@ public class Game_Run_Fragment extends Fragment implements SensorHandler.runCall
                                              mediaPlayer.start(); // no need to call prepare(); create() does that for you
                                              Vibrator v = (Vibrator) getActivity().getSystemService(getActivity().VIBRATOR_SERVICE);
                                              v.vibrate(500);
+
+                                             if(!ServerData.isServer()) {
+                                                 BluetoothHelper.sendDataToPairedDevice(ServerData.getServer(), "WON_Run_keyGreen_");
+                                             } else {
+                                                 BluetoothHelper.sendDataToPairedDevice(ServerData.getTeamMembers(1).get(0), "WON_Run_keyGreen_");
+                                             }
+                                             ((GameActivity) getActivity()).changeFragment(Game_Won_Fragment.newInstance("keyGreen",1), "WON");
                                          }
                                      }},
                         13000

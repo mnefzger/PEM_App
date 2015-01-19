@@ -11,69 +11,68 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
 
-import org.w3c.dom.Text;
-
 
 /**
  * A simple {@link Fragment} subclass.
+ * Use the {@link Game_Won_Fragment#newInstance} factory method to
+ * create an instance of this fragment.
  */
-public class Game_Lost_Fragment extends Fragment {
-    private String lostKey;
+public class Game_Won_Fragment extends Fragment {
+    private static final String ARG_PARAM1 = "param1";
+    private static final String ARG_PARAM2 = "param2";
+
+    private String wonKey;
     private int player;
 
-    static final String param1 = "param1";
-    static final String param2 = "param2";
 
-    public Game_Lost_Fragment() {
-        // Required empty public constructor
-    }
-
-    public static Game_Lost_Fragment newInstance(String key, int player) {
-        Game_Lost_Fragment fragment = new Game_Lost_Fragment();
+    public static Game_Won_Fragment newInstance(String param1, int param2) {
+        Game_Won_Fragment fragment = new Game_Won_Fragment();
         Bundle args = new Bundle();
-        args.putString(param1, key);
-        args.putInt(param2, player);
+        args.putString(ARG_PARAM1, param1);
+        args.putInt(ARG_PARAM2, param2);
         fragment.setArguments(args);
         return fragment;
+    }
+
+    public Game_Won_Fragment() {
+        // Required empty public constructor
     }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
-            lostKey = getArguments().getString(param1);
-            player = getArguments().getInt(param2);
+            wonKey = getArguments().getString(ARG_PARAM1);
+            player = getArguments().getInt(ARG_PARAM2);
         }
-
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
-        View v = inflater.inflate(R.layout.fragment_game__lost_, container, false);
-        TextView message = (TextView)v.findViewById(R.id.lostMessage);
-        message.setText("You lost the " + convertKey(lostKey) + "!");
+        View v = inflater.inflate(R.layout.fragment_game__won_, container, false);
+        TextView message = (TextView)v.findViewById(R.id.wonMessage);
+        if(message != null) message.setText("Congratulations!\nOn the wayside, you found the " + convertKey(wonKey) + "!");
 
-        Button proceed = (Button) v.findViewById(R.id.proceed_button_lost);
+        Button proceed = (Button) v.findViewById(R.id.proceed_button);
         proceed.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 if (!ServerData.isServer()){
                     //send to server
-                    BluetoothHelper.sendDataToPairedDevice(ServerData.getServer(), "UPDATE_lost_"+lostKey+"_");
+                    BluetoothHelper.sendDataToPairedDevice(ServerData.getServer(), "UPDATE_won_"+wonKey+"_");
                 } else {
                     for(BluetoothSocket client : ServerData.getClients()){
-                        Log.d("CLIENTS", client.getRemoteDevice().getName());
-                        BluetoothHelper.sendDataToPairedDevice(client, "UPDATE_lost_team1_"+lostKey+"_");
+                        BluetoothHelper.sendDataToPairedDevice(client, "UPDATE_won_team1_"+wonKey+"_");
                     }
-                    if(!lostKey.contains("coin")) ServerData.removeKey("team1", lostKey);
+                    if(!wonKey.contains("coin")) ServerData.addKey("team1", wonKey);
                     else{
-                        ServerData.setCoin("team1", "coin_no");
-                        ServerData.setCoin("team2", "coin_both");
+                        ServerData.setCoin("team1", "coinBoth");
+                        ServerData.setCoin("team2", "coinNo");
                     }
+                    ((GameActivity)getActivity()).changeFragment(Game_Main_Fragment.newInstance(), "MAIN");
                 }
-                ((GameActivity)getActivity()).changeFragment(Game_Main_Fragment.newInstance(), "MAIN");
+
             }
         });
 

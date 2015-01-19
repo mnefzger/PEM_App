@@ -11,7 +11,7 @@
         android:id="@+id/runGame"
         android:visibility="invisible"
         android:orientation="vertical"
-        >
+        android:alpha="0">
 
         <ImageView
             android:layout_width="wrap_content"
@@ -150,7 +150,8 @@
         android:layout_width="fill_parent"
         android:layout_height="fill_parent"
         android:background="#304135"
-        android:id="@+id/runInfoText">
+        android:id="@+id/runInfoText"
+        android:alpha="0">
 
         <FrameLayout
             android:layout_width="fill_parent"
@@ -284,4 +285,65 @@
 
         </LinearLayout>
     </LinearLayout>
+
+    <FrameLayout
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:id="@+id/frameLayout"
+        android:visibility="visible"
+        android:orientation="vertical" >
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceLarge"
+            android:text=""
+            android:id="@+id/textView4"
+            android:layout_centerVertical="true"
+            android:layout_centerHorizontal="true"
+            android:textSize="40dp"
+            android:layout_gravity="center"
+            android:textColor="@color/black" />
+
+        <TextView
+            android:layout_width="fill_parent"
+            android:layout_height="55dp"
+            android:textAppearance="?android:attr/textAppearanceLarge"
+            android:text="The Monster"
+            android:id="@+id/textView12"
+            android:layout_gravity="center_horizontal|top"
+            android:gravity="center"
+            android:background="#3E6617"
+            android:textSize="30dp"
+            android:textColor="#D5F6B8" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="You managed to run away from the beast.\nThere, where you stopped to catch breath, you find a green key."
+            android:id="@+id/textView13"
+            android:layout_gravity="center"
+            android:textColor="@color/black"
+            android:gravity="center"
+            android:textSize="25dp"
+            android:padding="25dp" />
+
+        <ImageView
+            android:layout_width="75dp"
+            android:layout_height="75dp"
+            android:id="@+id/imageView19"
+            android:src="@drawable/key_green_yes"
+            android:layout_alignParentTop="true"
+            android:layout_centerHorizontal="true"
+            android:alpha="1"
+            android:layout_gravity="center_horizontal|bottom"
+            android:layout_marginBottom="85dp" />
+
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="New Button"
+            android:id="@+id/button"
+            android:layout_gravity="center_horizontal|bottom" />
+    </FrameLayout>
 </RelativeLayout>

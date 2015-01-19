@@ -52,7 +52,7 @@ tools:context="com.pem.project.pem_app.GameActivity">
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_weight="0.2"
-                android:src="@drawable/coin_left" />
+                android:src="@drawable/coinleft" />
 
             <ImageView
                 android:id="@+id/team1_keyYellow"
@@ -116,7 +116,7 @@ tools:context="com.pem.project.pem_app.GameActivity">
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_weight="0.2"
-                android:src="@drawable/coin_right" />
+                android:src="@drawable/coinright" />
 
             <ImageView
                 android:id="@+id/team2_keyYellow"

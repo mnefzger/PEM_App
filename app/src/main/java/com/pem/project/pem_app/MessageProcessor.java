@@ -83,7 +83,7 @@ public class MessageProcessor {
                     }
                     return "UPDATE_"+miniGame+"_"+t+"_keyRed_";
                 }
-                if(extra.equals("mathRunesSuccess")){
+                if(extra.equals("MR:mathSuccess")){
                     for(BluetoothSocket client : ServerData.getClients()){
                         BluetoothHelper.sendDataToPairedDevice(client, "UPDATE_MathRunes_"+t+"_keyBlue_");
                     }
@@ -104,6 +104,9 @@ public class MessageProcessor {
                 }
 
                 if(miniGame.equals("lost")){
+                    for(BluetoothSocket client : ServerData.getClients()){
+                        BluetoothHelper.sendDataToPairedDevice(client, "UPDATE_lost_" + t + "_" + extra + "_");
+                    }
                     return "UPDATE_lost_" + t + "_" + extra + "_";
                 }
 
@@ -125,16 +128,16 @@ public class MessageProcessor {
             } else {
                 return messageArt + "_" + miniGame + "_" + extra;
             }
-        } else if(messageArt.equals("WON")){
+        }  else if(messageArt.equals("WON")){
             if(ServerData.isServer()){
                 //check if socket belongs to server's team
                 if(ServerData.getTeam(socket) == 1){
-                    return messageArt;
+                    return messageArt + "_" + miniGame + "_" + extra;
                 } else {
-                    BluetoothHelper.sendDataToPairedDevice(ServerData.getOtherTeamMember(socket), "WON_null_null_");
+                    BluetoothHelper.sendDataToPairedDevice(ServerData.getOtherTeamMember(socket), "WON_" + miniGame + "_" + extra + "_");
                 }
             } else {
-                return messageArt;
+                return messageArt + "_" + miniGame + "_" + extra;
             }
         }
 

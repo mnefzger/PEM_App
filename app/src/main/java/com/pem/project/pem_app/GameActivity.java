@@ -24,10 +24,6 @@ public class GameActivity extends Activity implements BluetoothListener.IListenC
     private FragmentManager fragmentManager;
     private FragmentTransaction fragmentTransaction;
     private MessageProcessor messageProcessor;
-    private ImageView team1_coin, team2_coin,
-                team1_keyyellow, team1_keyred, team1_keygreen, team1_keyblue,
-                team2_keyyellow, team2_keyred, team2_keygreen, team2_keyblue;
-
 
 
     @Override
@@ -106,18 +102,49 @@ public class GameActivity extends Activity implements BluetoothListener.IListenC
         if(processed.startsWith("UPDATE")) {
             String key = processed.split("_")[3];
             String team = processed.split("_")[2];
+            String outcome = processed.split("_")[1];
 
-            if(!processed.contains("lost")) ServerData.addKey(team, key);
-            else ServerData.removeKey(team, key);
+            if(!processed.contains("lost")){
+                if(!key.contains("coin")) ServerData.addKey(team, key);
+                else{
+                    ServerData.setCoin(team, key);
+                    toggleOtherCoin(team, outcome);
+                }
+            }
+            else{
+                if(!key.contains("coin")) ServerData.removeKey(team, key);
+                else{
+                    ServerData.setCoin(team, key);
+                    toggleOtherCoin(team, outcome);
+                }
+            }
 
             this.changeFragment(Game_Main_Fragment.newInstance(), "MAIN");
+        }
+
+        if(processed.startsWith("WON")){
+            String key = processed.split("_")[2];
+            this.changeFragment(Game_Won_Fragment.newInstance(key, 2), "WON");
+
+            //to stop things happening in the background
+            Game_Rescue_Fragment fragment = (Game_Rescue_Fragment)fragmentManager.findFragmentByTag("RESCUE");
+            if(fragment!=null) fragment.markAsLost();
+
+            Game_Run_Fragment fragment2 = (Game_Run_Fragment)fragmentManager.findFragmentByTag("RUN");
+            if(fragment2!=null) fragment2.markAsLost();
+
+            Game_Math_Fragment fragment3 = (Game_Math_Fragment)fragmentManager.findFragmentByTag("MATH");
+            if(fragment3!=null) fragment3.CancelCountDown();
+
+            Game_MathRunes_Fragment fragment4 = (Game_MathRunes_Fragment)fragmentManager.findFragmentByTag("MATHRUNES");
+            if(fragment4!=null) fragment4.CancelCountDown();
         }
 
         // MINIGAME LOST
         if(processed.startsWith("LOST")){
             String key = processed.split("_")[2];
 
-            this.changeFragment(Game_Lost_Fragment.newInstance(key ,2), "LOST");
+            this.changeFragment(Game_Lost_Fragment.newInstance(key, 2), "LOST");
 
             //to stop things happening in the background
             Game_Rescue_Fragment fragment = (Game_Rescue_Fragment)fragmentManager.findFragmentByTag("RESCUE");
@@ -195,6 +222,12 @@ public class GameActivity extends Activity implements BluetoothListener.IListenC
             Game_Scream_Fragment fragment = (Game_Scream_Fragment) fragmentManager.findFragmentByTag("SCREAM");
             fragment.getPlayedRounds(processed);
         }
+    }
+
+    public void toggleOtherCoin(String team, String message){
+        String team2 = (team.equals("team1")) ? "team2" : "team1";
+        String coin2 = (message.equals("won")) ? "coinNo" : "coinBoth";
+        ServerData.setCoin(team2, coin2);
     }
 
     public void changeFragment(Fragment f, String tag){

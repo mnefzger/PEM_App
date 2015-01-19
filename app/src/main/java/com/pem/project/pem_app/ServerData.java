@@ -17,8 +17,8 @@ public class ServerData {
     private static ArrayList<BluetoothSocket> team2 = new ArrayList<BluetoothSocket>();
     private static ArrayList<String> team1_keys = new ArrayList<String>();
     private static ArrayList<String> team2_keys = new ArrayList<String>();
-    private static String team1_coin = "coin_left";
-    private static String team2_coin = "coin_right";
+    private static String team1_coin = "coinleft";
+    private static String team2_coin = "coinright";
     private static boolean isServer = false;
     private static BluetoothSocket server;
 
@@ -80,6 +80,15 @@ public class ServerData {
         }else{
             if(team2_keys.contains(key))
                 team2_keys.remove(key);
+        }
+    }
+
+    public static void setCoin(String team, String coin){
+        Log.d("COIN", coin);
+        if(team.equals("team1")){
+            team1_coin = coin;
+        } else {
+            team2_coin = coin;
         }
     }
 

@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.net.Uri;
 import android.os.Bundle;
 import android.app.Fragment;
+import android.os.Handler;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -161,7 +162,7 @@ public class Game_Scream_Fragment extends Fragment{
 
         //Player starts
         if (mParam1.equals("Player2S")) {
-            buttonStart1.setEnabled(false);
+            buttonStart1.setVisibility(View.INVISIBLE);
         }
 
         buttonStart1.setOnClickListener(new OnClickListener() {
@@ -172,7 +173,7 @@ public class Game_Scream_Fragment extends Fragment{
                 getActivity().runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
-                        buttonStart1.setEnabled(false);
+                        buttonStart1.setVisibility(View.INVISIBLE);
                     }
                 });
 
@@ -204,12 +205,44 @@ public class Game_Scream_Fragment extends Fragment{
                         //send to other Device
                         if (!ServerData.isServer()) {
                             //send to server
-                            BluetoothHelper.sendDataToPairedDevice(ServerData.getServer(), "GAMEDATA_Scream_myVolume:" + df.format(myVol) + "_\n");
-                            BluetoothHelper.sendDataToPairedDevice(ServerData.getServer(), "GAMEDATA_Scream_myPlayedRounds:" + myRoundsPlayed + "_\n");
+                            BluetoothHelper.sendDataToPairedDevice(ServerData.getServer(), "GAMEDATA_Scream_myVolume:" + df.format(myVol) + "_");
+                            //wait so that messages don't get mixed up
+                            getActivity().runOnUiThread(new Runnable() {
+
+                                @Override
+                                public void run() {
+                                    Handler wait = new Handler();
+                                    wait.postDelayed(new Runnable() {
+                                                         @Override
+                                                         public void run() {
+                                                             BluetoothHelper.sendDataToPairedDevice(ServerData.getServer(), "GAMEDATA_Scream_myPlayedRounds:" + myRoundsPlayed + "_");
+                                                         }},
+                                            200
+                                    );
+                                }
+
+                            });
+
+
                         } else {
                             // send to partner of server
-                            BluetoothHelper.sendDataToPairedDevice(ServerData.getTeamMembers(2).get(0), "GAMEDATA_Scream_myVolume:" + df.format(myVol) + "_\n");
-                            BluetoothHelper.sendDataToPairedDevice(ServerData.getTeamMembers(2).get(0), "GAMEDATA_Scream_myPlayedRounds:" + myRoundsPlayed + "_\n");
+                            BluetoothHelper.sendDataToPairedDevice(ServerData.getTeamMembers(2).get(0), "GAMEDATA_Scream_myVolume:" + df.format(myVol) + "_");
+                            //wait so that messages don't get mixed up
+                            getActivity().runOnUiThread(new Runnable() {
+
+                                @Override
+                                public void run() {
+                                    Handler wait = new Handler();
+                                    wait.postDelayed(new Runnable() {
+                                                         @Override
+                                                         public void run() {
+                                                             BluetoothHelper.sendDataToPairedDevice(ServerData.getTeamMembers(2).get(0), "GAMEDATA_Scream_myPlayedRounds:" + myRoundsPlayed + "_");
+                                                         }},
+                                            200
+                                    );
+                                }
+
+                            });
                         }
                     }
                 }).start();
@@ -233,10 +266,8 @@ public class Game_Scream_Fragment extends Fragment{
         });
     }
     public void setOtherTeamVol(final String volPartner) {
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
-                otherVol= Double.parseDouble(volPartner);
+                otherVol= Double.parseDouble(volPartner.substring(9));
+                Log.d("OTHERVOL", otherVol+"");
                 getActivity().runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
@@ -244,33 +275,17 @@ public class Game_Scream_Fragment extends Fragment{
                         otherScreamTextView.setText("Other Team: " + volPartner.substring(9));
                     }
                 });
-            }
-
-        });
-
     }
 
     private boolean checkIfGameWon() {
         if (myVol>otherVol){
-            Log.d("Scream", "won!!");
-            if (!ServerData.isServer()) {
-                //send to server
-                BluetoothHelper.sendDataToPairedDevice(ServerData.getServer(), "WON_null_null_");
-            } else {
-                BluetoothHelper.sendDataToPairedDevice(ServerData.getTeamMembers(2).get(0), "WON_null_null_");
-            }
-            ((GameActivity) getActivity()).changeFragment(Game_Lost_Fragment.newInstance("coin",1), "LOST");
+            Log.d("Scream", myVol + " > " + otherVol);
+            ((GameActivity) getActivity()).changeFragment(Game_Won_Fragment.newInstance("coinboth",1), "WON");
             won = true;
             return won;
         }  else {
             Log.d("Scream", "lost!!");
-            if (!ServerData.isServer()) {
-                //send to server
-                BluetoothHelper.sendDataToPairedDevice(ServerData.getServer(), "LOST_null_null_");
-            } else {
-                BluetoothHelper.sendDataToPairedDevice(ServerData.getTeamMembers(2).get(0), "LOST_null_null_");
-            }
-            ((GameActivity) getActivity()).changeFragment(Game_Lost_Fragment.newInstance("coin",1), "LOST");
+            ((GameActivity) getActivity()).changeFragment(Game_Lost_Fragment.newInstance("coinno",1), "LOST");
         }
         won = false;
         return won;
@@ -286,7 +301,7 @@ public class Game_Scream_Fragment extends Fragment{
          getActivity().runOnUiThread(new Runnable() {
             @Override
             public void run() {
-                buttonStart1.setEnabled(true);
+                buttonStart1.setVisibility(View.VISIBLE);
             }
         });
 

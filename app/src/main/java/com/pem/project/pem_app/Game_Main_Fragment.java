@@ -214,23 +214,23 @@ public class Game_Main_Fragment extends Fragment {
 
         // update game state view
         // -> coins
-        if(coin1.equals("coin_left")){
-            team1_coin.setImageResource(R.drawable.coin_left);
-        }else if(coin1.equals("coin_right")){
-            team1_coin.setImageResource(R.drawable.coin_right);
-        }else if(coin1.equals("coin_both")){
-            team1_coin.setImageResource(R.drawable.coin_both);
+        if(coin1.equals("coinleft")){
+            team1_coin.setImageResource(R.drawable.coinleft);
+        }else if(coin1.equals("coinright")){
+            team1_coin.setImageResource(R.drawable.coinright);
+        }else if(coin1.equals("coinboth")){
+            team1_coin.setImageResource(R.drawable.coinboth);
         }else {
-            team1_coin.setImageResource(R.drawable.coin_no);
+            team1_coin.setImageResource(R.drawable.coinno);
         }
-        if(coin2.equals("coin_left")){
-            team2_coin.setImageResource(R.drawable.coin_left);
-        }else if(coin2.equals("coin_right")){
-            team2_coin.setImageResource(R.drawable.coin_right);
-        }else if(coin2.equals("coin_both")){
-            team2_coin.setImageResource(R.drawable.coin_both);
+        if(coin2.equals("coinleft")){
+            team2_coin.setImageResource(R.drawable.coinleft);
+        }else if(coin2.equals("coinright")){
+            team2_coin.setImageResource(R.drawable.coinright);
+        }else if(coin2.equals("coinboth")){
+            team2_coin.setImageResource(R.drawable.coinboth);
         }else {
-            team2_coin.setImageResource(R.drawable.coin_no);
+            team2_coin.setImageResource(R.drawable.coinno);
         }
 
         // -> keys

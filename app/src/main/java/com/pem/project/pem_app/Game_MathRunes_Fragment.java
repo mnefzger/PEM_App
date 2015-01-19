@@ -496,15 +496,18 @@ public class Game_MathRunes_Fragment extends Fragment implements OnClickListener
 
             if (!ServerData.isServer()) {
                 //send to server
-                BluetoothHelper.sendDataToPairedDevice(ServerData.getServer(), "GAMEDATA_MathRunes_MR:mathSuccess_");
+                //BluetoothHelper.sendDataToPairedDevice(ServerData.getServer(), "GAMEDATA_MathRunes_MR:mathSuccess_");
+                BluetoothHelper.sendDataToPairedDevice(ServerData.getServer(), "WON_MathRunes_keyBlue_");
             } else {
                 // send to partner of server
-                BluetoothHelper.sendDataToPairedDevice(ServerData.getTeamMembers(1).get(0), "GAMEDATA_MathRunes_MR:mathSuccess_");
+                //BluetoothHelper.sendDataToPairedDevice(ServerData.getTeamMembers(1).get(0), "GAMEDATA_MathRunes_MR:mathSuccess_");
+                BluetoothHelper.sendDataToPairedDevice(ServerData.getTeamMembers(1).get(0), "WON_MathRunes_keyBlue_");
             }
             CancelCountDown();
-            ((GameActivity)getActivity()).changeFragment(Game_Main_Fragment.newInstance(), "MAIN");
+            //((GameActivity)getActivity()).changeFragment(Game_Main_Fragment.newInstance(), "MAIN");
+            ((GameActivity)getActivity()).changeFragment(Game_Won_Fragment.newInstance("keyBlue",1), "MAIN");
 
-            if (!ServerData.isServer()){
+            /* if (!ServerData.isServer()){
                 //send to server
                 BluetoothHelper.sendDataToPairedDevice(ServerData.getServer(), "UPDATE_MathRunes_mathSuccess_");
             } else {
@@ -513,7 +516,7 @@ public class Game_MathRunes_Fragment extends Fragment implements OnClickListener
                 }
                 ServerData.addKey("team1", "keyBlue");
                 ((GameActivity)getActivity()).changeFragment(Game_Main_Fragment.newInstance(), "MAIN");
-            }
+            }*/
 
             return true;
         } else if (wait_partner == false){
@@ -598,6 +601,7 @@ class RowAdapter extends ArrayAdapter {
             view = layoutInflater.inflate(R.layout.fragment_game_mathrunes_listitem, null);
 
         ImageView imageView1 = (ImageView) view.findViewById(R.id.rune);
+
 
         if (runesArray[position] == 5) {
             imageView1.setImageResource(R.drawable.five);
