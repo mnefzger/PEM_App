@@ -53,7 +53,12 @@ public class Game_Lost_Fragment extends Fragment {
         // Inflate the layout for this fragment
         View v = inflater.inflate(R.layout.fragment_game__lost_, container, false);
         TextView message = (TextView)v.findViewById(R.id.lostMessage);
-        message.setText("You lost the " + convertKey(lostKey) + "!");
+
+        if(checkKey("team1", lostKey)){
+            message.setText("Oh no! \nYou had the " + convertKey(lostKey) + " \nbut lost it again!");
+        }else{
+            message.setText("You did't get the " + convertKey(lostKey) + "!");
+        }
 
         Button proceed = (Button) v.findViewById(R.id.proceed_button_lost);
         proceed.setOnClickListener(new View.OnClickListener() {
@@ -92,5 +97,11 @@ public class Game_Lost_Fragment extends Fragment {
         return "";
     }
 
+    public boolean checkKey (String team, String key) {
+        if (team == "team1") {
+            return ServerData.getTeam1_keys().contains(key);
+        } else
+            return ServerData.getTeam2_keys().contains(key);
+    }
 
 }

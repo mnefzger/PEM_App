@@ -205,7 +205,7 @@ public class Game_Scream_Fragment extends Fragment{
                         //send to other Device
                         if (!ServerData.isServer()) {
                             //send to server
-                            BluetoothHelper.sendDataToPairedDevice(ServerData.getServer(), "GAMEDATA_Scream_myVolume:" + df.format(myVol) + "_");
+                            BluetoothHelper.sendDataToPairedDevice(ServerData.getServer(), "GAMEDATA_Scream_myVolume:" + myVol + "_");
                             //wait so that messages don't get mixed up
                             getActivity().runOnUiThread(new Runnable() {
 
@@ -226,7 +226,7 @@ public class Game_Scream_Fragment extends Fragment{
 
                         } else {
                             // send to partner of server
-                            BluetoothHelper.sendDataToPairedDevice(ServerData.getTeamMembers(2).get(0), "GAMEDATA_Scream_myVolume:" + df.format(myVol) + "_");
+                            BluetoothHelper.sendDataToPairedDevice(ServerData.getTeamMembers(2).get(0), "GAMEDATA_Scream_myVolume:" + myVol + "_");
                             //wait so that messages don't get mixed up
                             getActivity().runOnUiThread(new Runnable() {
 
@@ -272,7 +272,7 @@ public class Game_Scream_Fragment extends Fragment{
                     @Override
                     public void run() {
                         //otherScreamTextView is invisible
-                        otherScreamTextView.setText("Other Team: " + volPartner.substring(9));
+                        otherScreamTextView.setText("Other Team: " + df.format(otherVol));
                     }
                 });
     }
