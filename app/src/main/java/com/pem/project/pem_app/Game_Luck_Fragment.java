@@ -86,7 +86,7 @@ public class Game_Luck_Fragment extends Fragment implements View.OnClickListener
                 } else {
                     if(outcome.equals("success")){
                         for(BluetoothSocket client : ServerData.getClients()){
-                            BluetoothHelper.sendDataToPairedDevice(client, "UPDATE_Luck_team1_keyYellow_");
+                            BluetoothHelper.sendDataToPairedDevice(client, "UPDATE_won_team1_keyYellow_");
                         }
                         ServerData.addKey("team1", "keyYellow");
                     } else if(outcome.equals("fail")){
@@ -95,9 +95,9 @@ public class Game_Luck_Fragment extends Fragment implements View.OnClickListener
                         }
                         ServerData.removeKey("team1", "keyYellow");
                     }
-
-                    ((GameActivity)getActivity()).changeFragment(Game_Main_Fragment.newInstance(), "MAIN");
                 }
+
+                ((GameActivity)getActivity()).changeFragment(Game_Main_Fragment.newInstance(), "MAIN");
 
 
             }

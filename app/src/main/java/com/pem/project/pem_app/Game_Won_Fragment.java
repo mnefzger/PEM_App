@@ -81,7 +81,7 @@ public class Game_Won_Fragment extends Fragment {
             }
         });
 
-        if(player == 2) proceed.setVisibility(View.INVISIBLE);
+        //if(player == 2) proceed.setVisibility(View.INVISIBLE);
 
         return v;
     }
