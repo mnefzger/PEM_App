@@ -138,12 +138,10 @@ public class Game_Math_Fragment extends Fragment implements OnClickListener {
             public void onFinish() {
                 if (!won) {
                     Log.d("Math", "lost!!");
-                    if (!ServerData.isServer()) {
-                        //send to server
-                        BluetoothHelper.sendDataToPairedDevice(ServerData.getServer(), "LOST_null_null_");
+                    if(!ServerData.isServer()) {
+                        BluetoothHelper.sendDataToPairedDevice(ServerData.getServer(), "LOST_Math_keyBlue_");
                     } else {
-                        // send to partner of server
-                        BluetoothHelper.sendDataToPairedDevice(ServerData.getTeamMembers(1).get(0), "LOST_null_null_");
+                        BluetoothHelper.sendDataToPairedDevice(ServerData.getTeamMembers(1).get(0), "LOST_Math_keyBlue_");
                     }
 
                     ((GameActivity) getActivity()).changeFragment(Game_Lost_Fragment.newInstance("keyBlue",1), "LOST");
@@ -473,16 +471,13 @@ public class Game_Math_Fragment extends Fragment implements OnClickListener {
             correct_partner ){ // Check Partner
             Log.d("Math", "won!!");
 
-
-            if (!ServerData.isServer()) {
-                //send to server
-                BluetoothHelper.sendDataToPairedDevice(ServerData.getServer(), "GAMEDATA_Math_mathSuccess_");
+            if(!ServerData.isServer()) {
+                BluetoothHelper.sendDataToPairedDevice(ServerData.getServer(), "WON_Math_keyBlue_");
             } else {
-                // send to partner of server
-                BluetoothHelper.sendDataToPairedDevice(ServerData.getTeamMembers(1).get(0), "GAMEDATA_Math_mathSuccess_");
+                BluetoothHelper.sendDataToPairedDevice(ServerData.getTeamMembers(1).get(0), "WON_Math_keyBlue_");
             }
             CancelCountDown();
-            ((GameActivity)getActivity()).changeFragment(Game_Main_Fragment.newInstance(), "MAIN");
+            ((GameActivity) getActivity()).changeFragment(Game_Won_Fragment.newInstance("keyBlue",1), "WON");
 
             return true;
         } else if (wait_partner == false){
@@ -495,14 +490,13 @@ public class Game_Math_Fragment extends Fragment implements OnClickListener {
             }
         } else {
             Log.d("Math", "lost!!");
-            if (!ServerData.isServer()) {
-                //send to server
-                BluetoothHelper.sendDataToPairedDevice(ServerData.getServer(), "LOST_null_null_");
+            if(!ServerData.isServer()) {
+                BluetoothHelper.sendDataToPairedDevice(ServerData.getServer(), "LOST_Math_keyBlue_");
             } else {
-                // send to partner of server
-                BluetoothHelper.sendDataToPairedDevice(ServerData.getTeamMembers(1).get(0), "LOST_null_null_");
+                BluetoothHelper.sendDataToPairedDevice(ServerData.getTeamMembers(1).get(0), "LOST_Math_keyBlue_");
             }
-            ((GameActivity) getActivity()).changeFragment(Game_Lost_Fragment.newInstance("keyBlue", 1), "LOST");
+
+            ((GameActivity) getActivity()).changeFragment(Game_Lost_Fragment.newInstance("keyBlue",1), "LOST");
             CancelCountDown();
         }
     return false;
