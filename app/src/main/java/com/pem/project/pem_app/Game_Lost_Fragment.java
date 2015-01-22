@@ -74,8 +74,8 @@ public class Game_Lost_Fragment extends Fragment {
                     }
                     if(!lostKey.contains("coin")) ServerData.removeKey("team1", lostKey);
                     else{
-                        ServerData.setCoin("team1", "coin_no");
-                        ServerData.setCoin("team2", "coin_both");
+                        ServerData.setCoin("team1", "coinno");
+                        ServerData.setCoin("team2", "coinboth");
                     }
                 }
                 ((GameActivity)getActivity()).changeFragment(Game_Main_Fragment.newInstance(), "MAIN");

@@ -226,7 +226,7 @@ public class GameActivity extends Activity implements BluetoothListener.IListenC
 
     public void toggleOtherCoin(String team, String message){
         String team2 = (team.equals("team1")) ? "team2" : "team1";
-        String coin2 = (message.equals("won")) ? "coinNo" : "coinBoth";
+        String coin2 = (message.equals("won")) ? "coinno" : "coinboth";
         ServerData.setCoin(team2, coin2);
     }
 

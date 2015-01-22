@@ -72,8 +72,8 @@ public class Game_Won_Fragment extends Fragment {
                     }
                     if(!wonKey.contains("coin")) ServerData.addKey("team1", wonKey);
                     else{
-                        ServerData.setCoin("team1", "coinBoth");
-                        ServerData.setCoin("team2", "coinNo");
+                        ServerData.setCoin("team1", "coinboth");
+                        ServerData.setCoin("team2", "coinno");
                     }
 
                 }
