@@ -2,7 +2,6 @@ package com.pem.project.pem_app;
 
 import android.app.Activity;
 import android.app.Fragment;
-import android.bluetooth.BluetoothSocket;
 import android.content.Context;
 import android.content.res.Configuration;
 import android.net.Uri;
@@ -496,27 +495,15 @@ public class Game_MathRunes_Fragment extends Fragment implements OnClickListener
 
             if (!ServerData.isServer()) {
                 //send to server
-                //BluetoothHelper.sendDataToPairedDevice(ServerData.getServer(), "GAMEDATA_MathRunes_MR:mathSuccess_");
                 BluetoothHelper.sendDataToPairedDevice(ServerData.getServer(), "WON_MathRunes_keyBlue_");
             } else {
                 // send to partner of server
-                //BluetoothHelper.sendDataToPairedDevice(ServerData.getTeamMembers(1).get(0), "GAMEDATA_MathRunes_MR:mathSuccess_");
                 BluetoothHelper.sendDataToPairedDevice(ServerData.getTeamMembers(1).get(0), "WON_MathRunes_keyBlue_");
             }
             CancelCountDown();
-            //((GameActivity)getActivity()).changeFragment(Game_Main_Fragment.newInstance(), "MAIN");
             ((GameActivity)getActivity()).changeFragment(Game_Won_Fragment.newInstance("keyBlue",1), "MAIN");
 
-            /* if (!ServerData.isServer()){
-                //send to server
-                BluetoothHelper.sendDataToPairedDevice(ServerData.getServer(), "UPDATE_MathRunes_mathSuccess_");
-            } else {
-                for(BluetoothSocket client : ServerData.getClients()){
-                    BluetoothHelper.sendDataToPairedDevice(client, "UPDATE_MathRunes_team1_keyBlue_");
-                }
-                ServerData.addKey("team1", "keyBlue");
-                ((GameActivity)getActivity()).changeFragment(Game_Main_Fragment.newInstance(), "MAIN");
-            }*/
+
 
             return true;
         } else if (wait_partner == false){
