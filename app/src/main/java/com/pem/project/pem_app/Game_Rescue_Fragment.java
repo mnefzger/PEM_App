@@ -259,7 +259,7 @@ public class Game_Rescue_Fragment extends Fragment implements SensorHandler.rope
            i.setAdjustViewBounds(true); // set the ImageView bounds to match the Drawable's dimensions
 
            // Spawn rock at random x position
-           int x = (Math.random() > 0.5) ? 200 : screen_width-200-rock_size;
+           int x = (Math.random() > 0.5) ? screen_width/4 : 3*(screen_width/4)-rock_size;
            side = (x == 200) ? "right" : "left";
            TranslateAnimation anim = new TranslateAnimation(x, x, 0, size.y+rock_size);
            anim.setDuration(1500);

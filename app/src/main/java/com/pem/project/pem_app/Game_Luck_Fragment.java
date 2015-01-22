@@ -95,9 +95,11 @@ public class Game_Luck_Fragment extends Fragment implements View.OnClickListener
                         }
                         ServerData.removeKey("team1", "keyYellow");
                     }
+
+                    ((GameActivity)getActivity()).changeFragment(Game_Main_Fragment.newInstance(), "MAIN");
                 }
 
-                ((GameActivity)getActivity()).changeFragment(Game_Main_Fragment.newInstance(), "MAIN");
+
             }
         });
 
