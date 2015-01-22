@@ -10,8 +10,7 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.widget.Button;
-import android.widget.ImageView;
+import android.view.WindowManager;
 
 
 public class GameActivity extends Activity implements BluetoothListener.IListenCallback,
@@ -33,7 +32,8 @@ public class GameActivity extends Activity implements BluetoothListener.IListenC
 
         messageProcessor = new MessageProcessor();
         fragmentManager = getFragmentManager();
-
+        // deactivate Screensaver
+        getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
 
         changeFragment(Game_Main_Fragment.newInstance(), "MAIN");
 
