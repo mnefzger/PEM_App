@@ -45,14 +45,15 @@ public class GameActivity extends Activity implements BluetoothListener.IListenC
             BluetoothListener listener = new BluetoothListener(this);
             listener.listen(ServerData.getClientAt(0));
 
-            BluetoothListener listener2 = new BluetoothListener(this);
+           /* BluetoothListener listener2 = new BluetoothListener(this);
             listener2.listen(ServerData.getClientAt(1));
 
             BluetoothListener listener3 = new BluetoothListener(this);
-            listener3.listen(ServerData.getClientAt(2));
+            listener3.listen(ServerData.getClientAt(2));*/
         }
 
     }
+
 
 
     @Override
@@ -134,10 +135,10 @@ public class GameActivity extends Activity implements BluetoothListener.IListenC
             if(fragment2!=null) fragment2.markAsLost();
 
             Game_Math_Fragment fragment3 = (Game_Math_Fragment)fragmentManager.findFragmentByTag("MATH");
-            if(fragment3!=null) fragment3.CancelCountDown();
+            if(fragment3!=null) fragment3.gameEnds();
 
             Game_MathRunes_Fragment fragment4 = (Game_MathRunes_Fragment)fragmentManager.findFragmentByTag("MATHRUNES");
-            if(fragment4!=null) fragment4.CancelCountDown();
+            if(fragment4!=null) fragment4.gameEnds();
         }
 
         // MINIGAME LOST
@@ -154,10 +155,10 @@ public class GameActivity extends Activity implements BluetoothListener.IListenC
             if(fragment2!=null) fragment2.markAsLost();
 
             Game_Math_Fragment fragment3 = (Game_Math_Fragment)fragmentManager.findFragmentByTag("MATH");
-            if(fragment3!=null) fragment3.CancelCountDown();
+            if(fragment3!=null) fragment3.gameEnds();
 
             Game_MathRunes_Fragment fragment4 = (Game_MathRunes_Fragment)fragmentManager.findFragmentByTag("MATHRUNES");
-            if(fragment4!=null) fragment4.CancelCountDown();
+            if(fragment4!=null) fragment4.gameEnds();
         }
 
 
@@ -186,6 +187,7 @@ public class GameActivity extends Activity implements BluetoothListener.IListenC
         } else if(processed.equals("mathSuccess")){
             Game_Math_Fragment fragment = (Game_Math_Fragment)fragmentManager.findFragmentByTag("MATH");
             fragment.setWon();
+            fragment.gameEnds();
             this.changeFragment(Game_Main_Fragment.newInstance(), "MAIN");
         }
 
@@ -202,7 +204,7 @@ public class GameActivity extends Activity implements BluetoothListener.IListenC
             fragment.getData(processed);
         } else if(processed.equals("MR:mathSuccess")){
             Game_MathRunes_Fragment fragment = (Game_MathRunes_Fragment)fragmentManager.findFragmentByTag("MATHRUNES");
-            fragment.setWon();
+            fragment.gameWon();
             this.changeFragment(Game_Main_Fragment.newInstance(), "MAIN");
         }
 

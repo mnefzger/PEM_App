@@ -13,6 +13,7 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.view.inputmethod.EditorInfo;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
@@ -143,8 +144,8 @@ public class Game_Math_Fragment extends Fragment implements OnClickListener {
                     } else {
                         BluetoothHelper.sendDataToPairedDevice(ServerData.getTeamMembers(1).get(0), "LOST_Math_keyBlue_");
                     }
-
-                    ((GameActivity) getActivity()).changeFragment(Game_Lost_Fragment.newInstance("keyBlue",1), "LOST");
+                    gameEnds();
+                    ((GameActivity) getActivity()).changeFragment(Game_Lost_Fragment.newInstance("keyBlue", 1), "LOST");
                 }
             }
         }.start();
@@ -219,7 +220,13 @@ public class Game_Math_Fragment extends Fragment implements OnClickListener {
             public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
                 if(actionId== EditorInfo.IME_ACTION_DONE){
                     //Clear focus here from edittext
-                    editText1.clearFocus();
+                    try {
+                        InputMethodManager input = (InputMethodManager) getActivity()
+                                .getSystemService(Activity.INPUT_METHOD_SERVICE);
+                        input.hideSoftInputFromWindow(getActivity().getCurrentFocus().getWindowToken(), 0);
+                    }catch(Exception e) {
+                        e.printStackTrace();
+                    }
 
                     String input = editText1.getText().toString();
 
@@ -358,11 +365,7 @@ public class Game_Math_Fragment extends Fragment implements OnClickListener {
             if (correct2) {
                 System.out.println("2 correct");
             }
-            /**if(correct1 && correct2) {
-                createOperation();
-                correct1 = false;
-                correct2 = false;
-            }**/
+
         }
 
         public void buttonPressed(int field, View view){
@@ -469,15 +472,10 @@ public class Game_Math_Fragment extends Fragment implements OnClickListener {
             correctFinalResult_my == input_my && // Check own
             (correct1 && correct2) && // Check own
             correct_partner ){ // Check Partner
-            Log.d("Math", "won!!");
 
-            if(!ServerData.isServer()) {
-                BluetoothHelper.sendDataToPairedDevice(ServerData.getServer(), "WON_Math_keyBlue_");
-            } else {
-                BluetoothHelper.sendDataToPairedDevice(ServerData.getTeamMembers(1).get(0), "WON_Math_keyBlue_");
-            }
-            CancelCountDown();
-            ((GameActivity) getActivity()).changeFragment(Game_Won_Fragment.newInstance("keyBlue",1), "WON");
+            gameEnds();
+
+            gameWon();
 
             return true;
         } else if (wait_partner == false){
@@ -489,23 +487,13 @@ public class Game_Math_Fragment extends Fragment implements OnClickListener {
                 BluetoothHelper.sendDataToPairedDevice(ServerData.getTeamMembers(1).get(0), "GAMEDATA_Math_WaitForPartner_");
             }
         } else {
-            Log.d("Math", "lost!!");
-            if(!ServerData.isServer()) {
-                BluetoothHelper.sendDataToPairedDevice(ServerData.getServer(), "LOST_Math_keyBlue_");
-            } else {
-                BluetoothHelper.sendDataToPairedDevice(ServerData.getTeamMembers(1).get(0), "LOST_Math_keyBlue_");
-            }
+            gameEnds();
 
-            ((GameActivity) getActivity()).changeFragment(Game_Lost_Fragment.newInstance("keyBlue",1), "LOST");
-            CancelCountDown();
+            gameLost();
+
         }
     return false;
     }
-
-    public void CancelCountDown() {
-        countdown.cancel();
-    }
-
 
     public void setWaitIfGameWon() {
         
@@ -537,8 +525,65 @@ public class Game_Math_Fragment extends Fragment implements OnClickListener {
     }
 
     public void setWon() {
-        CancelCountDown();
         won = true;
-        System.out.println("Won: " + won);
+    }
+
+    public void gameEnds(){
+        countdown.cancel();
+
+        /**  getActivity().runOnUiThread(new Runnable() {
+        @Override
+        public void run() {
+        EditText textView1;
+
+
+        textView1 = (EditText) rootView.findViewById(R.id.result);
+
+
+        textView1.clearFocus();
+
+
+        }
+        });**/
+
+        //clear Focus of Keyboard
+        try {
+            InputMethodManager input = (InputMethodManager) getActivity()
+                    .getSystemService(Activity.INPUT_METHOD_SERVICE);
+            input.hideSoftInputFromWindow(getActivity().getCurrentFocus().getWindowToken(), 0);
+        }catch(Exception e) {
+            e.printStackTrace();
+        }
+
+    }
+
+    private void gameLost() {
+
+        Log.d("MathRunes", "lost!!");
+        if (!ServerData.isServer()) {
+            //send to server
+            BluetoothHelper.sendDataToPairedDevice(ServerData.getServer(), "LOST_MathRunes_keyBlue_");
+        } else {
+            // send to partner of server
+            BluetoothHelper.sendDataToPairedDevice(ServerData.getTeamMembers(1).get(0), "LOST_MathRunes_keyBlue_");
+        }
+
+        ((GameActivity) getActivity()).changeFragment(Game_Lost_Fragment.newInstance("keyBlue",1), "LOST");
+    }
+
+    public void gameWon() {
+        won = true;
+
+        Log.d("MathRunes", "won!!");
+
+        if (!ServerData.isServer()) {
+            //send to server
+            BluetoothHelper.sendDataToPairedDevice(ServerData.getServer(), "WON_MathRunes_keyBlue_");
+        } else {
+            // send to partner of server
+            BluetoothHelper.sendDataToPairedDevice(ServerData.getTeamMembers(1).get(0), "WON_MathRunes_keyBlue_");
+        }
+
+        ((GameActivity)getActivity()).changeFragment(Game_Won_Fragment.newInstance("keyBlue",1), "MAIN");
     }
 }

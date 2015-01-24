@@ -14,6 +14,7 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.view.inputmethod.EditorInfo;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
@@ -73,7 +74,7 @@ public class Game_MathRunes_Fragment extends Fragment implements OnClickListener
     private boolean field_two_pressed;
     private EditText editText1;
     private boolean wait_partner = false;
-    private int player;
+   // private int player;
     private GridView listView1;
     private GridView listView2;
     private GridView listView3;
@@ -117,14 +118,18 @@ public class Game_MathRunes_Fragment extends Fragment implements OnClickListener
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
 
-        if (mParam1.equals("Player2")){
+    /**    if (mParam1.equals("Player2")){
             player = 2;
             rootView = inflater.inflate(R.layout.fragment_game_mathrunes, container, false);
         } else {
             player = 1;
             rootView = inflater.inflate(R.layout.fragment_game_mathrunes, container, false);
 
-        }
+        }**/
+
+
+        rootView = inflater.inflate(R.layout.fragment_game_mathrunes, container, false);
+
 
         operation1 = new Game_Math_Helper();
         operation2 = new Game_Math_Helper();
@@ -141,16 +146,10 @@ public class Game_MathRunes_Fragment extends Fragment implements OnClickListener
 
             public void onFinish() {
                 if (!won) {
-                    Log.d("MathRunes", "lost!!");
-                    if (!ServerData.isServer()) {
-                        //send to server
-                        BluetoothHelper.sendDataToPairedDevice(ServerData.getServer(), "LOST_MathRunes_keyBlue_");
-                    } else {
-                        // send to partner of server
-                        BluetoothHelper.sendDataToPairedDevice(ServerData.getTeamMembers(1).get(0), "LOST_MathRunes_keyBlue_");
-                    }
 
-                    ((GameActivity) getActivity()).changeFragment(Game_Lost_Fragment.newInstance("keyBlue",1), "LOST");
+                    gameEnds();
+
+                    gameLost();
                 }
             }
         }.start();
@@ -158,6 +157,7 @@ public class Game_MathRunes_Fragment extends Fragment implements OnClickListener
 
         return rootView;
     }
+
 
     // TODO: Rename method, update argument and hook method into UI event
     public void onButtonPressed(Uri uri) {
@@ -224,7 +224,13 @@ public class Game_MathRunes_Fragment extends Fragment implements OnClickListener
             public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
                 if(actionId== EditorInfo.IME_ACTION_DONE){
                     //Clear focus here from edittext
-                    editText1.clearFocus();
+                    try {
+                        InputMethodManager input = (InputMethodManager) getActivity()
+                                .getSystemService(Activity.INPUT_METHOD_SERVICE);
+                        input.hideSoftInputFromWindow(getActivity().getCurrentFocus().getWindowToken(), 0);
+                    }catch(Exception e) {
+                        e.printStackTrace();
+                    }
 
                     String input = editText1.getText().toString();
 
@@ -254,15 +260,6 @@ public class Game_MathRunes_Fragment extends Fragment implements OnClickListener
         operation2.createOperation(18);
 
         correctFinalResult_partner = operation1.getRightValue() + operation2.getRightValue();
-
-
-     //   TextView textViewOperation1 = (TextView) rootView.findViewById(R.id.textViewOperation1);
-     //   TextView textViewOperation2 = (TextView) rootView.findViewById(R.id.textViewOperation2);
-
-       // textViewOperation1.setText(operation1.getOperationText());
-       // textViewOperation2.setText(operation2.getOperationText());
-
-        //ImageView imageviewOperation1 = (ImageView) rootView.findViewById(R.id.imageViewOperation1);
 
         listView1 = (GridView) rootView.findViewById(R.id.listView1);
         listView2 = (GridView) rootView.findViewById(R.id.listView2);
@@ -387,11 +384,7 @@ public class Game_MathRunes_Fragment extends Fragment implements OnClickListener
             if (correct2) {
                 System.out.println("2 correct");
             }
-            /**if(correct1 && correct2) {
-                createOperation();
-                correct1 = false;
-                correct2 = false;
-            }**/
+
         }
 
         public void buttonPressed(int field, View view){
@@ -459,17 +452,17 @@ public class Game_MathRunes_Fragment extends Fragment implements OnClickListener
             getActivity().runOnUiThread(new Runnable() {
                 @Override
                 public void run() {
-                    TextView textview1;
-                    TextView textview2;
+                    TextView textView1;
+                    TextView textView2;
 
-                    textview1 = (TextView) rootView.findViewById(R.id.result1);
-                    textview2 = (TextView) rootView.findViewById(R.id.result2);
+                    textView1 = (TextView) rootView.findViewById(R.id.result1);
+                    textView2 = (TextView) rootView.findViewById(R.id.result2);
 
                     if (processed.startsWith("MR:result1")) {
-                        textview1.setText(processed.substring(11));
+                        textView1.setText(processed.substring(11));
                         result1_partner = Integer.parseInt(processed.substring(11));
                     } else if (processed.startsWith("MR:result2")){
-                        textview2.setText(processed.substring(11));
+                        textView2.setText(processed.substring(11));
                         result2_partner = Integer.parseInt(processed.substring(11));
                     }
 
@@ -491,17 +484,10 @@ public class Game_MathRunes_Fragment extends Fragment implements OnClickListener
             correctFinalResult_my == input_my && // Check own
             (correct1 && correct2) && // Check own
             correct_partner ){ // Check Partner
-            Log.d("MathRunes", "won!!");
 
-            if (!ServerData.isServer()) {
-                //send to server
-                BluetoothHelper.sendDataToPairedDevice(ServerData.getServer(), "WON_MathRunes_keyBlue_");
-            } else {
-                // send to partner of server
-                BluetoothHelper.sendDataToPairedDevice(ServerData.getTeamMembers(1).get(0), "WON_MathRunes_keyBlue_");
-            }
-            CancelCountDown();
-            ((GameActivity)getActivity()).changeFragment(Game_Won_Fragment.newInstance("keyBlue",1), "MAIN");
+            gameEnds();
+
+            gameWon();
 
 
 
@@ -515,23 +501,15 @@ public class Game_MathRunes_Fragment extends Fragment implements OnClickListener
                 BluetoothHelper.sendDataToPairedDevice(ServerData.getTeamMembers(1).get(0), "GAMEDATA_MathRunes_MR:WaitForPartner_");
             }
         } else {
-            Log.d("MathRunes", "lost!!");
-            if (!ServerData.isServer()) {
-                //send to server
-                BluetoothHelper.sendDataToPairedDevice(ServerData.getServer(), "LOST_MathRunes_keyBlue_");
-            } else {
-                // send to partner of server
-                BluetoothHelper.sendDataToPairedDevice(ServerData.getTeamMembers(1).get(0), "LOST_MathRunes_keyBlue_");
-            }
-            ((GameActivity) getActivity()).changeFragment(Game_Lost_Fragment.newInstance("keyBlue", 1), "LOST");
-            CancelCountDown();
+
+            gameEnds();
+
+            gameLost();
         }
     return false;
     }
 
-    public void CancelCountDown() {
-        countdown.cancel();
-    }
+
 
 
     public void setWaitIfGameWon() {
@@ -560,11 +538,65 @@ public class Game_MathRunes_Fragment extends Fragment implements OnClickListener
         checkCorrectPartner(correct_partner);
     }
 
-    public void setWon() {
-        CancelCountDown();
-        won = true;
-        System.out.println("Won: " + won);
+    public void gameEnds(){
+        countdown.cancel();
+
+      /**  getActivity().runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                EditText textView1;
+
+
+                textView1 = (EditText) rootView.findViewById(R.id.result);
+
+
+                textView1.clearFocus();
+
+
+            }
+        });**/
+
+        //clear Focus of Keyboard
+        try {
+            InputMethodManager input = (InputMethodManager) getActivity()
+                    .getSystemService(Activity.INPUT_METHOD_SERVICE);
+            input.hideSoftInputFromWindow(getActivity().getCurrentFocus().getWindowToken(), 0);
+        }catch(Exception e) {
+            e.printStackTrace();
+        }
+
     }
+
+    private void gameLost() {
+
+        Log.d("MathRunes", "lost!!");
+        if (!ServerData.isServer()) {
+            //send to server
+            BluetoothHelper.sendDataToPairedDevice(ServerData.getServer(), "LOST_MathRunes_keyBlue_");
+        } else {
+            // send to partner of server
+            BluetoothHelper.sendDataToPairedDevice(ServerData.getTeamMembers(1).get(0), "LOST_MathRunes_keyBlue_");
+        }
+
+        ((GameActivity) getActivity()).changeFragment(Game_Lost_Fragment.newInstance("keyBlue",1), "LOST");
+    }
+
+    public void gameWon() {
+        won = true;
+
+        Log.d("MathRunes", "won!!");
+
+        if (!ServerData.isServer()) {
+            //send to server
+            BluetoothHelper.sendDataToPairedDevice(ServerData.getServer(), "WON_MathRunes_keyBlue_");
+        } else {
+            // send to partner of server
+            BluetoothHelper.sendDataToPairedDevice(ServerData.getTeamMembers(1).get(0), "WON_MathRunes_keyBlue_");
+        }
+
+        ((GameActivity)getActivity()).changeFragment(Game_Won_Fragment.newInstance("keyBlue",1), "MAIN");
+    }
+
 }
 
 class RowAdapter extends ArrayAdapter {
