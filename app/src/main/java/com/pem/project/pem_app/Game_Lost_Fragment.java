@@ -1,17 +1,15 @@
 package com.pem.project.pem_app;
 
 
+import android.app.Fragment;
 import android.bluetooth.BluetoothSocket;
 import android.os.Bundle;
-import android.app.Fragment;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
-
-import org.w3c.dom.Text;
 
 
 /**
@@ -57,7 +55,7 @@ public class Game_Lost_Fragment extends Fragment {
         if(checkKey("team1", lostKey)){
             message.setText("Oh no! \nYou had the " + convertKey(lostKey) + " \nbut lost it again!");
         }else{
-            message.setText("You did't get the " + convertKey(lostKey) + "!");
+            message.setText("You didn't get the " + convertKey(lostKey) + "!");
         }
 
         Button proceed = (Button) v.findViewById(R.id.proceed_button_lost);
