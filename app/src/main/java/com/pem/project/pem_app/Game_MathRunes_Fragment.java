@@ -394,11 +394,11 @@ public class Game_MathRunes_Fragment extends Fragment implements OnClickListener
             if (field == 0){
                 field_one_pressed = true;
 
-                buttonOption1.setBackgroundColor(0xFFFFFFFF);
-                buttonOption2.setBackgroundColor(0xFFFFFFFF);
-                buttonOption3.setBackgroundColor(0xFFFFFFFF);
+                buttonOption1.setBackgroundColor(0x95000000);
+                buttonOption2.setBackgroundColor(0x95000000);
+                buttonOption3.setBackgroundColor(0x95000000);
 
-                butPressed.setBackgroundColor(0xFFD3D3D3);
+                butPressed.setBackgroundColor(0xcc480000);
 
                 if (!ServerData.isServer()) {
                     //send to server
@@ -415,11 +415,11 @@ public class Game_MathRunes_Fragment extends Fragment implements OnClickListener
 
                 field_two_pressed = true;
 
-                buttonOption4.setBackgroundColor(0xFFFFFFFF);
-                buttonOption5.setBackgroundColor(0xFFFFFFFF);
-                buttonOption6.setBackgroundColor(0xFFFFFFFF);
+                buttonOption4.setBackgroundColor(0x95000000);
+                buttonOption5.setBackgroundColor(0x95000000);
+                buttonOption6.setBackgroundColor(0x95000000);
 
-                butPressed.setBackgroundColor(0xFFD3D3D3);
+                butPressed.setBackgroundColor(0xcc480000);
 
                 if (!ServerData.isServer()) {
                     //send to server
