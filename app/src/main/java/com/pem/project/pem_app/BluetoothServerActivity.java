@@ -49,7 +49,7 @@ public class BluetoothServerActivity extends Activity {
             @Override
             public void onClick(View view) {
                 // Tell Clients to start the game
-                for(BluetoothSocket client : ServerData.getClients()) BluetoothHelper.sendDataToPairedDevice(client, "START_null_null_");
+                for(BluetoothSocket client : ServerData.getClients()) BluetoothHelper.sendDataToPairedDevice(client, "START_null_" + ServerData.getTeam(client) + "_");
 
                 Intent intent = new Intent(getApplicationContext(), GameActivity.class);
                 intent.putExtra("miniGame","first");
@@ -87,6 +87,7 @@ public class BluetoothServerActivity extends Activity {
     public void bluetoothSetup() {
         //first, mark this device as server
         ServerData.markLocalAsServer();
+        ServerData.setMyTeam(1);
 
         bAdapter = BluetoothAdapter.getDefaultAdapter();
         // check if bluetooth is on
@@ -179,7 +180,7 @@ public class BluetoothServerActivity extends Activity {
         public void manageConnections(final BluetoothSocket socket) {
             Log.d("BluetoothServer", "Client ist da! " + socket.getRemoteDevice());
             ServerData.addToClients(socket);
-            int team = (ServerData.getNumOfClients() < 2)?  1 : 2;
+            final int team = (ServerData.getNumOfClients() < 2)?  1 : 2;
             ServerData.addToTeam(socket, team);
 
             runOnUiThread(new Runnable() {
@@ -188,7 +189,7 @@ public class BluetoothServerActivity extends Activity {
                     //refresh ListView
                     listAdapter.add(socket);
                     listAdapter.notifyDataSetChanged();
-                    BluetoothHelper.sendDataToPairedDevice(socket, "INFO_null_Hello, welcome to the game!_");
+                    BluetoothHelper.sendDataToPairedDevice(socket, "INFO_" + team + "_Hello, welcome to the game!_");
 
                     if (ServerData.getNumOfClients() == 1) startGame.setEnabled(true);
                 }

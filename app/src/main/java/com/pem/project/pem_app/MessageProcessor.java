@@ -18,6 +18,9 @@ public class MessageProcessor {
         if(messageArt.equals("START")){
             //default
             if(miniGame.equals("null")){
+                //remember own team
+                if(!ServerData.isServer()) ServerData.setMyTeam(Integer.parseInt(extra));
+                
                 return "START";
             } else if(miniGame.equals("Scream")){
                 if (ServerData.isServer()) {

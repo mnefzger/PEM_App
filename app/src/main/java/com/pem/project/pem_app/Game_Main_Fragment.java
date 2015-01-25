@@ -9,6 +9,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.TextView;
+
 import java.util.ArrayList;
 
 
@@ -28,6 +30,8 @@ public class Game_Main_Fragment extends Fragment {
     private Button startMiniGameButton5;
     private Button startMiniGameButton6;
 
+    TextView team1;
+    TextView team2;
     ImageView team1_coin;
     ImageView team2_coin;
     ImageView team1_keyYellow;
@@ -98,6 +102,9 @@ public class Game_Main_Fragment extends Fragment {
                 }
             }
         });
+
+        team1 = (TextView)view.findViewById(R.id.team1);
+        team2 = (TextView)view.findViewById(R.id.team2);
 
         team1_coin = (ImageView) view.findViewById(R.id.team1_coin);
         team2_coin = (ImageView) view.findViewById(R.id.team2_coin);
@@ -211,6 +218,10 @@ public class Game_Main_Fragment extends Fragment {
         ArrayList<String> keys1 = ServerData.getTeam1_keys();
         ArrayList<String> keys2 = ServerData.getTeam2_keys();
 
+        int team = ServerData.getMyTeam();
+
+        if(team == 1) team1.setText("Team Blue (You)");
+        else team2.setText("Team Red (You)");
 
         // update game state view
         // -> coins

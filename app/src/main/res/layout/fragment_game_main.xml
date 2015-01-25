@@ -36,8 +36,8 @@ tools:context="com.pem.project.pem_app.GameActivity">
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textAppearance="?android:attr/textAppearanceLarge"
-            android:text="Team 1"
-            android:id="@+id/textView5"
+            android:text="Team Blue"
+            android:id="@+id/team1"
             android:autoText="false" />
 
         <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
@@ -100,8 +100,8 @@ tools:context="com.pem.project.pem_app.GameActivity">
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textAppearance="?android:attr/textAppearanceLarge"
-            android:text="Team 2"
-            android:id="@+id/textView6" />
+            android:text="Team Red"
+            android:id="@+id/team2" />
 
         <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
             android:id="@+id/team2_state"

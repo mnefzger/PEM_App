@@ -21,6 +21,7 @@ public class ServerData {
     private static String team2_coin = "coinright";
     private static boolean isServer = false;
     private static BluetoothSocket server;
+    private static int myTeam;
 
     public static void addToClients(BluetoothSocket socket){
         Log.d("Bluetooth ServerData", "Added Client " + socket);
@@ -42,6 +43,15 @@ public class ServerData {
         else if(team2.contains(socket)) return 2;
         else return 0;
     }
+
+    public static void setMyTeam(int team){
+        myTeam = team;
+    }
+
+    public static int getMyTeam(){
+        return myTeam;
+    }
+
 
     public static ArrayList<BluetoothSocket> getTeamMembers(int team){
         if(team == 1) return team1;
