@@ -20,6 +20,8 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.GridView;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.TableRow;
 import android.widget.TextView;
 
 
@@ -43,6 +45,9 @@ public class Game_MathRunes_Fragment extends Fragment implements OnClickListener
     private String mParam2;
 
     private OnFragmentInteractionListener mListener;
+
+    private LinearLayout infoText;
+    private TableRow start;
 
 
     private View rootView;
@@ -129,33 +134,62 @@ public class Game_MathRunes_Fragment extends Fragment implements OnClickListener
 
 
         rootView = inflater.inflate(R.layout.fragment_game_mathrunes, container, false);
+        infoText = (LinearLayout)rootView.findViewById(R.id.mathInfoText);
+        start = (TableRow)rootView.findViewById(R.id.startMath);
 
-
-        operation1 = new Game_Math_Helper();
-        operation2 = new Game_Math_Helper();
-
-        createOperation();
-
-        countTextField = (TextView) rootView.findViewById(R.id.countTextField);
-
-        countdown = new CountDownTimer(40000, 1000) {
-
-            public void onTick(long millisUntilFinished) {
-                countTextField.setText("seconds remaining: " + millisUntilFinished / 1000);
-            }
-
-            public void onFinish() {
-                if (!won) {
-
-                    gameEnds();
-
-                    gameLost();
+        start.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (!ServerData.isServer()){
+                    //send to server
+                    BluetoothHelper.sendDataToPairedDevice(ServerData.getServer(), "GAMEDATA_MathRunes_startMath_");
+                } else {
+                    // send to partner of server
+                    BluetoothHelper.sendDataToPairedDevice(ServerData.getTeamMembers(1).get(0), "GAMEDATA_MathRunes_startMath_");
                 }
+
+                mathSetup();
             }
-        }.start();
+        });
+
+
 
 
         return rootView;
+    }
+
+    public void mathSetup(){
+        getActivity().runOnUiThread(new Runnable() {
+           @Override
+           public void run() {
+               infoText.setVisibility(View.GONE);
+
+
+                operation1 = new Game_Math_Helper();
+                operation2 = new Game_Math_Helper();
+
+                createOperation();
+
+                countTextField = (TextView) rootView.findViewById(R.id.countTextField);
+
+                countdown = new CountDownTimer(40000, 1000) {
+
+                    public void onTick(long millisUntilFinished) {
+                        countTextField.setText("seconds remaining: " + millisUntilFinished / 1000);
+                    }
+
+                    public void onFinish() {
+                        if (!won) {
+
+                            gameEnds();
+
+                            gameLost();
+                        }
+                    }
+                }.start();
+
+           }
+        });
     }
 
 

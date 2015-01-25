@@ -192,7 +192,10 @@ public class GameActivity extends Activity implements BluetoothListener.IListenC
         }
 
         // MATHRUNES
-        if(processed.startsWith("MR:result")) {
+        if(processed.equals("startMath")){
+            Game_MathRunes_Fragment fragment = (Game_MathRunes_Fragment)fragmentManager.findFragmentByTag("MATHRUNES");
+            fragment.mathSetup();
+        }else if(processed.startsWith("MR:result")) {
             Game_MathRunes_Fragment fragment = (Game_MathRunes_Fragment) fragmentManager.findFragmentByTag("MATHRUNES");
             fragment.setResult(processed);
         } else if(processed.startsWith("MR:correctResult")){
