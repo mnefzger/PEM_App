@@ -623,9 +623,9 @@ class RowAdapter extends ArrayAdapter {
 
 
         if (runesArray[position] == 5) {
-            imageView1.setImageResource(R.drawable.five);
+            imageView1.setImageResource(R.drawable.five_white);
         } else {
-            imageView1.setImageResource(R.drawable.one);
+            imageView1.setImageResource(R.drawable.one_white);
         }
 
         return view;
