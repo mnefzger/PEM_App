@@ -152,25 +152,25 @@ public class QR_Fragment extends Fragment {
         }
     };
 
-    private void processScan(String scan){
+    private boolean processScan(String scan){
         Fragment f = null;
         String minigame = "";
         Double d = Math.random();
         if(scan.equals("Category:Speed")) {
             f = Game_Run_Fragment.newInstance();
             minigame = "Run";
-            //minigame = d>0.5 ? "Run" : "Items";
         }else if(scan.equals("Category:Puzzle")) {
             f = Game_MathRunes_Fragment.newInstance("Player1", "");
             //f = d>0.5 ? Game_MathRunes_Fragment.newInstance("Player1", "") : Game_Math_Fragment.newInstance("Player1", "");
             minigame = "MathRunes";
-            //minigame = d>0.5 ? "MathRunes" : "Math";
         } else if(scan.equals("Category:Skill")) {
             f = Game_Rescue_Fragment.newInstance("rope");
             minigame = "Rescue";
         } else if(scan.equals("Category:Luck")) {
             f = Game_Luck_Fragment.newInstance();
             minigame = "Luck";
+            ((GameActivity) getActivity()).changeFragment(f, minigame.toUpperCase());
+            return true;
         } else {
             scanText.setText("Unable to detect Minigame.");
         }
@@ -183,7 +183,10 @@ public class QR_Fragment extends Fragment {
             }
 
             ((GameActivity) getActivity()).changeFragment(f, minigame.toUpperCase());
+            return true;
         }
+
+        return false;
     }
 
 
