@@ -145,7 +145,7 @@ public class Game_Run_Fragment extends Fragment implements SensorHandler.runCall
                                              ((GameActivity) getActivity()).changeFragment(Game_Won_Fragment.newInstance("keyGreen",1), "WON");
                                          }
                                      }},
-                        13000
+                        11000
                 );
             }
         });
@@ -156,7 +156,7 @@ public class Game_Run_Fragment extends Fragment implements SensorHandler.runCall
     @Override
     public void runSensed(double[] data) {
         // too slow
-        if(Math.abs(data[0]) < 8){
+        if(Math.abs(data[0]) < 6){
 
                 if(animated == false) {
                     if (fails == 0) {
