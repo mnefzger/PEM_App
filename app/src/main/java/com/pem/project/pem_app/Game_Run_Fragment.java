@@ -173,6 +173,8 @@ public class Game_Run_Fragment extends Fragment implements SensorHandler.runCall
         // player failed two times -> lost
         if(fails == 2){
             sensorHandler.stopSensing();
+            Vibrator v = (Vibrator) getActivity().getSystemService(getActivity().VIBRATOR_SERVICE);
+            v.vibrate(500);
             if(!ServerData.isServer()) {
                 BluetoothHelper.sendDataToPairedDevice(ServerData.getServer(), "LOST_Run_keyGreen_");
             } else {

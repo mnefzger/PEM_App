@@ -52,7 +52,7 @@ public class Game_Lost_Fragment extends Fragment {
         View v = inflater.inflate(R.layout.fragment_game__lost_, container, false);
         TextView message = (TextView)v.findViewById(R.id.lostMessage);
 
-        if(checkKey("team1", lostKey)){
+        if(checkKey("team"+ServerData.getMyTeam(), lostKey)){
             message.setText("Oh no! \nYou had the " + convertKey(lostKey) + " \nbut lost it again!");
         }else{
             message.setText("You didn't get the " + convertKey(lostKey) + "!");
