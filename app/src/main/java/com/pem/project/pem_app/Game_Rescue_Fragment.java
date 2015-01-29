@@ -260,7 +260,7 @@ public class Game_Rescue_Fragment extends Fragment implements SensorHandler.rope
 
            // Spawn rock at random x position
            int x = (Math.random() > 0.5) ? screen_width/4 : 3*(screen_width/4)-rock_size;
-           side = (x == 200) ? "right" : "left";
+           side = (x == screen_width/4) ? "right" : "left";
            TranslateAnimation anim = new TranslateAnimation(x, x, 0, size.y+rock_size);
            anim.setDuration(1500);
            anim.setFillAfter(true);
@@ -396,13 +396,13 @@ public class Game_Rescue_Fragment extends Fragment implements SensorHandler.rope
             try {
                 if (Math.abs(e1.getY() - e2.getY()) > 250)
                     return false;
-                if(e1.getX() - e2.getX() > 120 && Math.abs(velocityX) > 100) {
+                if(e1.getX() - e2.getX() > 90 && Math.abs(velocityX) > 75) {
                     if(side.equals("left")){
                         Log.d("SWIPE", "correct left");
                         rope.startAnimation(swingLeft);
                         alive = true;
                     }
-                }  else if (e2.getX() - e1.getX() > 120 && Math.abs(velocityX) > 100) {
+                }  else if (e2.getX() - e1.getX() > 90 && Math.abs(velocityX) > 75) {
                     if(side.equals("right")){
                         Log.d("SWIPE", "correct right");
                         rope.startAnimation(swingRight);

@@ -45,11 +45,11 @@ public class GameActivity extends Activity implements BluetoothListener.IListenC
             BluetoothListener listener = new BluetoothListener(this);
             listener.listen(ServerData.getClientAt(0));
 
-           /* BluetoothListener listener2 = new BluetoothListener(this);
+            BluetoothListener listener2 = new BluetoothListener(this);
             listener2.listen(ServerData.getClientAt(1));
 
             BluetoothListener listener3 = new BluetoothListener(this);
-            listener3.listen(ServerData.getClientAt(2));*/
+            listener3.listen(ServerData.getClientAt(2));
         }
 
     }
