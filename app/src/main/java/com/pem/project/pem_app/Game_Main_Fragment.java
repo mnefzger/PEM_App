@@ -24,11 +24,13 @@ import java.util.ArrayList;
  */
 public class Game_Main_Fragment extends Fragment {
     private OnFragmentInteractionListener mListener;
-    private Button startMiniGameButton;
+
+
+    /*private Button startMiniGameButton;
     private Button startMiniGameButton2;
     private Button startMiniGameButton3;
     private Button startMiniGameButton5;
-    private Button startMiniGameButton6;
+    private Button startMiniGameButton6;*/
 
     TextView team1;
     TextView team2;
@@ -123,7 +125,7 @@ public class Game_Main_Fragment extends Fragment {
 
 
         // testing buttons
-
+        /*
         startMiniGameButton = (Button)view.findViewById(R.id.startMiniGameButton);
         startMiniGameButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -193,17 +195,9 @@ public class Game_Main_Fragment extends Fragment {
             @Override
             public void onClick(View view) {
                 ((GameActivity)getActivity()).changeFragment(Game_Luck_Fragment.newInstance(), "LUCK");
-            /*
-                if (!ServerData.isServer()){
-                    //send to server
-                    BluetoothHelper.sendDataToPairedDevice(ServerData.getServer(), "START_Luck_Player2_");
-                } else {
-                    // send to partner of server
-                    BluetoothHelper.sendDataToPairedDevice(ServerData.getTeamMembers(1).get(0), "START_Luck_Player2_");
-                }
-                */
+
             }
-        });
+        }); */
         updateGUI();
 
 
